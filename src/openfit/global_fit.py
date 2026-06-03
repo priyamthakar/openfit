@@ -13,8 +13,8 @@ University Press, 2004.  Chapter 35: Fitting data from several experiments.
 
 from __future__ import annotations
 
-from dataclasses import dataclass
-from typing import Any
+from dataclasses import dataclass, field
+from typing import TYPE_CHECKING, Any
 
 import numpy as np
 import scipy.optimize
@@ -24,6 +24,9 @@ from openfit.models import get_model
 from openfit.models.base import BaseModel
 from openfit.spec import FitSpec, build_spec
 from openfit.weighting import WeightScheme, apply_weights, parse_weight_scheme
+
+if TYPE_CHECKING:
+    pass
 
 # ---------------------------------------------------------------------------
 # Result dataclasses
@@ -124,6 +127,38 @@ class GlobalFitResult:
     weight_scheme: str
     f_test_sharing: FTestSharing | None
     specs: list[FitSpec]
+    
+    # Private fields for report generation and plotting
+    _datasets: list[tuple[np.ndarray, np.ndarray]] = field(repr=False, compare=False, default_factory=list)
+    _model: BaseModel = field(repr=False, compare=False, default=None)
+    _weights_per_ds: list[np.ndarray] = field(repr=False, compare=False, default_factory=list)
+
+    # ------------------------------------------------------------------
+    # report()
+    # ------------------------------------------------------------------
+
+    def report(self, path: str, fmt: str = "html") -> None:
+        """Write a global fit report to a file.
+
+        Parameters
+        ----------
+        path : str
+            Output file path (e.g. "global_fit_result.html").
+        fmt : str
+            Output format: "html" or "markdown". Default "html".
+
+        Raises
+        ------
+        ValueError
+            If fmt is not "html" or "markdown".
+        """
+        _valid = {"html", "markdown"}
+        if fmt not in _valid:
+            raise ValueError(
+                f"fmt must be one of {sorted(_valid)}, got {fmt!r}."
+            )
+        from openfit.report.global_fit import report_global_fit
+        report_global_fit(self, path=path, fmt=fmt)
 
     # ------------------------------------------------------------------
     # Human-readable summary
@@ -681,4 +716,7 @@ class GlobalFit:
             weight_scheme=weight_label,
             f_test_sharing=f_test,
             specs=specs,
+            _datasets=datasets,
+            _model=model,
+            _weights_per_ds=weights_per_ds,
         )

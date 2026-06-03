@@ -109,6 +109,34 @@ def render_markdown_report(result: "FitResult") -> str:
 
     lines.append("")
 
+    # --- ROUT outlier section (if available) ---
+    rout_result = getattr(result, "rout_result", None)
+    if rout_result is not None:
+        lines.append("## ROUT Outlier Detection")
+        lines.append("")
+        lines.append("| Metric | Value |")
+        lines.append("|--------|-------|")
+        lines.append(f"| Total points | {len(result.x)} |")
+        lines.append(f"| Flagged outliers | {rout_result.n_outliers} |")
+        lines.append(f"| Q parameter | {rout_result.Q*100:.1f}% |")
+        
+        if rout_result.n_outliers > 0:
+            outlier_indices = rout_result.outlier_indices
+            outlier_x_values = result.x[rout_result.outlier_mask]
+            
+            # Show first 20 outliers
+            if len(outlier_indices) > 20:
+                idx_str = ", ".join(str(i) for i in outlier_indices[:20]) + f"... ({len(outlier_indices)} total)"
+                x_str = ", ".join(f"{x:.3g}" for x in outlier_x_values[:20]) + f"... ({len(outlier_x_values)} total)"
+            else:
+                idx_str = ", ".join(str(i) for i in outlier_indices)
+                x_str = ", ".join(f"{x:.3g}" for x in outlier_x_values)
+            
+            lines.append(f"| Outlier indices | {idx_str} |")
+            lines.append(f"| Outlier x-values | {x_str} |")
+        
+        lines.append("")
+
     # --- FitSpec ---
     lines.append("## Reproducibility Spec")
     lines.append("")

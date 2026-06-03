@@ -11,6 +11,7 @@ import numpy as np
 if TYPE_CHECKING:
     import matplotlib.figure
     from openfit.models.base import BaseModel
+    from openfit.outliers import ROUTResult
     from openfit.spec import FitSpec
 
 
@@ -95,6 +96,9 @@ class FitResult:
     # Private fields used by uncertainty and plotting helpers
     _model: "BaseModel" = field(repr=False, compare=False)
     _weights: np.ndarray = field(repr=False, compare=False)
+    
+    # Optional ROUT outlier detection result
+    rout_result: "ROUTResult | None" = field(default=None, repr=False, compare=False)
 
     # ------------------------------------------------------------------
     # summary()

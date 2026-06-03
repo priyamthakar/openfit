@@ -125,3 +125,153 @@ def test_global_fit_f_test_rejects_sharing():
     assert not gf.f_test_sharing.sharing_justified, (
         f"Expected sharing rejected, p={gf.f_test_sharing.p_value:.4f}"
     )
+
+
+# ---------------------------------------------------------------------------
+# Global fit report tests
+# ---------------------------------------------------------------------------
+
+
+def test_global_fit_report_html_generation(tmp_path):
+    """Test HTML report generation for 3-dataset global fit."""
+    datasets = _make_datasets_shared_top_bottom()
+    gf = GlobalFit(
+        datasets,
+        "hill4p",
+        shared=["Top", "Bottom", "HillSlope"],
+        local=["EC50"],
+        weights="uniform",
+    ).run()
+    
+    report_path = tmp_path / "global_fit_report.html"
+    gf.report(str(report_path), fmt="html")
+    
+    assert report_path.exists()
+    content = report_path.read_text(encoding="utf-8")
+    
+    # Check that all datasets are mentioned
+    assert "Dataset 1" in content
+    assert "Dataset 2" in content
+    assert "Dataset 3" in content
+    
+    # Check that shared parameters are listed
+    assert "Top" in content
+    assert "Bottom" in content
+    assert "HillSlope" in content
+    
+    # Check that local parameter is listed
+    assert "EC50" in content
+    
+    # Check that R^2 values are present
+    assert "R^2" in content
+    
+    # Check for disclaimer
+    assert "independently verified" in content
+
+
+def test_global_fit_report_markdown_generation(tmp_path):
+    """Test Markdown report generation for global fit."""
+    datasets = _make_datasets_shared_top_bottom()
+    gf = GlobalFit(
+        datasets,
+        "hill4p",
+        shared=["Top", "Bottom"],
+        local=["EC50", "HillSlope"],
+        weights="uniform",
+    ).run()
+    
+    report_path = tmp_path / "global_fit_report.md"
+    gf.report(str(report_path), fmt="markdown")
+    
+    assert report_path.exists()
+    content = report_path.read_text(encoding="utf-8")
+    
+    # Check that all datasets are mentioned
+    assert "Dataset 1" in content
+    assert "Dataset 2" in content
+    assert "Dataset 3" in content
+    
+    # Check for parameter tables
+    assert "Shared Parameters" in content
+    assert "Local Parameters" in content
+    
+    # Check for disclaimer
+    assert "independently verified" in content
+
+
+def test_global_fit_report_contains_f_test(tmp_path):
+    """Test that F-test results are included in the report."""
+    datasets = _make_datasets_shared_top_bottom()
+    gf = GlobalFit(
+        datasets,
+        "hill4p",
+        shared=["Top", "Bottom"],
+        local=["EC50", "HillSlope"],
+        weights="uniform",
+        run_f_test=True,
+    ).run()
+    
+    report_path = tmp_path / "global_fit_with_ftest.html"
+    gf.report(str(report_path), fmt="html")
+    
+    content = report_path.read_text(encoding="utf-8")
+    
+    # Check F-test section exists
+    assert "F-test" in content
+    assert "Sharing" in content
+    
+    # Check F-test metrics
+    assert "F statistic" in content
+    assert "p-value" in content
+    assert "RSS" in content
+
+
+def test_global_fit_report_shared_local_tables(tmp_path):
+    """Test that shared and local parameter tables are correctly populated."""
+    datasets = _make_datasets_shared_top_bottom()
+    gf = GlobalFit(
+        datasets,
+        "hill4p",
+        shared=["Top", "Bottom"],
+        local=["EC50", "HillSlope"],
+        weights="uniform",
+    ).run()
+    
+    report_path = tmp_path / "global_fit_tables.html"
+    gf.report(str(report_path), fmt="html")
+    
+    content = report_path.read_text(encoding="utf-8")
+    
+    # Check shared parameter section
+    assert "Shared Parameters" in content
+    # Shared params should appear once (same value for all datasets)
+    assert content.count(">Top<") >= 1
+    assert content.count(">Bottom<") >= 1
+    
+    # Check local parameter section
+    assert "Local Parameters" in content
+    # Local params should appear for each dataset
+    assert "Dataset 1" in content
+    assert "Dataset 2" in content
+    assert "Dataset 3" in content
+    
+    # EC50 and HillSlope should be in local parameters
+    assert "EC50" in content
+    assert "HillSlope" in content
+
+
+def test_global_fit_report_invalid_format(tmp_path):
+    """Test that invalid format raises ValueError."""
+    datasets = _make_datasets_shared_top_bottom()
+    gf = GlobalFit(
+        datasets,
+        "hill4p",
+        shared=["Top", "Bottom"],
+        local=["EC50", "HillSlope"],
+        weights="uniform",
+    ).run()
+    
+    report_path = tmp_path / "global_fit_report.txt"
+    with pytest.raises(ValueError, match="fmt must be one of"):
+        gf.report(str(report_path), fmt="txt")
+

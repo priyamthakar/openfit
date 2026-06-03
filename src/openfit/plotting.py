@@ -20,6 +20,7 @@ import numpy as np
 matplotlib.use("Agg")  # non-interactive backend -- safe for server/report use
 
 if TYPE_CHECKING:
+    from openfit.outliers import ROUTResult
     from openfit.results import FitResult
 
 # ---------------------------------------------------------------------------
@@ -29,6 +30,8 @@ if TYPE_CHECKING:
 _STYLE = "seaborn-v0_8-whitegrid"
 _COLOR_DATA = "#2563EB"   # blue
 _COLOR_FIT = "#DC2626"    # red
+_COLOR_OUTLIER = "#DC2626"  # red for outliers
+_COLOR_NORMAL = "#2563EB"   # blue for normal points
 _COLOR_POS = "#2563EB"    # positive residuals -- blue
 _COLOR_NEG = "#DC2626"    # negative residuals -- red
 _COLOR_ZERO = "#6B7280"   # dashed zero line -- gray
@@ -326,6 +329,127 @@ def qq_plot(
         current_ax.set_title("Normal Q-Q Plot of Standardized Residuals")
         current_ax.set_xlabel("Theoretical Quantiles")
         current_ax.set_ylabel("Standardized Residuals")
+
+        fig.tight_layout()
+
+    return fig
+
+
+def rout_outlier_plot(
+    x: np.ndarray,
+    y: np.ndarray,
+    rout_result: "ROUTResult",
+    model_equation=None,
+    model_params: dict | None = None,
+    ax: matplotlib.axes.Axes | None = None,
+    x_smooth_points: int = 200,
+    title: str | None = None,
+    xlabel: str = "x",
+    ylabel: str = "y",
+    figsize: tuple[float, float] = (7, 5),
+) -> matplotlib.figure.Figure:
+    """Plot data with ROUT-flagged outliers highlighted.
+
+    Displays the fitted curve with normal points in blue circles and
+    ROUT-flagged outliers as red X markers.
+
+    Parameters
+    ----------
+    x : np.ndarray
+        Independent variable values.
+    y : np.ndarray
+        Observed response values.
+    rout_result : ROUTResult
+        ROUT outlier detection result.
+    model_equation : callable | None
+        Model equation function f(x, **params) -> y. If provided along with
+        model_params, draws the fitted curve.
+    model_params : dict | None
+        Model parameters for the fitted curve.
+    ax : matplotlib.axes.Axes | None
+        Axes to draw on. If None, creates a new figure.
+    x_smooth_points : int
+        Number of points for smooth curve interpolation. Default 200.
+    title : str | None
+        Plot title. If None, uses "ROUT Outlier Detection (Q={Q})".
+    xlabel : str
+        X-axis label. Default "x".
+    ylabel : str
+        Y-axis label. Default "y".
+    figsize : tuple[float, float]
+        Figure size in inches. Default (7, 5).
+
+    Returns
+    -------
+    matplotlib.figure.Figure
+        The figure object.
+    """
+    x = np.asarray(x, dtype=float)
+    y = np.asarray(y, dtype=float)
+    outlier_mask = rout_result.outlier_mask
+    normal_mask = ~outlier_mask
+
+    with _try_style():
+        fig, current_ax = _make_axes(ax, figsize)
+
+        # Fitted curve (if model provided)
+        if model_equation is not None and model_params is not None:
+            x_smooth = np.linspace(x.min(), x.max(), x_smooth_points)
+            y_smooth = model_equation(x_smooth, **model_params)
+            current_ax.plot(
+                x_smooth,
+                y_smooth,
+                color=_COLOR_FIT,
+                linewidth=2,
+                zorder=2,
+                label="Fit",
+            )
+
+        # Normal points (blue circles)
+        if np.any(normal_mask):
+            current_ax.scatter(
+                x[normal_mask],
+                y[normal_mask],
+                color=_COLOR_NORMAL,
+                marker='o',
+                alpha=0.85,
+                s=40,
+                zorder=3,
+                label=f"Normal ({normal_mask.sum()})",
+            )
+
+        # Outlier points (red X markers)
+        if np.any(outlier_mask):
+            current_ax.scatter(
+                x[outlier_mask],
+                y[outlier_mask],
+                color=_COLOR_OUTLIER,
+                marker='x',
+                s=100,
+                linewidth=2.5,
+                zorder=4,
+                label=f"Outlier (ROUT Q={rout_result.Q*100:.0f}%)",
+            )
+
+        if title is None:
+            title = f"ROUT Outlier Detection (Q={rout_result.Q*100:.0f}%)"
+        current_ax.set_title(title)
+        current_ax.set_xlabel(xlabel)
+        current_ax.set_ylabel(ylabel)
+        current_ax.legend(loc="best", framealpha=0.7)
+
+        # Annotation box with outlier count
+        annotation = f"Outliers: {rout_result.n_outliers}/{len(x)}"
+        current_ax.text(
+            0.97,
+            0.97,
+            annotation,
+            transform=current_ax.transAxes,
+            ha="right",
+            va="top",
+            fontsize=9,
+            bbox=dict(boxstyle="round,pad=0.3", facecolor="white", alpha=0.7, edgecolor="none"),
+        )
 
         fig.tight_layout()
 

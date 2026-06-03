@@ -6,9 +6,11 @@ from typing import TYPE_CHECKING
 
 from openfit.report.html import render_html_report
 from openfit.report.markdown import render_markdown_report
+from openfit.report.global_fit import report_global_fit
 
 if TYPE_CHECKING:
     from openfit.results import FitResult
+    from openfit.global_fit import GlobalFitResult
 
 
 def report_fit(result: "FitResult", path: str, fmt: str = "html") -> None:
@@ -40,4 +42,4 @@ def report_fit(result: "FitResult", path: str, fmt: str = "html") -> None:
         raise ValueError(f"Unknown format: {fmt!r}. Use 'html' or 'markdown'.")
 
 
-__all__ = ["report_fit", "render_html_report", "render_markdown_report"]
+__all__ = ["report_fit", "render_html_report", "render_markdown_report", "report_global_fit"]
