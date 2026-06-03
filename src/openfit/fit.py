@@ -312,7 +312,6 @@ class Fit:
 
         try:
             jtj = J.T @ J
-            # Use pinv for slightly ill-conditioned systems; raises on hard singular
             cov = np.linalg.pinv(jtj) * (rss_weighted / max(df, 1))
             se_arr = np.sqrt(np.diag(cov))
             if not np.isfinite(se_arr).all():
@@ -323,6 +322,7 @@ class Fit:
         except np.linalg.LinAlgError:
             # Singular Jacobian: model is overparameterized or data is degenerate
             se = {name: float("inf") for name in model.param_names}
+            cov = np.full((n_params, n_params), np.nan)
 
         # ----------------------------------------------------------------
         # 10. Asymptotic confidence intervals (lazy import for future-proofing)
@@ -402,6 +402,7 @@ class Fit:
             params=params,
             se=se,
             ci=ci,
+            covariance=cov,
             r_squared=float(r_squared),
             aic=float(aic),
             bic=float(bic),
