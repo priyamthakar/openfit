@@ -168,8 +168,16 @@ def profile_likelihood_ci(
         ci[target_name] = (lower, upper)
         converged[target_name] = lower_conv and upper_conv
 
-        # Unimodality: check that lr values are monotone away from center
-        is_unimodal = bool(np.all(np.diff(lr_lo) >= 0) and np.all(np.diff(lr_hi) >= 0))
+        # Unimodality: check that lr values are monotone away from center.
+        # grid_lo runs from far-left to near-center, so LR should DECREASE
+        # left-to-right (diff <= 0).  grid_hi runs near-center to far-right,
+        # so LR should INCREASE left-to-right (diff >= 0).
+        # A small tolerance (_UNI_TOL) absorbs optimizer noise in RSS.
+        _UNI_TOL = 0.05  # absolute tolerance on LR statistic
+        is_unimodal = bool(
+            np.all(np.diff(lr_lo) <= _UNI_TOL)
+            and np.all(np.diff(lr_hi) >= -_UNI_TOL)
+        )
         unimodal[target_name] = is_unimodal
 
         if not converged[target_name]:
