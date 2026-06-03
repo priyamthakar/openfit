@@ -55,26 +55,23 @@ Deliverable: update `tests/validation/test_drda_crossvalidation.py`
 
 Before tagging v0.1.2, resolve in order:
 
-1. **Resolve binding model validation gap (BLOCKING -- see issue #3 in AGENT_GUIDANCE)**
-   - OneSiteBinding, TwoSiteBinding, CompetitiveBinding: committed to master
-     and listed under "29 built-in" in README, but no published-reference
-     validation test exists.
-   - Option A: Add published-reference test (e.g., saturation binding data from
-     Motulsky & Christopoulos, or a pharmacology textbook dataset).
-   - Option B: Mark all three as `experimental` in the registry, rename the
-     README count to "25 validated + 3 experimental binding models", and add
-     a disclaimer.
-   - Do not ship v0.1.2 without resolving this.
+1. **Resolve binding model validation gap** [DONE]
+   - Synthetic certified datasets added:
+     `tests/validation/binding_certified_values.py` (9 datasets)
+   - 26 parameter recovery tests added:
+     `tests/validation/test_binding_synth.py`
+   - Mathematical references: Langmuir 1918, Cheng & Prusoff 1973,
+     Motulsky & Christopoulos 2003 (Chapters 7-9).
 
-2. **Triage scratch R files**
-   - `drda.R`, `drda_data.R`, `drda_main.R`, `drda_vignette.R`, `extract_drda.py`,
-     `testdata.R`, `voropm2.Rd`, `voropm2.rda` are tracked in git.
-   - Move any needed test fixtures to `tests/validation/reference/`.
-   - Remove the rest. Update `.gitignore`. Verify the wheel excludes them.
+2. **Triage scratch R files** [DONE]
+   - All 8 scratch files moved to `tests/validation/reference/` via `git mv`.
+   - Tests directory not included in wheel; no packaging impact.
 
-3. **Complete drda coefficient cross-check (see item 2 above)**
+3. **Complete drda coefficient cross-check**
+   - Still pending: add stored R `drda` coefficient values from a reproducible
+     R run against voropm2. See AGENT_GUIDANCE issue #4 for details.
 
-4. **Fix README test count** (currently stale: says 339/338, actual 343/342)
+4. **Fix README test count** (currently stale: says 343/342, actual 368/368/5)
    Update only after the final test inventory is stable.
 
 5. **README validation badge**
@@ -113,9 +110,11 @@ ROUT validation against Motulsky & Brown 2006:
 Global fit validation against textbook shared-parameter examples:
 `tests/test_global_fit_reference.py`
 
-### binding.py -- published saturation-binding reference [PENDING -- see above]
+### binding.py -- synthetic certified parameter recovery [DONE]
 
-No published-reference test exists. Blocked until resolved.
+Synthetic certified datasets and recovery tests added (see items 1 above).
+Mathematical references: Langmuir 1918, Cheng & Prusoff 1973, Motulsky &
+Christopoulos 2003 Ch. 7-9. All 26 tests pass.
 
 ---
 

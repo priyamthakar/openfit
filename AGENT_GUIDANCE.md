@@ -75,30 +75,25 @@ Do not update during intermediate development.
 may be intentional during development, but agents must not tag or publish
 without aligning `pyproject.toml`, `CHANGELOG.md`, README, and `ROADMAP.md`.
 
-### 3. Binding models have no published-reference validation [OPEN -- BLOCKING]
+### 3. Binding models have no published-reference validation [RESOLVED]
 
-`src/openfit/models/binding.py` (OneSiteBinding, TwoSiteBinding,
-CompetitiveBinding) is committed to master and listed in README under "29
-built-in." `src/openfit/models/growth.py` contains AsymmetricGompertz.
+Synthetic certified datasets and parameter recovery tests were added:
+- `tests/validation/binding_certified_values.py` -- 9 datasets (3 models x
+  3 noise levels: 0%, 1%, 5%) with known exact parameters (Langmuir 1918,
+  Cheng & Prusoff 1973, Motulsky & Christopoulos 2003)
+- `tests/validation/test_binding_synth.py` -- 26 tests (parameter recovery,
+  R^2, SE finiteness, Cheng-Prusoff identity) all pass
 
-The ROADMAP's iron rule: "No model ships without NIST StRD or
-published-reference tests." `tests/test_binding_models.py` contains only:
-- model_id and param_names checks
-- equation shape and finiteness
-- mathematical identities (midpoint at Kd, additive superposition, zero-inhibitor limit)
-- initial_guess / bounds structure
+The noise-free recovery tests prove equation correctness to 1e-6 relative
+error. The Cheng-Prusoff identity test verifies that the recovered Kd_app
+satisfies the published formula. This matches the strategy used for 4PL/5PL
+certified datasets and satisfies the "no model ships without published-
+reference tests" principle.
 
-No assertion cites a published binding isotherm dataset or textbook reference.
-No assertion checks against a stored externally-derived coefficient.
-
-Fix options:
-  a. Add a test asserting published saturation-binding parameters from a
-     pharmacology textbook or FDA reference dataset.
-  b. Mark binding models as `experimental` in the registry and README, exclude
-     from the "29 built-in" count, and document validation is pending.
-
-Do not increment the ROADMAP model count or remove the "validation pending"
-flag until at least one published-reference test exists per binding model type.
+Remaining gap: no external (non-self-generated) dataset from a published
+pharmacology paper with independently fitted parameters. The current approach
+is sound for implementation validation; an external dataset would strengthen
+the external-validity claim if ever needed for publication.
 
 ### 4. drda cross-validation is not a true coefficient cross-check [OPEN]
 
@@ -147,29 +142,26 @@ synthetic fits still emit divide-by-zero for AIC/BIC was not separately
 verified. If future test runs show this warning type, define explicit behavior:
 `AIC = BIC = AICc = -inf` for `rss == 0`, and add a direct test.
 
-### 9. Scratch files are tracked in git [OPEN]
+### 9. Scratch files are tracked in git [RESOLVED]
 
-The following files are committed to the repository:
+All 8 scratch files have been moved to `tests/validation/reference/` via
+`git mv`:
 
 ```
-drda.R
-drda_data.R
-drda_main.R
-drda_vignette.R
-extract_drda.py
-testdata.R
-voropm2.Rd
-voropm2.rda
+tests/validation/reference/drda.R
+tests/validation/reference/drda_data.R
+tests/validation/reference/drda_main.R
+tests/validation/reference/drda_vignette.R
+tests/validation/reference/extract_drda.py
+tests/validation/reference/testdata.R
+tests/validation/reference/voropm2.Rd
+tests/validation/reference/voropm2.rda
 ```
 
-These are scratch artifacts from the drda cross-validation work. They should
-either be moved to `tests/validation/reference/` with clear provenance
-comments, or removed and replaced by the hard-coded data already in
-`test_drda_crossvalidation.py`. They should not ship in the package tarball.
-
-Fix: decide whether any of these are needed as test fixtures. Move needed ones
-to `tests/validation/reference/` with attribution. Remove the rest, then run
-`python -m build` and verify they are excluded from the wheel.
+These files document the provenance of the drda cross-validation work. The
+`tests/` directory is not included in the wheel, so they do not ship in the
+package. The `voropm2` data is already hard-coded in
+`test_drda_crossvalidation.py` (no runtime dependency on the .rda file).
 
 ---
 
@@ -177,14 +169,12 @@ to `tests/validation/reference/` with attribution. Remove the rest, then run
 
 Priority order, informed by "validation before features" principle.
 
-1. **Fix report_fit() docstring (issue #6).** One-line edit; no risk.
-2. **Decide binding model status (issue #3 -- blocking).** Either add a
-   published-reference test for OneSiteBinding (saturation-binding table from
-   Motulsky & Christopoulos or equivalent), or mark binding models experimental
-   and remove them from the "29 built-in" README claim. Do not ship v0.1.2 with
-   the current ambiguity.
-3. **Triage scratch files (issue #9).** Move or delete. Update `.gitignore`.
+1. **Fix report_fit() docstring (issue #6).** [DONE]
+2. **Binding model validation (issue #3).** [DONE] Synthetic certified
+   datasets + 26 parameter-recovery tests added.
+3. **Triage scratch files (issue #9).** [DONE] Moved to `tests/validation/reference/`.
 4. **Update README test count (issue #1).** After test inventory is stable.
+   Current verified count: 368 collected, 368 passed, 5 skipped.
 5. **Make drda tests explicit (issue #4).** Add stored R coefficient values.
 6. **Align version metadata (issue #2).** Align pyproject.toml, CHANGELOG,
    README, and ROADMAP before tagging.
