@@ -11,6 +11,9 @@ Versioning follows [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 ### v0.1.1 -- Validation Suite Complete
 
 **Done:**
+- `FitResult.covariance` exposes the full parameter covariance matrix in
+  `model.param_names` order; singular Jacobians return a NaN-filled covariance
+  matrix and infinite standard errors.
 - NIST StRD nonlinear regression suite: all 27 datasets, 200 tests passing
   - Both NIST Start I (far) and Start II (close) recover certified parameters
     to >= 6 significant digits for all 27 datasets

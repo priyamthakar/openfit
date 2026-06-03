@@ -5,6 +5,7 @@ from __future__ import annotations
 import numpy as np
 
 from openfit import Fit
+from openfit.models.custom import CustomModel
 
 
 def test_covariance_shape_and_diagonal_4pl():
@@ -67,16 +68,21 @@ def test_covariance_shape_and_diagonal_5pl():
 
 def test_covariance_nan_on_singular_jacobian():
     """When Jacobian is singular, covariance should be NaN-filled matrix of correct shape."""
-    # Degenerate data: all y values identical, which can cause singular Jacobian
-    x = np.array([1.0, 2.0, 3.0, 4.0, 5.0])
-    y = np.array([10.0, 10.0, 10.0, 10.0, 10.0])
 
-    # This may succeed or fail depending on optimizer, but if it succeeds,
-    # covariance should still be valid or NaN-filled
-    try:
-        result = Fit("hill4p", x, y, weights="uniform").run()
-        # If it succeeds, check shape
-        assert result.covariance.shape == (4, 4)
-    except ValueError:
-        # Expected if optimization fails due to degenerate data
-        pass
+    def redundant_line(x: np.ndarray, a: float, b: float) -> np.ndarray:
+        return (a + b) * x
+
+    model = CustomModel(
+        model_id="redundant_line",
+        func=redundant_line,
+        param_names=["a", "b"],
+        initial_guess_func=lambda x, y: {"a": 1.0, "b": 1.0},
+    )
+    x = np.array([1.0, 2.0, 3.0, 4.0])
+    y = np.array([2.0, 4.0, 6.0, 8.0])
+
+    result = Fit(model, x, y, weights="uniform").run()
+
+    assert result.covariance.shape == (2, 2)
+    assert np.isnan(result.covariance).all()
+    assert all(np.isinf(value) for value in result.se.values())

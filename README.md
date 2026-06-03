@@ -5,7 +5,7 @@
 Reproducible, open-source nonlinear curve fitting with publication-quality reports.
 Every fit you can rerun, every result you can cite.
 
-> **Status:** v0.1.2 (in progress). 336 tests collected (335 passed, 1 skipped;
+> **Status:** v0.1.2 (in progress). 339 tests collected (338 passed, 1 skipped;
 > NIST StRD all 27 datasets, synthetic 4PL/5PL certified, published-reference
 > validation). PyPI publish planned for v0.1.2.
 
@@ -72,6 +72,9 @@ pip install "openfit[dev]"            # + development tools (pytest, ruff, mypy)
 
 ### Statistical output
 - Fitted parameters + asymptotic standard errors
+- Full parameter covariance matrix via `FitResult.covariance` in
+  `model.param_names` order; singular Jacobians return a NaN-filled matrix
+  and infinite standard errors
 - Confidence intervals: asymptotic, profile-likelihood, bootstrap (BCa)
 - R^2 (correct nonlinear definition), AICc, BIC, residuals (raw, weighted, standardized)
 - `FitSpec` reproducibility manifest: data SHA-256 hash, version pins, random seed
@@ -205,7 +208,7 @@ never imports openassay.
 git clone https://github.com/priyamthakar/openfit
 cd openfit
 pip install -e ".[dev]"
-pytest                              # 336 tests (335 passed, 1 skipped)
+pytest                              # 339 tests (338 passed, 1 skipped)
 pytest tests/validation/ -v        # NIST StRD suite
 ruff check src/ tests/ --fix
 mypy src/openfit
