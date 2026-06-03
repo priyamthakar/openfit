@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>openfit Fit Report -- {{ model_id }}</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+      font-size: 14px;
+      color: #1a202c;
+      background: #ffffff;
+      line-height: 1.6;
+    }
+    header {
+      background: #1e3a5f;
+      color: #ffffff;
+      padding: 24px 40px;
+    }
+    header h1 { font-size: 1.5rem; font-weight: 700; margin-bottom: 4px; }
+    header .subtitle { font-size: 0.875rem; opacity: 0.8; }
+    main { max-width: 960px; margin: 32px auto; padding: 0 24px; }
+    h2 {
+      font-size: 1.1rem;
+      font-weight: 600;
+      color: #1e3a5f;
+      border-bottom: 2px solid #e2e8f0;
+      padding-bottom: 6px;
+      margin: 32px 0 16px;
+    }
+    .plots { display: flex; flex-wrap: wrap; gap: 16px; margin-bottom: 8px; }
+    .plots img { max-width: 100%; border: 1px solid #e2e8f0; border-radius: 6px; }
+    .plot-full { flex: 1 1 100%; }
+    .plot-half { flex: 1 1 calc(50% - 8px); }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 13px;
+      margin-bottom: 8px;
+    }
+    th {
+      background: #1e3a5f;
+      color: #ffffff;
+      text-align: left;
+      padding: 8px 12px;
+      font-weight: 600;
+    }
+    td { padding: 7px 12px; border-bottom: 1px solid #e2e8f0; }
+    tr:nth-child(even) td { background: #f8fafc; }
+    tr:last-child td { border-bottom: none; }
+    details { margin-top: 8px; }
+    summary {
+      cursor: pointer;
+      font-weight: 600;
+      color: #2d6a9f;
+      padding: 4px 0;
+      user-select: none;
+    }
+    pre {
+      background: #f1f5f9;
+      border: 1px solid #e2e8f0;
+      border-radius: 4px;
+      padding: 16px;
+      overflow-x: auto;
+      font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
+      font-size: 12px;
+      margin-top: 8px;
+      white-space: pre-wrap;
+      word-break: break-all;
+    }
+    .disclaimer {
+      background: #fffbeb;
+      border-left: 4px solid #f59e0b;
+      padding: 12px 16px;
+      font-size: 12px;
+      color: #78350f;
+      margin: 32px 0 16px;
+      border-radius: 0 4px 4px 0;
+    }
+    footer {
+      text-align: center;
+      font-size: 12px;
+      color: #718096;
+      padding: 24px 0 32px;
+      border-top: 1px solid #e2e8f0;
+      margin-top: 40px;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>openfit Fit Report</h1>
+    <div class="subtitle">Model: {{ model_id }} &nbsp;|&nbsp; {{ timestamp }}</div>
+  </header>
+
+  <main>
+
+    <h2>Fit Overlay</h2>
+    <div class="plots">
+      {% if overlay_img %}
+        <img src="{{ overlay_img }}" alt="Fit overlay" class="plot-full">
+      {% else %}
+        <p class="plot-full">[Fit overlay plot unavailable]</p>
+      {% endif %}
+    </div>
+
+    <h2>Residual Diagnostics</h2>
+    <div class="plots">
+      {% if residual_img %}
+        <img src="{{ residual_img }}" alt="Residuals" class="plot-half">
+      {% else %}
+        <p class="plot-half">[Residual plot unavailable]</p>
+      {% endif %}
+      {% if qq_img %}
+        <img src="{{ qq_img }}" alt="Normal Q-Q" class="plot-half">
+      {% else %}
+        <p class="plot-half">[Q-Q plot unavailable]</p>
+      {% endif %}
+    </div>
+
+    <h2>Parameter Estimates</h2>
+    <table>
+      <thead>
+        <tr>
+          <th>Parameter</th>
+          <th>Value</th>
+          <th>SE</th>
+          <th>95% CI Lower</th>
+          <th>95% CI Upper</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for name, val in params.items() %}
+        {% set se_val = se.get(name) if se else none %}
+        {% set ci_entry = ci.get(name) if ci else none %}
+        <tr>
+          <td>{{ name }}</td>
+          <td>{{ "%.5g" | format(val) if val is not none else "N/A" }}</td>
+          <td>{{ "%.5g" | format(se_val) if se_val is not none else "N/A" }}</td>
+          <td>{{ "%.5g" | format(ci_entry[0]) if ci_entry else "N/A" }}</td>
+          <td>{{ "%.5g" | format(ci_entry[1]) if ci_entry else "N/A" }}</td>
+        </tr>
+        {% else %}
+        <tr><td colspan="5">No parameters available</td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+
+    <h2>Goodness of Fit</h2>
+    <table>
+      <thead>
+        <tr><th>Metric</th><th>Value</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>R^2</td><td>{{ "%.5g" | format(r_squared) if r_squared is not none else "N/A" }}</td></tr>
+        <tr><td>AICc</td><td>{{ "%.5g" | format(aicc) if aicc is not none else "N/A" }}</td></tr>
+        <tr><td>BIC</td><td>{{ "%.5g" | format(bic) if bic is not none else "N/A" }}</td></tr>
+        <tr><td>AIC</td><td>{{ "%.5g" | format(aic) if aic is not none else "N/A" }}</td></tr>
+        <tr><td>RSS</td><td>{{ "%.5g" | format(rss) if rss is not none else "N/A" }}</td></tr>
+        <tr><td>Observations (n)</td><td>{{ n_obs }}</td></tr>
+        <tr><td>Parameters (p)</td><td>{{ n_params }}</td></tr>
+        <tr><td>Degrees of freedom</td><td>{{ df }}</td></tr>
+        <tr><td>Weight scheme</td><td>{{ weight_scheme }}</td></tr>
+      </tbody>
+    </table>
+
+    <h2>Reproducibility Spec</h2>
+    <details>
+      <summary>FitSpec JSON (click to expand)</summary>
+      <pre>{{ spec_json }}</pre>
+    </details>
+
+    <div class="disclaimer">{{ disclaimer }}</div>
+
+  </main>
+
+  <footer>Generated by openfit &nbsp;|&nbsp; {{ timestamp }}</footer>
+</body>
+</html>
