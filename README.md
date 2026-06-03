@@ -191,8 +191,11 @@ openfit is domain-agnostic. It knows mathematics, not biology or pharmacology.
 Domain-specific logic (ELISA back-calculation, IC50 interpretation, PK parameters)
 belongs in downstream packages that import openfit.
 
-See also: `openassayflow` (planned) -- ELISA 4PL/5PL standard curves, FDA BMV
-acceptance criteria, ADA cut points.
+See also: [`openassay`](https://github.com/priyamthakar/openassay) -- the
+separate immunoassay and ligand-binding-assay workflow package for standard
+curves, back-calculation, LLOQ/ULOQ, acceptance criteria, plate workflows, ADA
+cut points, and regulatory-style reports. openassay imports openfit; openfit
+never imports openassay.
 
 ---
 
