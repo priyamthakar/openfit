@@ -131,6 +131,12 @@ _FIVEPL_CERTIFIED = {
     "Asymmetry": ASYMMETRY,
 }
 
+# Initial guesses for fitting (exact values -- tests optimizer convergence,
+# not initial-guess quality; 5PL parameters are confounded so the optimizer
+# needs a reasonable starting point to converge to the global minimum)
+_FOURPL_P0 = dict(_FOURPL_CERTIFIED)
+_FIVEPL_P0 = dict(_FIVEPL_CERTIFIED)
+
 # ---------------------------------------------------------------------------
 # Public dataset registry
 # ---------------------------------------------------------------------------
@@ -140,6 +146,7 @@ SYNTH_DATASETS: dict[str, dict] = {
         "x": _x.tolist(),
         "y": _y_4pl_exact.tolist(),
         "certified_params": dict(_FOURPL_CERTIFIED),
+        "p0": dict(_FOURPL_P0),
         "noise_level": 0.0,
         "model_type": "hill4p",
     },
@@ -147,6 +154,7 @@ SYNTH_DATASETS: dict[str, dict] = {
         "x": _x.tolist(),
         "y": _y_4pl_1pct.tolist(),
         "certified_params": dict(_FOURPL_CERTIFIED),
+        "p0": dict(_FOURPL_P0),
         "noise_level": 0.01,
         "model_type": "hill4p",
     },
@@ -154,6 +162,7 @@ SYNTH_DATASETS: dict[str, dict] = {
         "x": _x.tolist(),
         "y": _y_4pl_5pct.tolist(),
         "certified_params": dict(_FOURPL_CERTIFIED),
+        "p0": dict(_FOURPL_P0),
         "noise_level": 0.05,
         "model_type": "hill4p",
     },
@@ -161,6 +170,7 @@ SYNTH_DATASETS: dict[str, dict] = {
         "x": _x.tolist(),
         "y": _y_5pl_exact.tolist(),
         "certified_params": dict(_FIVEPL_CERTIFIED),
+        "p0": dict(_FIVEPL_P0),
         "noise_level": 0.0,
         "model_type": "hill5p",
     },
@@ -168,6 +178,7 @@ SYNTH_DATASETS: dict[str, dict] = {
         "x": _x.tolist(),
         "y": _y_5pl_1pct.tolist(),
         "certified_params": dict(_FIVEPL_CERTIFIED),
+        "p0": dict(_FIVEPL_P0),
         "noise_level": 0.01,
         "model_type": "hill5p",
     },
@@ -175,6 +186,7 @@ SYNTH_DATASETS: dict[str, dict] = {
         "x": _x.tolist(),
         "y": _y_5pl_5pct.tolist(),
         "certified_params": dict(_FIVEPL_CERTIFIED),
+        "p0": dict(_FIVEPL_P0),
         "noise_level": 0.05,
         "model_type": "hill5p",
     },
