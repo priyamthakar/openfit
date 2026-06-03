@@ -28,6 +28,13 @@ class FitResult:
         Asymptotic standard errors keyed by parameter name.
     ci : dict[str, tuple[float, float]]
         95% confidence intervals keyed by parameter name (asymptotic by default).
+    covariance : np.ndarray
+        Full parameter covariance matrix of shape (n_params, n_params).
+        Row/column order matches ``model.param_names`` (same order as
+        ``params`` dict iteration).  Computed as ``(J^T J)^{-1} * s^2``
+        where ``J`` is the weighted Jacobian at the solution and
+        ``s^2 = weighted_RSS / (n_obs - n_params)``.  Diagonal elements
+        equal ``se[name]**2``.
     r_squared : float
         Coefficient of determination R^2 = 1 - SS_res/SS_tot.
         For weighted fits both SS terms use the weight array.
@@ -71,6 +78,7 @@ class FitResult:
     params: dict[str, float]
     se: dict[str, float]
     ci: dict[str, tuple[float, float]]
+    covariance: np.ndarray
 
     # Goodness of fit
     r_squared: float

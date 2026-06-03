@@ -8,9 +8,10 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).parent.parent / "src"))
 
 import numpy as np
+import pytest
 
 from openfit import Fit
-from openfit.uncertainty import bootstrap_ci, profile_likelihood_ci
+from openfit.uncertainty import asymptotic_ci, bootstrap_ci, profile_likelihood_ci
 
 
 def _make_mm_result(n=30, seed=0):
@@ -39,6 +40,12 @@ def test_asymptotic_ci_contains_true_param() -> None:
     lo_km, hi_km = ci["Km"]
     assert lo_vmax <= 50.0 <= hi_vmax, f"True Vmax=50 not in CI [{lo_vmax:.3f}, {hi_vmax:.3f}]"
     assert lo_km <= 10.0 <= hi_km, f"True Km=10 not in CI [{lo_km:.3f}, {hi_km:.3f}]"
+
+
+def test_asymptotic_ci_rejects_non_finite_se() -> None:
+    """asymptotic_ci should reject NaN/Inf SE rather than returning infinite bounds."""
+    with pytest.raises(ValueError, match="not finite"):
+        asymptotic_ci({"theta": 1.0}, {"theta": float("inf")}, n_obs=5, n_params=1)
 
 
 # ---------------------------------------------------------------------------

@@ -135,8 +135,6 @@ class Fit:
             If x or y contain NaN or Inf (CLAUDE.md rule 8).
             If the number of observations is too small (n < n_params + 1).
             If scipy optimization fails to converge (status < 0).
-        RuntimeError
-            If the Jacobian is singular and covariance cannot be computed.
         """
         model = self._model
 
@@ -312,8 +310,7 @@ class Fit:
 
         try:
             jtj = J.T @ J
-            # Use pinv for slightly ill-conditioned systems; raises on hard singular
-            cov = np.linalg.pinv(jtj) * (rss_weighted / max(df, 1))
+            cov = np.linalg.inv(jtj) * (rss_weighted / max(df, 1))
             se_arr = np.sqrt(np.diag(cov))
             if not np.isfinite(se_arr).all():
                 raise np.linalg.LinAlgError("Non-finite SE from covariance diagonal.")
@@ -323,15 +320,19 @@ class Fit:
         except np.linalg.LinAlgError:
             # Singular Jacobian: model is overparameterized or data is degenerate
             se = {name: float("inf") for name in model.param_names}
+            cov = np.full((n_params, n_params), np.nan)
 
         # ----------------------------------------------------------------
-        # 10. Asymptotic confidence intervals (lazy import for future-proofing)
+        # 10. Asymptotic confidence intervals
         # ----------------------------------------------------------------
         try:
             from openfit.uncertainty import asymptotic_ci
 
             ci = asymptotic_ci(params, se, n_obs, n_params)
-        except (ImportError, ValueError):
+        except ValueError:
+            # Singular fit: SE is inf/nan, so CI is undefined
+            ci = {name: (float("nan"), float("nan")) for name in model.param_names}
+        except ImportError:
             # Fallback inline t-distribution CI if uncertainty module unavailable
             import scipy.stats as _stats
 
@@ -402,6 +403,7 @@ class Fit:
             params=params,
             se=se,
             ci=ci,
+            covariance=cov,
             r_squared=float(r_squared),
             aic=float(aic),
             bic=float(bic),

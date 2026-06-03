@@ -75,6 +75,7 @@ def asymptotic_ci(
     ------
     ValueError
         If n_obs <= n_params (no degrees of freedom for t-distribution).
+        If any standard error is NaN or Inf.
     """
     if n_obs <= n_params:
         raise ValueError(
@@ -88,6 +89,10 @@ def asymptotic_ci(
     ci: dict[str, tuple[float, float]] = {}
     for name, estimate in params.items():
         se_val = se.get(name, float("nan"))
+        if not np.isfinite(se_val):
+            raise ValueError(
+                f"Standard error for {name!r} is not finite; asymptotic CI is undefined."
+            )
         half_width = t_crit * se_val
         ci[name] = (estimate - half_width, estimate + half_width)
     return ci
@@ -136,6 +141,14 @@ def profile_likelihood_ci(
     se_fit = result.se
     param_names = list(params_fit.keys())
     n_obs = len(y)
+
+    for name in param_names:
+        se_val = se_fit.get(name, float("nan"))
+        if not np.isfinite(se_val):
+            raise ValueError(
+                f"Standard error for {name!r} is not finite; "
+                "profile-likelihood CI requires finite SE to define the search range."
+            )
 
     chi2_crit = float(stats.chi2.ppf(confidence, df=1))
     rss_min = _compute_rss(result._model, x, y, weights, params_fit)
