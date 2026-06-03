@@ -65,11 +65,11 @@ RSS_ABS_FLOOR = 1e-20  # only Lanczos1 is below this threshold
 #   precision gradients, replacing the default '2-point' forward differences.
 #   Valid for all CustomModel functions implemented with standard numpy ufuncs.
 _SOLVER_KWARGS = dict(
-    method="trf",       # required: x_scale='jac' and bounds are TRF-only features
+    method="trf",  # required: x_scale='jac' and bounds are TRF-only features
     xtol=1e-15,
     ftol=1e-15,
     gtol=1e-15,
-    x_scale="jac",     # Jacobian-based scaling -- critical for ill-conditioned problems
+    x_scale="jac",  # Jacobian-based scaling -- critical for ill-conditioned problems
     diff_method="cs",
     max_nfev=200000,
 )
@@ -84,6 +84,7 @@ PI = np.pi
 
 
 # ---- Lower difficulty -------------------------------------------------------
+
 
 def _misra1a(x: np.ndarray, b1: float, b2: float) -> np.ndarray:
     """Monomolecular adsorption.  y = b1*(1 - exp(-b2*x))"""
@@ -102,47 +103,57 @@ def _chwirut(x: np.ndarray, b1: float, b2: float, b3: float) -> np.ndarray:
 
 def _danwood(x: np.ndarray, b1: float, b2: float) -> np.ndarray:
     """Radiated energy power law.  y = b1 * x^b2"""
-    return b1 * (x ** b2)
+    return b1 * (x**b2)
 
 
-def _lanczos(x: np.ndarray, b1: float, b2: float, b3: float,
-             b4: float, b5: float, b6: float) -> np.ndarray:
+def _lanczos(
+    x: np.ndarray, b1: float, b2: float, b3: float, b4: float, b5: float, b6: float
+) -> np.ndarray:
     """Sum of three exponentials.  y = b1*exp(-b2*x) + b3*exp(-b4*x) + b5*exp(-b6*x)"""
-    return (b1 * np.exp(-b2 * x)
-            + b3 * np.exp(-b4 * x)
-            + b5 * np.exp(-b6 * x))
+    return b1 * np.exp(-b2 * x) + b3 * np.exp(-b4 * x) + b5 * np.exp(-b6 * x)
 
 
-def _gauss(x: np.ndarray, b1: float, b2: float, b3: float, b4: float,
-           b5: float, b6: float, b7: float, b8: float) -> np.ndarray:
+def _gauss(
+    x: np.ndarray,
+    b1: float,
+    b2: float,
+    b3: float,
+    b4: float,
+    b5: float,
+    b6: float,
+    b7: float,
+    b8: float,
+) -> np.ndarray:
     """Double Gaussian on exponential baseline.
     y = b1*exp(-b2*x) + b3*exp(-(x-b4)^2/b5^2) + b6*exp(-(x-b7)^2/b8^2)
     """
-    return (b1 * np.exp(-b2 * x)
-            + b3 * np.exp(-((x - b4) ** 2) / (b5 ** 2))
-            + b6 * np.exp(-((x - b7) ** 2) / (b8 ** 2)))
+    return (
+        b1 * np.exp(-b2 * x)
+        + b3 * np.exp(-((x - b4) ** 2) / (b5**2))
+        + b6 * np.exp(-((x - b7) ** 2) / (b8**2))
+    )
 
 
 # ---- Average difficulty -----------------------------------------------------
 
-def _kirby2(x: np.ndarray, b1: float, b2: float, b3: float,
-            b4: float, b5: float) -> np.ndarray:
+
+def _kirby2(x: np.ndarray, b1: float, b2: float, b3: float, b4: float, b5: float) -> np.ndarray:
     """SEM line width rational.  y = (b1 + b2*x + b3*x^2) / (1 + b4*x + b5*x^2)"""
-    return (b1 + b2 * x + b3 * x ** 2) / (1.0 + b4 * x + b5 * x ** 2)
+    return (b1 + b2 * x + b3 * x**2) / (1.0 + b4 * x + b5 * x**2)
 
 
-def _hahn1(x: np.ndarray, b1: float, b2: float, b3: float, b4: float,
-           b5: float, b6: float, b7: float) -> np.ndarray:
+def _hahn1(
+    x: np.ndarray, b1: float, b2: float, b3: float, b4: float, b5: float, b6: float, b7: float
+) -> np.ndarray:
     """Thermal expansion of copper (cubic/cubic rational).
     y = (b1 + b2*x + b3*x^2 + b4*x^3) / (1 + b5*x + b6*x^2 + b7*x^3)
     """
-    num = b1 + b2 * x + b3 * x ** 2 + b4 * x ** 3
-    den = 1.0 + b5 * x + b6 * x ** 2 + b7 * x ** 3
+    num = b1 + b2 * x + b3 * x**2 + b4 * x**3
+    den = 1.0 + b5 * x + b6 * x**2 + b7 * x**3
     return num / den
 
 
-def _mgh17(x: np.ndarray, b1: float, b2: float, b3: float,
-           b4: float, b5: float) -> np.ndarray:
+def _mgh17(x: np.ndarray, b1: float, b2: float, b3: float, b4: float, b5: float) -> np.ndarray:
     """MGH #17 sum of exponentials.  y = b1 + b2*exp(-x*b4) + b3*exp(-x*b5)"""
     return b1 + b2 * np.exp(-x * b4) + b3 * np.exp(-x * b5)
 
@@ -157,35 +168,46 @@ def _misra1d(x: np.ndarray, b1: float, b2: float) -> np.ndarray:
     return b1 * b2 * x * ((1.0 + b2 * x) ** (-1.0))
 
 
-def _roszman1(x: np.ndarray, b1: float, b2: float, b3: float,
-              b4: float) -> np.ndarray:
+def _roszman1(x: np.ndarray, b1: float, b2: float, b3: float, b4: float) -> np.ndarray:
     """Quantum defects.  y = b1 - b2*x - arctan(b3/(x-b4))/pi"""
     return b1 - b2 * x - np.arctan(b3 / (x - b4)) / PI
 
 
-def _enso(x: np.ndarray, b1: float, b2: float, b3: float, b4: float,
-          b5: float, b6: float, b7: float, b8: float, b9: float) -> np.ndarray:
+def _enso(
+    x: np.ndarray,
+    b1: float,
+    b2: float,
+    b3: float,
+    b4: float,
+    b5: float,
+    b6: float,
+    b7: float,
+    b8: float,
+    b9: float,
+) -> np.ndarray:
     """El Nino / Southern Oscillation (3 Fourier cycles).
     y = b1 + b2*cos(2*pi*x/12) + b3*sin(2*pi*x/12)
            + b5*cos(2*pi*x/b4)  + b6*sin(2*pi*x/b4)
            + b8*cos(2*pi*x/b7)  + b9*sin(2*pi*x/b7)
     """
     two_pi = 2.0 * PI
-    return (b1
-            + b2 * np.cos(two_pi * x / 12.0)
-            + b3 * np.sin(two_pi * x / 12.0)
-            + b5 * np.cos(two_pi * x / b4)
-            + b6 * np.sin(two_pi * x / b4)
-            + b8 * np.cos(two_pi * x / b7)
-            + b9 * np.sin(two_pi * x / b7))
+    return (
+        b1
+        + b2 * np.cos(two_pi * x / 12.0)
+        + b3 * np.sin(two_pi * x / 12.0)
+        + b5 * np.cos(two_pi * x / b4)
+        + b6 * np.sin(two_pi * x / b4)
+        + b8 * np.cos(two_pi * x / b7)
+        + b9 * np.sin(two_pi * x / b7)
+    )
 
 
 # ---- Higher difficulty ------------------------------------------------------
 
-def _mgh09(x: np.ndarray, b1: float, b2: float, b3: float,
-           b4: float) -> np.ndarray:
+
+def _mgh09(x: np.ndarray, b1: float, b2: float, b3: float, b4: float) -> np.ndarray:
     """MGH #9 rational.  y = b1*(x^2 + x*b2) / (x^2 + x*b3 + b4)"""
-    return b1 * (x ** 2 + x * b2) / (x ** 2 + x * b3 + b4)
+    return b1 * (x**2 + x * b2) / (x**2 + x * b3 + b4)
 
 
 def _mgh10(x: np.ndarray, b1: float, b2: float, b3: float) -> np.ndarray:
@@ -193,13 +215,14 @@ def _mgh10(x: np.ndarray, b1: float, b2: float, b3: float) -> np.ndarray:
     return b1 * np.exp(b2 / (x + b3))
 
 
-def _thurber(x: np.ndarray, b1: float, b2: float, b3: float, b4: float,
-             b5: float, b6: float, b7: float) -> np.ndarray:
+def _thurber(
+    x: np.ndarray, b1: float, b2: float, b3: float, b4: float, b5: float, b6: float, b7: float
+) -> np.ndarray:
     """Semiconductor electron mobility (cubic/cubic rational).
     y = (b1 + b2*x + b3*x^2 + b4*x^3) / (1 + b5*x + b6*x^2 + b7*x^3)
     """
-    num = b1 + b2 * x + b3 * x ** 2 + b4 * x ** 3
-    den = 1.0 + b5 * x + b6 * x ** 2 + b7 * x ** 3
+    num = b1 + b2 * x + b3 * x**2 + b4 * x**3
+    den = 1.0 + b5 * x + b6 * x**2 + b7 * x**3
     return num / den
 
 
@@ -213,8 +236,7 @@ def _rat42(x: np.ndarray, b1: float, b2: float, b3: float) -> np.ndarray:
     return b1 / (1.0 + np.exp(b2 - b3 * x))
 
 
-def _rat43(x: np.ndarray, b1: float, b2: float, b3: float,
-           b4: float) -> np.ndarray:
+def _rat43(x: np.ndarray, b1: float, b2: float, b3: float, b4: float) -> np.ndarray:
     """Onion growth 4-parameter logistic.
     y = b1 / ((1 + exp(b2 - b3*x))^(1/b4))
     """
@@ -241,8 +263,10 @@ def _bennett5(x: np.ndarray, b1: float, b2: float, b3: float) -> np.ndarray:
 # wrapper below passes log(y_obs) as the response.
 # ---------------------------------------------------------------------------
 
-def _nelson_logspace(x1: np.ndarray, b1: float, b2: float, b3: float,
-                     *, x2: np.ndarray) -> np.ndarray:
+
+def _nelson_logspace(
+    x1: np.ndarray, b1: float, b2: float, b3: float, *, x2: np.ndarray
+) -> np.ndarray:
     """Nelson dielectric breakdown in log-y space.
     log[y] = b1 - b2*x1 * exp(-b3*x2)
     """
@@ -263,20 +287,23 @@ def _nelson_logspace(x1: np.ndarray, b1: float, b2: float, b3: float,
 # ---------------------------------------------------------------------------
 
 
-def _hahn1_jac(x: np.ndarray, b1: float, b2: float, b3: float, b4: float,
-               b5: float, b6: float, b7: float) -> np.ndarray:
+def _hahn1_jac(
+    x: np.ndarray, b1: float, b2: float, b3: float, b4: float, b5: float, b6: float, b7: float
+) -> np.ndarray:
     """Analytic Jacobian of Hahn1: d(y_pred)/d(b_j) for j=1..7."""
-    den = 1.0 + b5 * x + b6 * x ** 2 + b7 * x ** 3
-    f = (b1 + b2 * x + b3 * x ** 2 + b4 * x ** 3) / den
-    return np.column_stack([
-        np.ones_like(x) / den,  # df/db1
-        x / den,                # df/db2
-        x ** 2 / den,           # df/db3
-        x ** 3 / den,           # df/db4
-        -f * x / den,           # df/db5
-        -f * x ** 2 / den,      # df/db6
-        -f * x ** 3 / den,      # df/db7
-    ])
+    den = 1.0 + b5 * x + b6 * x**2 + b7 * x**3
+    f = (b1 + b2 * x + b3 * x**2 + b4 * x**3) / den
+    return np.column_stack(
+        [
+            np.ones_like(x) / den,  # df/db1
+            x / den,  # df/db2
+            x**2 / den,  # df/db3
+            x**3 / den,  # df/db4
+            -f * x / den,  # df/db5
+            -f * x**2 / den,  # df/db6
+            -f * x**3 / den,  # df/db7
+        ]
+    )
 
 
 class _AnalyticJacModel(CustomModel):
@@ -310,31 +337,31 @@ class _AnalyticJacModel(CustomModel):
 # Nelson and Hahn1 have special handling in _run_fit (log-y space / analytic Jacobian).
 # BoxBOD has bounds applied in _run_fit.
 _MODEL_REGISTRY: dict[str, Callable] = {
-    "Misra1a":  _misra1a,
-    "Misra1b":  _misra1b,
+    "Misra1a": _misra1a,
+    "Misra1b": _misra1b,
     "Chwirut1": _chwirut,
     "Chwirut2": _chwirut,
     "Lanczos3": _lanczos,
-    "Gauss1":   _gauss,
-    "Gauss2":   _gauss,
-    "DanWood":  _danwood,
-    "Kirby2":   _kirby2,
-    "Hahn1":    _hahn1,    # uses analytic Jacobian -- see _run_fit
-    "Nelson":   _nelson_logspace,  # 2 predictors, log-y space -- see _run_fit
-    "MGH17":    _mgh17,
+    "Gauss1": _gauss,
+    "Gauss2": _gauss,
+    "DanWood": _danwood,
+    "Kirby2": _kirby2,
+    "Hahn1": _hahn1,  # uses analytic Jacobian -- see _run_fit
+    "Nelson": _nelson_logspace,  # 2 predictors, log-y space -- see _run_fit
+    "MGH17": _mgh17,
     "Lanczos1": _lanczos,
     "Lanczos2": _lanczos,
-    "Gauss3":   _gauss,
-    "Misra1c":  _misra1c,
-    "Misra1d":  _misra1d,
+    "Gauss3": _gauss,
+    "Misra1c": _misra1c,
+    "Misra1d": _misra1d,
     "Roszman1": _roszman1,
-    "ENSO":     _enso,
-    "MGH09":    _mgh09,
-    "MGH10":    _mgh10,
-    "Thurber":  _thurber,
-    "BoxBOD":   _boxbod,   # physical bounds applied -- see _run_fit
-    "Rat42":    _rat42,
-    "Rat43":    _rat43,
+    "ENSO": _enso,
+    "MGH09": _mgh09,
+    "MGH10": _mgh10,
+    "Thurber": _thurber,
+    "BoxBOD": _boxbod,  # physical bounds applied -- see _run_fit
+    "Rat42": _rat42,
+    "Rat43": _rat43,
     "Eckerle4": _eckerle4,
     "Bennett5": _bennett5,
 }
@@ -372,9 +399,7 @@ def _run_fit(name: str, start: dict[str, float], dataset: dict) -> object:
         # finite-difference and complex-step Jacobians divert the optimizer into
         # a nearby local minimum that differs from the NIST certified solution by
         # < 0.5% in RSS but > 5e-3 in parameter values.
-        model = _AnalyticJacModel(
-            model_id="hahn1", func=_hahn1, jac_func=_hahn1_jac
-        )
+        model = _AnalyticJacModel(model_id="hahn1", func=_hahn1, jac_func=_hahn1_jac)
         return Fit(model, x, y, weights="uniform", p0=start, **_SOLVER_KWARGS).run()
 
     if name == "BoxBOD":
@@ -383,7 +408,8 @@ def _run_fit(name: str, start: dict[str, float], dataset: dict) -> object:
         # Physical bounds (b2 in (0, 10]) prevent this region and recover the
         # certified solution from both start sets.
         model = CustomModel(
-            model_id="boxbod", func=_boxbod,
+            model_id="boxbod",
+            func=_boxbod,
             bounds_dict={"b1": (0.0, np.inf), "b2": (0.0, 10.0)},
         )
         return Fit(model, x, y, weights="uniform", p0=start, **_SOLVER_KWARGS).run()
@@ -436,6 +462,7 @@ def _check_rss(
 # ---------------------------------------------------------------------------
 # Parametrize helpers
 # ---------------------------------------------------------------------------
+
 
 def _dataset_params(start_key: str) -> list[tuple[str, dict]]:
     """Return (name, dataset_dict) pairs for pytest.mark.parametrize.
@@ -490,9 +517,8 @@ def test_nist_start1(dataset_name: str, dataset: dict) -> None:
 
     all_failures = param_failures + ([rss_failure] if rss_failure else [])
     if all_failures:
-        msg = (
-            f"Dataset: {dataset_name} (Start I = far initial values)\n"
-            + "\n".join(f"  {f}" for f in all_failures)
+        msg = f"Dataset: {dataset_name} (Start I = far initial values)\n" + "\n".join(
+            f"  {f}" for f in all_failures
         )
         pytest.fail(msg)
 
@@ -515,9 +541,8 @@ def test_nist_start2(dataset_name: str, dataset: dict) -> None:
 
     all_failures = param_failures + ([rss_failure] if rss_failure else [])
     if all_failures:
-        msg = (
-            f"Dataset: {dataset_name} (Start II = close initial values)\n"
-            + "\n".join(f"  {f}" for f in all_failures)
+        msg = f"Dataset: {dataset_name} (Start II = close initial values)\n" + "\n".join(
+            f"  {f}" for f in all_failures
         )
         pytest.fail(msg)
 
@@ -586,7 +611,7 @@ def _eval_model_at_cert(name: str, dataset: dict) -> float:
 @pytest.mark.parametrize(
     "dataset_name,dataset",
     _DATA_SANITY_PARAMS,
-    ids=[f"{n}[{d.get('difficulty','?')[0]}]" for n, d in _DATA_SANITY_PARAMS],
+    ids=[f"{n}[{d.get('difficulty', '?')[0]}]" for n, d in _DATA_SANITY_PARAMS],
 )
 def test_nist_data_sanity(dataset_name: str, dataset: dict) -> None:
     """Model evaluated at certified params must reproduce the certified RSS.

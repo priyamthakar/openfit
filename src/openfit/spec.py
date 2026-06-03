@@ -44,7 +44,7 @@ def build_spec(
     x: np.ndarray,
     y: np.ndarray,
     random_seed: int = 0,
-) -> "FitSpec":
+) -> FitSpec:
     """Convenience factory that auto-populates version strings and timestamp.
 
     Parameters
@@ -124,9 +124,7 @@ class FitSpec:
     scipy_version: str
     numpy_version: str
     random_seed: int
-    timestamp: str = field(
-        default_factory=lambda: datetime.now(timezone.utc).isoformat()
-    )
+    timestamp: str = field(default_factory=lambda: datetime.now(timezone.utc).isoformat())
 
     # ------------------------------------------------------------------
     # Serialisation
@@ -151,7 +149,7 @@ class FitSpec:
         return json.dumps(raw, indent=2)
 
     @classmethod
-    def from_json(cls, s: str) -> "FitSpec":
+    def from_json(cls, s: str) -> FitSpec:
         """Deserialise from a JSON string produced by :meth:`to_json`.
 
         ``param_values`` string representations are converted back to

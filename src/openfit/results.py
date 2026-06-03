@@ -4,12 +4,13 @@
 from __future__ import annotations
 
 from dataclasses import dataclass, field
-from typing import TYPE_CHECKING, Any
+from typing import TYPE_CHECKING
 
 import numpy as np
 
 if TYPE_CHECKING:
     import matplotlib.figure
+
     from openfit.models.base import BaseModel
     from openfit.outliers import ROUTResult
     from openfit.spec import FitSpec
@@ -91,14 +92,14 @@ class FitResult:
     n_params: int
     model_id: str
     weight_scheme: str
-    spec: "FitSpec"
+    spec: FitSpec
 
     # Private fields used by uncertainty and plotting helpers
-    _model: "BaseModel" = field(repr=False, compare=False)
+    _model: BaseModel = field(repr=False, compare=False)
     _weights: np.ndarray = field(repr=False, compare=False)
-    
+
     # Optional ROUT outlier detection result
-    rout_result: "ROUTResult | None" = field(default=None, repr=False, compare=False)
+    rout_result: ROUTResult | None = field(default=None, repr=False, compare=False)
 
     # ------------------------------------------------------------------
     # summary()
@@ -154,7 +155,7 @@ class FitResult:
         log_x: bool = False,
         xlabel: str = "x",
         ylabel: str = "y",
-    ) -> "matplotlib.figure.Figure":
+    ) -> matplotlib.figure.Figure:
         """Return a fit overlay figure (observed data + fitted curve).
 
         Parameters
@@ -192,7 +193,7 @@ class FitResult:
         path : str
             Output file path (e.g. "fit_result.html").
         fmt : str
-            Output format: "html" or "markdown".  Default "html".
+            Output format: "html", "markdown", "pdf", or "docx". Default "html".
 
         Raises
         ------
@@ -200,13 +201,11 @@ class FitResult:
             If the openfit.report module has not been installed (it requires the
             [reports] optional-dependency group).
         ValueError
-            If fmt is not "html" or "markdown".
+            If fmt is not "html", "markdown", "pdf", or "docx".
         """
-        _valid = {"html", "markdown"}
+        _valid = {"html", "markdown", "pdf", "docx"}
         if fmt not in _valid:
-            raise ValueError(
-                f"fmt must be one of {sorted(_valid)}, got {fmt!r}."
-            )
+            raise ValueError(f"fmt must be one of {sorted(_valid)}, got {fmt!r}.")
 
         try:
             from openfit.report import report_fit  # type: ignore[import]

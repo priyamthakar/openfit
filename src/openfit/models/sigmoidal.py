@@ -337,7 +337,7 @@ class Hill4P:
         ec50_safe = ec50 if ec50 != 0.0 else _X_EPS
         log_ratio = np.log(np.abs(ec50_safe)) - np.log(np.abs(x_safe))
 
-        d_bottom = ratio * inv_1pr                           # R/(1+R) = 1 - 1/(1+R)
+        d_bottom = ratio * inv_1pr  # R/(1+R) = 1 - 1/(1+R)
         d_top = inv_1pr
         d_ec50 = -span * slope * ratio / (ec50_safe * denom)
         d_slope = -span * ratio * log_ratio / denom
@@ -533,10 +533,7 @@ class Boltzmann:
         # Rough slope from data range.
         x_range = float(np.ptp(x))
         y_range = top - bottom
-        if x_range > 0 and y_range > 0:
-            slope_est = x_range / 4.0
-        else:
-            slope_est = 1.0
+        slope_est = x_range / 4.0 if x_range > 0 and y_range > 0 else 1.0
         return {"Bottom": bottom, "Top": top, "V50": v50, "Slope": slope_est}
 
     def bounds(self) -> tuple[list[float], list[float]]:

@@ -13,11 +13,12 @@ register_model(model)    -- add a model to the registry
 from __future__ import annotations
 
 from openfit.models.base import BaseModel
+from openfit.models.binding import CompetitiveBinding, OneSiteBinding, TwoSiteBinding
 from openfit.models.custom import CustomModel
 from openfit.models.enzyme import Allosteric, MichaelisMenten, SubstrateInhibition
 from openfit.models.exponential import BiExp, ExpDecay, ExpGrowth, ExpPlateau, MonoExp
 from openfit.models.gaussian import BiGaussian, Gaussian, Lorentzian
-from openfit.models.growth import Gompertz, Logistic3P, Logistic4P, Richards
+from openfit.models.growth import AsymmetricGompertz, Gompertz, Logistic3P, Logistic4P, Richards
 from openfit.models.polynomial import Poly1, Poly2, Poly3, Poly4, Poly5, Poly6
 from openfit.models.sigmoidal import Boltzmann, Hill3P, Hill4P, Hill5P
 
@@ -40,6 +41,7 @@ __all__ = [
     "SubstrateInhibition",
     "Allosteric",
     # Growth
+    "AsymmetricGompertz",
     "Logistic3P",
     "Logistic4P",
     "Gompertz",
@@ -55,6 +57,10 @@ __all__ = [
     "Poly4",
     "Poly5",
     "Poly6",
+    # Binding
+    "OneSiteBinding",
+    "TwoSiteBinding",
+    "CompetitiveBinding",
     # Custom
     "CustomModel",
     # Registry API
@@ -87,6 +93,7 @@ def _register_defaults() -> None:
         Allosteric,
         Logistic3P,
         Logistic4P,
+        AsymmetricGompertz,
         Gompertz,
         Richards,
         Gaussian,
@@ -98,6 +105,9 @@ def _register_defaults() -> None:
         Poly4,
         Poly5,
         Poly6,
+        OneSiteBinding,
+        TwoSiteBinding,
+        CompetitiveBinding,
     ]
     for cls in built_ins:
         instance = cls()  # type: ignore[call-arg]
@@ -135,10 +145,7 @@ def get_model(model_id: str) -> BaseModel:
         return _REGISTRY[key]
     except KeyError:
         available = ", ".join(sorted(_REGISTRY.keys()))
-        raise KeyError(
-            f"Unknown model ID: {model_id!r}. "
-            f"Available models: {available}"
-        ) from None
+        raise KeyError(f"Unknown model ID: {model_id!r}. Available models: {available}") from None
 
 
 def list_models() -> list[str]:
@@ -171,7 +178,5 @@ def register_model(model: BaseModel) -> None:
         If *model* does not satisfy the BaseModel Protocol.
     """
     if not isinstance(model, BaseModel):
-        raise TypeError(
-            f"model must satisfy the BaseModel Protocol, got {type(model)!r}."
-        )
+        raise TypeError(f"model must satisfy the BaseModel Protocol, got {type(model)!r}.")
     _REGISTRY[model.model_id] = model

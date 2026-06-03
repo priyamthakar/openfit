@@ -1,11 +1,13 @@
 # openfit
 
+![CI](https://github.com/priyamthakar/openfit/actions/workflows/ci.yml/badge.svg)
+
 Reproducible, open-source nonlinear curve fitting with publication-quality reports.
 Every fit you can rerun, every result you can cite.
 
-> **Status:** v0.1.1 (in progress). 264 tests passing (NIST StRD all 27 datasets,
-> synthetic 4PL/5PL certified, published-reference validation). PyPI publish
-> planned for v0.1.2.
+> **Status:** v0.1.2 (in progress). 336 tests collected (335 passed, 1 skipped;
+> NIST StRD all 27 datasets, synthetic 4PL/5PL certified, published-reference
+> validation). PyPI publish planned for v0.1.2.
 
 ---
 
@@ -38,7 +40,7 @@ result.spec.to_json("fit_spec.json")  # reproducibility manifest
 ```bash
 pip install openfit                   # core engine + models + reports
 pip install "openfit[cli]"            # + CLI (typer, rich)
-pip install "openfit[reports]"        # + PDF reports (reportlab, jinja2)
+pip install "openfit[reports]"        # + PDF & DOCX reports (reportlab, jinja2, python-docx)
 pip install "openfit[dev]"            # + development tools (pytest, ruff, mypy)
 ```
 
@@ -55,16 +57,17 @@ pip install "openfit[dev]"            # + development tools (pytest, ruff, mypy)
 - Smart per-model initial guesses from data-driven heuristics
 - Analytic Jacobian where available; finite-difference fallback
 
-### Models (25 built-in)
+### Models (29 built-in)
 
 | Family | Models |
 |--------|--------|
 | Sigmoidal | Hill3P, Hill4P (4PL), Hill5P (5PL), Boltzmann |
 | Exponential | MonoExp, BiExp, ExpGrowth, ExpPlateau, ExpDecay |
 | Enzyme | MichaelisMenten, SubstrateInhibition, Allosteric |
-| Growth | Logistic3P, Logistic4P, Gompertz, Richards |
+| Growth | Logistic3P, Logistic4P, Gompertz, AsymmetricGompertz, Richards |
 | Gaussian | Gaussian, BiGaussian, Lorentzian |
 | Polynomial | Poly1 through Poly6 |
+| Binding | OneSiteBinding, TwoSiteBinding, CompetitiveBinding |
 | Custom | CustomModel (any callable; param names inferred from signature) |
 
 ### Statistical output
@@ -178,7 +181,7 @@ spec = FitSpec.from_json(open("my_fit.spec.json").read())
 | ROUT outlier removal | Yes | No | No |
 | Reproducibility spec | Yes (unique) | No | No |
 | NIST validation | Published | No | Not published |
-| Publication report | HTML + Markdown | No | No |
+| Publication report | HTML + Markdown + PDF + DOCX | No | No |
 
 ---
 
@@ -199,7 +202,7 @@ acceptance criteria, ADA cut points.
 git clone https://github.com/priyamthakar/openfit
 cd openfit
 pip install -e ".[dev]"
-pytest                              # 200 tests
+pytest                              # 336 tests (335 passed, 1 skipped)
 pytest tests/validation/ -v        # NIST StRD suite
 ruff check src/ tests/ --fix
 mypy src/openfit

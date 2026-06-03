@@ -2,7 +2,6 @@
 
 from __future__ import annotations
 
-import json
 import sys
 from pathlib import Path
 
@@ -11,15 +10,14 @@ sys.path.insert(0, str(Path(__file__).parent.parent / "src"))
 import numpy as np
 import pytest
 
-from openfit.spec import FitSpec, compute_data_hash, build_spec
-
+from openfit.spec import FitSpec, build_spec, compute_data_hash
 
 # ---------------------------------------------------------------------------
 # compute_data_hash
 # ---------------------------------------------------------------------------
 
 
-def test_data_hash_deterministic():
+def test_data_hash_deterministic() -> None:
     """Same x, y arrays always produce the same SHA-256 hash."""
     x = np.array([1.0, 2.0, 3.0])
     y = np.array([4.0, 5.0, 6.0])
@@ -29,7 +27,7 @@ def test_data_hash_deterministic():
     assert len(h1) == 64  # 256-bit hex digest
 
 
-def test_data_hash_changes_on_data_change():
+def test_data_hash_changes_on_data_change() -> None:
     """Mutating any value in the arrays changes the hash."""
     x = np.array([1.0, 2.0, 3.0])
     y = np.array([4.0, 5.0, 6.0])
@@ -46,7 +44,7 @@ def test_data_hash_changes_on_data_change():
 # ---------------------------------------------------------------------------
 
 
-def test_to_json_roundtrip():
+def test_to_json_roundtrip() -> None:
     """FitSpec -> to_json() -> from_json() reconstructs identical object."""
     spec = build_spec(
         model_id="hill4p",
@@ -66,7 +64,7 @@ def test_to_json_roundtrip():
     assert spec2.param_values == spec.param_values
 
 
-def test_param_values_float_lossless():
+def test_param_values_float_lossless() -> None:
     """A float param value survives JSON round-trip with exact precision (repr trick)."""
     tricky_float = 1.0 / 3.0  # not exactly representable in decimal
     spec = FitSpec(
@@ -85,7 +83,9 @@ def test_param_values_float_lossless():
     assert spec2.param_values["a"] == tricky_float
 
 
-def test_from_json_invalid_raises():
+def test_from_json_invalid_raises() -> None:
     """Malformed JSON raises an error (JSONDecodeError or similar)."""
-    with pytest.raises(Exception):
+    import json
+
+    with pytest.raises(json.JSONDecodeError):
         FitSpec.from_json("{not valid json }")

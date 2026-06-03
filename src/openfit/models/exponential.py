@@ -197,9 +197,7 @@ class BiExp:
         span_slow = params["Span_slow"]
         k_slow = params["k_slow"]
         return np.asarray(
-            plateau
-            + span_fast * _safe_exp(-k_fast * x)
-            + span_slow * _safe_exp(-k_slow * x)
+            plateau + span_fast * _safe_exp(-k_fast * x) + span_slow * _safe_exp(-k_slow * x)
         )
 
     def initial_guess(self, x: np.ndarray, y: np.ndarray) -> dict[str, float]:
@@ -315,10 +313,7 @@ class ExpGrowth:
         pos = y[y > 0]
         y0 = float(y[0]) if y[0] > 0 else (float(pos[0]) if pos.size > 0 else 1.0)
         x_range = float(np.ptp(x))
-        if x_range > 0 and pos.size >= 2:
-            k = float(np.log(pos[-1] / pos[0]) / x_range)
-        else:
-            k = 1.0
+        k = float(np.log(pos[-1] / pos[0]) / x_range) if x_range > 0 and pos.size >= 2 else 1.0
         k = max(abs(k), 1e-10)
         return {"Y0": y0, "k": k}
 

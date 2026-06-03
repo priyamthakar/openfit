@@ -81,7 +81,7 @@ def _decide_log_x(x: Any) -> bool:
 # ---------------------------------------------------------------------------
 
 
-def _build_context(result: "FitResult") -> dict[str, Any]:
+def _build_context(result: FitResult) -> dict[str, Any]:
     """Build the template context dict from a FitResult.
 
     Parameters
@@ -95,7 +95,13 @@ def _build_context(result: "FitResult") -> dict[str, Any]:
         Context dict consumed by both the Jinja2 template and the
         pure-Python fallback renderer.
     """
-    from openfit.plotting import figure_to_base64, fit_overlay_plot, qq_plot, residual_plot, rout_outlier_plot
+    from openfit.plotting import (
+        figure_to_base64,
+        fit_overlay_plot,
+        qq_plot,
+        residual_plot,
+        rout_outlier_plot,
+    )
 
     log_x = _decide_log_x(result.x)
 
@@ -127,7 +133,7 @@ def _build_context(result: "FitResult") -> dict[str, Any]:
             model_obj = getattr(result, "_model", None)
             model_equation = model_obj.equation if model_obj else None
             model_params = result.params if model_obj else None
-            
+
             rout_fig = rout_outlier_plot(
                 result.x,
                 result.y,
@@ -138,14 +144,20 @@ def _build_context(result: "FitResult") -> dict[str, Any]:
             rout_img = figure_to_base64(rout_fig)
         except Exception:
             rout_img = ""
-        
+
         # Build ROUT summary
         rout_summary = {
             "n_total": len(result.x),
             "n_outliers": int(rout_result.n_outliers),
             "Q": float(rout_result.Q),
-            "outlier_indices": rout_result.outlier_indices.tolist() if hasattr(rout_result.outlier_indices, 'tolist') else list(rout_result.outlier_indices),
-            "outlier_x_values": result.x[rout_result.outlier_mask].tolist() if rout_result.n_outliers > 0 else [],
+            "outlier_indices": (
+                rout_result.outlier_indices.tolist()
+                if hasattr(rout_result.outlier_indices, "tolist")
+                else list(rout_result.outlier_indices)
+            ),
+            "outlier_x_values": (
+                result.x[rout_result.outlier_mask].tolist() if rout_result.n_outliers > 0 else []
+            ),
         }
 
     # --- spec JSON ---
@@ -358,29 +370,29 @@ def _render_html_fallback(ctx: dict[str, Any]) -> str:
     rout_summary = ctx.get("rout_summary", {})
     if rout_summary:
         rout_img_tag = img_tag(rout_img, "ROUT Outlier Detection", "plot-full")
-        
+
         # Build outlier summary table
         n_total = rout_summary.get("n_total", 0)
         n_outliers = rout_summary.get("n_outliers", 0)
         q_param = rout_summary.get("Q", 0.0)
         outlier_indices = rout_summary.get("outlier_indices", [])
         outlier_x_values = rout_summary.get("outlier_x_values", [])
-        
+
         rout_table_rows = f"<tr><td>Total points</td><td>{n_total}</td></tr>"
         rout_table_rows += f"<tr><td>Flagged outliers</td><td>{n_outliers}</td></tr>"
-        rout_table_rows += f"<tr><td>Q parameter</td><td>{q_param*100:.1f}%</td></tr>"
-        
+        rout_table_rows += f"<tr><td>Q parameter</td><td>{q_param * 100:.1f}%</td></tr>"
+
         if outlier_indices:
             idx_str = ", ".join(str(i) for i in outlier_indices[:20])
             if len(outlier_indices) > 20:
                 idx_str += f"... ({len(outlier_indices)} total)"
             rout_table_rows += f"<tr><td>Outlier indices</td><td>{idx_str}</td></tr>"
-            
+
             x_str = ", ".join(f"{x:.3g}" for x in outlier_x_values[:20])
             if len(outlier_x_values) > 20:
                 x_str += f"... ({len(outlier_x_values)} total)"
             rout_table_rows += f"<tr><td>Outlier x-values</td><td>{x_str}</td></tr>"
-        
+
         rout_section = f"""
     <h2>ROUT Outlier Detection</h2>
     <div class="plots">
@@ -466,7 +478,7 @@ def _render_html_fallback(ctx: dict[str, Any]) -> str:
 # ---------------------------------------------------------------------------
 
 
-def render_html_report(result: "FitResult") -> str:
+def render_html_report(result: FitResult) -> str:
     """Render a complete HTML fit report for a FitResult.
 
     Attempts to use the Jinja2 template if Jinja2 is installed and the

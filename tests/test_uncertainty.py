@@ -8,10 +8,9 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).parent.parent / "src"))
 
 import numpy as np
-import pytest
 
 from openfit import Fit
-from openfit.uncertainty import asymptotic_ci, bootstrap_ci, profile_likelihood_ci
+from openfit.uncertainty import bootstrap_ci, profile_likelihood_ci
 
 
 def _make_mm_result(n=30, seed=0):
@@ -29,7 +28,7 @@ def _make_mm_result(n=30, seed=0):
 # ---------------------------------------------------------------------------
 
 
-def test_asymptotic_ci_contains_true_param():
+def test_asymptotic_ci_contains_true_param() -> None:
     """For noiseless MM data, the 95% asymptotic CI contains the true Vmax and Km."""
     x = np.linspace(1, 100, 40)
     y = 50.0 * x / (10.0 + x)  # exact, no noise
@@ -47,17 +46,17 @@ def test_asymptotic_ci_contains_true_param():
 # ---------------------------------------------------------------------------
 
 
-def test_bootstrap_ci_shape():
+def test_bootstrap_ci_shape() -> None:
     """bootstrap_ci returns a dict keyed by param names, each value a (lo, hi) tuple."""
     result = _make_mm_result()
     ci = bootstrap_ci(result, n_bootstrap=200, random_seed=42)
     assert set(ci.keys()) == set(result.params.keys())
-    for name, (lo, hi) in ci.items():
+    for _name, (lo, hi) in ci.items():
         assert isinstance(lo, float)
         assert isinstance(hi, float)
 
 
-def test_bootstrap_ci_seed_reproducible():
+def test_bootstrap_ci_seed_reproducible() -> None:
     """Same random_seed produces identical bootstrap CI bounds."""
     result = _make_mm_result()
     ci1 = bootstrap_ci(result, n_bootstrap=200, random_seed=42)
@@ -66,7 +65,7 @@ def test_bootstrap_ci_seed_reproducible():
         assert ci1[name] == ci2[name], f"CI for {name!r} not reproducible"
 
 
-def test_bootstrap_ci_lower_lt_upper():
+def test_bootstrap_ci_lower_lt_upper() -> None:
     """bootstrap_ci lower < upper for all params."""
     result = _make_mm_result()
     ci = bootstrap_ci(result, n_bootstrap=200, random_seed=99)
@@ -79,13 +78,13 @@ def test_bootstrap_ci_lower_lt_upper():
 # ---------------------------------------------------------------------------
 
 
-def test_profile_ci_returns_dict():
+def test_profile_ci_returns_dict() -> None:
     """profile_likelihood_ci returns a ProfileCIResult with a .ci dict."""
     result = _make_mm_result()
     pci = profile_likelihood_ci(result, n_steps=10)
     # ci is a dict keyed by param names
     assert set(pci.ci.keys()) == set(result.params.keys())
-    for name, (lo, hi) in pci.ci.items():
+    for _name, (lo, hi) in pci.ci.items():
         assert isinstance(lo, float)
         assert isinstance(hi, float)
 
@@ -95,7 +94,7 @@ def test_profile_ci_returns_dict():
 # ---------------------------------------------------------------------------
 
 
-def test_ci_width_decreases_with_more_data():
+def test_ci_width_decreases_with_more_data() -> None:
     """Asymptotic SE (proxy for CI width) is smaller for n=50 than for n=8 on MM."""
     # Use the same noise magnitude; SE must shrink as n grows from 8 -> 50.
     rng_small = np.random.default_rng(12)
@@ -117,6 +116,5 @@ def test_ci_width_decreases_with_more_data():
 
     # Vmax SE is well-behaved: should clearly shrink
     assert r50.se["Vmax"] < r8.se["Vmax"], (
-        f"SE for Vmax did not decrease: 8pt={r8.se['Vmax']:.4f}, "
-        f"50pt={r50.se['Vmax']:.4f}"
+        f"SE for Vmax did not decrease: 8pt={r8.se['Vmax']:.4f}, 50pt={r50.se['Vmax']:.4f}"
     )

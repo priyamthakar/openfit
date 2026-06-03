@@ -3,9 +3,9 @@
 
 FitResult fields used: result.residuals, result.x, result.y, result.y_fitted.
 """
+
 from __future__ import annotations
 
-import warnings
 from dataclasses import dataclass
 from typing import TYPE_CHECKING
 
@@ -42,7 +42,7 @@ class DiagnosticsResult:
 # ---------------------------------------------------------------------------
 
 
-def residual_analysis(result: "FitResult") -> DiagnosticsResult:
+def residual_analysis(result: FitResult) -> DiagnosticsResult:
     """Full residual diagnostic suite on a FitResult.
 
     Runs: runs test, normality test, outlier flagging (3-sigma rule).
@@ -152,19 +152,14 @@ def runs_test(residuals: np.ndarray) -> tuple[float, int]:
     n = n_pos + n_neg
     # Expected runs and variance (combinatorial formulas)
     mu_r = (2.0 * n_pos * n_neg / n) + 1.0
-    sigma_r_sq = (2.0 * n_pos * n_neg * (2.0 * n_pos * n_neg - n)) / (
-        n * n * (n - 1.0)
-    )
+    sigma_r_sq = (2.0 * n_pos * n_neg * (2.0 * n_pos * n_neg - n)) / (n * n * (n - 1.0))
     if sigma_r_sq <= 0.0:
         return 1.0, n_runs
 
     sigma_r = float(np.sqrt(sigma_r_sq))
 
     # Continuity correction
-    if n_runs < mu_r:
-        z = (n_runs - mu_r + 0.5) / sigma_r
-    else:
-        z = (n_runs - mu_r - 0.5) / sigma_r
+    z = (n_runs - mu_r + 0.5) / sigma_r if n_runs < mu_r else (n_runs - mu_r - 0.5) / sigma_r
 
     p_value = float(2.0 * stats.norm.sf(abs(z)))
     p_value = min(p_value, 1.0)  # clamp floating-point overshoot

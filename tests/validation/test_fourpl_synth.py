@@ -55,7 +55,7 @@ _5PL_RELATIVE_TOLERANCE_MAP = {
 # Absolute tolerance for zero-certified parameters (scaled by response range)
 _ABSOLUTE_TOLERANCE_MAP = {
     0.0: 1e-6,
-    0.01: 2.0,   # absolute error < 2 (2% of 100)
+    0.01: 2.0,  # absolute error < 2 (2% of 100)
     0.05: 10.0,  # absolute error < 10 (10% of 100)
 }
 
@@ -142,8 +142,7 @@ def _check_params(
     """
     failures = []
     rel_tol_map = (
-        _4PL_RELATIVE_TOLERANCE_MAP if model_type == "hill4p"
-        else _5PL_RELATIVE_TOLERANCE_MAP
+        _4PL_RELATIVE_TOLERANCE_MAP if model_type == "hill4p" else _5PL_RELATIVE_TOLERANCE_MAP
     )
     rel_tol = rel_tol_map[noise_level]
     abs_tol = _ABSOLUTE_TOLERANCE_MAP[noise_level]

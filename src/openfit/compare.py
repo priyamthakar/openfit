@@ -12,13 +12,14 @@ Information criteria formulas (matching task spec verbatim):
     AICc = AIC + 2*k*(k+1) / (n - k - 1)      [guarded: n - k - 1 must be > 0]
     BIC  = n * ln(RSS/n) + k * ln(n)
 """
+
 from __future__ import annotations
 
-from dataclasses import dataclass, field
+from dataclasses import dataclass
+from typing import TYPE_CHECKING
 
 import numpy as np
 from scipy import stats
-from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
     from openfit.results import FitResult
@@ -67,7 +68,7 @@ class ComparisonResult:
 # ---------------------------------------------------------------------------
 
 
-def compare_models(results: list["FitResult"]) -> ComparisonResult:
+def compare_models(results: list[FitResult]) -> ComparisonResult:
     """Compare multiple fitted models on the same dataset.
 
     Parameters
@@ -105,8 +106,7 @@ def compare_models(results: list["FitResult"]) -> ComparisonResult:
         n_obs_vals.append(r.n_obs)
     if len(set(n_obs_vals)) != 1:
         raise ValueError(
-            f"All results must have the same number of observations. "
-            f"Got: {n_obs_vals}"
+            f"All results must have the same number of observations. Got: {n_obs_vals}"
         )
     n_obs = n_obs_vals[0]
 
@@ -117,7 +117,7 @@ def compare_models(results: list["FitResult"]) -> ComparisonResult:
     aicc_values: dict[str, float] = {}
     bic_values: dict[str, float] = {}
 
-    for model_id, r in zip(model_ids, results):
+    for model_id, r in zip(model_ids, results, strict=False):
         k = len(r.params)
         rss = _compute_rss_from_result(r)
         aic, aicc, bic = _information_criteria(rss, n_obs, k)
@@ -153,10 +153,10 @@ def compare_models(results: list["FitResult"]) -> ComparisonResult:
             simpler, complex_ = r0, r1
         else:
             simpler, complex_ = r1, r0
-        try:
+        import contextlib
+
+        with contextlib.suppress(ValueError):
             f_test_result = f_test_nested(simpler, complex_)
-        except ValueError:
-            pass  # Not truly nested despite name overlap -- skip silently
 
     summary = _build_summary(
         model_ids=model_ids,
@@ -188,7 +188,7 @@ def compare_models(results: list["FitResult"]) -> ComparisonResult:
     )
 
 
-def _check_nestedness(result_a: "FitResult", result_b: "FitResult") -> bool:
+def _check_nestedness(result_a: FitResult, result_b: FitResult) -> bool:
     """Return True if one model is nested in the other (params are strict subset).
 
     Parameters
@@ -209,8 +209,8 @@ def _check_nestedness(result_a: "FitResult", result_b: "FitResult") -> bool:
 
 
 def f_test_nested(
-    simpler: "FitResult",
-    complex_: "FitResult",
+    simpler: FitResult,
+    complex_: FitResult,
 ) -> FTestResult:
     """Extra sum-of-squares F-test for two nested models.
 
@@ -281,7 +281,7 @@ def f_test_nested(
 # ---------------------------------------------------------------------------
 
 
-def _get_model_id(result: "FitResult") -> str:
+def _get_model_id(result: FitResult) -> str:
     """Extract model_id from FitResult.spec, with fallback."""
     try:
         return str(result.spec.model_id)
@@ -289,7 +289,7 @@ def _get_model_id(result: "FitResult") -> str:
         return f"model_{id(result)}"
 
 
-def _compute_rss_from_result(result: "FitResult") -> float:
+def _compute_rss_from_result(result: FitResult) -> float:
     """Compute RSS from FitResult residuals."""
     residuals = np.asarray(result.residuals, dtype=float)
     return float(np.sum(residuals**2))
@@ -330,10 +330,7 @@ def _information_criteria(rss: float, n: int, k: int) -> tuple[float, float, flo
     aic = log_term + 2.0 * k
 
     denom = n - k - 1
-    if denom <= 0:
-        aicc = float("inf")  # undefined: too many parameters relative to data
-    else:
-        aicc = aic + 2.0 * k * (k + 1) / denom
+    aicc = float("inf") if denom <= 0 else aic + 2.0 * k * (k + 1) / denom
 
     bic = log_term + k * float(np.log(n))
 

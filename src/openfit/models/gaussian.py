@@ -11,7 +11,6 @@ from __future__ import annotations
 
 import numpy as np
 
-
 # ---------------------------------------------------------------------------
 # Gaussian
 # ---------------------------------------------------------------------------
@@ -57,7 +56,7 @@ class Gaussian:
         sigma = params["sigma"]
         sigma_safe = sigma if sigma != 0.0 else 1e-10
         z = (x - mu) / sigma_safe
-        return np.asarray(a * np.exp(-0.5 * z ** 2))
+        return np.asarray(a * np.exp(-0.5 * z**2))
 
     def initial_guess(self, x: np.ndarray, y: np.ndarray) -> dict[str, float]:
         """Compute data-driven initial estimates for Gaussian.
@@ -94,14 +93,36 @@ class Gaussian:
         return ([-np.inf, -np.inf, 1e-10], [np.inf, np.inf, np.inf])
 
     def jacobian(self, x: np.ndarray, **params: float) -> np.ndarray | None:
-        """Return None to use finite-difference Jacobian.
+        """Analytic Jacobian for Gaussian (n_obs x 3).
+
+        Partial derivatives:
+            z = (x - mu) / sigma,   g = exp(-0.5*z^2)
+            dY/dA     = g
+            dY/dmu    = A * z * g / sigma
+            dY/dsigma = A * z^2 * g / sigma
+
+        Parameters
+        ----------
+        x : np.ndarray
+            Independent-variable values.
+        **params : float
+            Must include A, mu, sigma.
 
         Returns
         -------
         np.ndarray | None
-            None.
+            Jacobian matrix of shape (n, 3).
         """
-        return None
+        a = params["A"]
+        mu = params["mu"]
+        sigma = params["sigma"]
+        sigma_safe = sigma if sigma != 0.0 else 1e-10
+        z = (x - mu) / sigma_safe
+        g = np.exp(-0.5 * z**2)
+        da = g
+        dmu = a * z * g / sigma_safe
+        dsigma = a * z**2 * g / sigma_safe
+        return np.column_stack([da, dmu, dsigma])
 
 
 # ---------------------------------------------------------------------------
@@ -157,8 +178,8 @@ class BiGaussian:
         left_mask = x <= mu
         z_l = (x - mu) / sl_safe
         z_r = (x - mu) / sr_safe
-        y_left = a * np.exp(-0.5 * z_l ** 2)
-        y_right = a * np.exp(-0.5 * z_r ** 2)
+        y_left = a * np.exp(-0.5 * z_l**2)
+        y_right = a * np.exp(-0.5 * z_r**2)
         return np.asarray(np.where(left_mask, y_left, y_right))
 
     def initial_guess(self, x: np.ndarray, y: np.ndarray) -> dict[str, float]:
@@ -250,7 +271,7 @@ class Lorentzian:
         gamma = params["gamma"]
         gamma_safe = gamma if gamma != 0.0 else 1e-10
         z = (x - x0) / gamma_safe
-        return np.asarray(a / (1.0 + z ** 2))
+        return np.asarray(a / (1.0 + z**2))
 
     def initial_guess(self, x: np.ndarray, y: np.ndarray) -> dict[str, float]:
         """Compute data-driven initial estimates for Lorentzian.
@@ -284,14 +305,38 @@ class Lorentzian:
         tuple[list[float], list[float]]
             Lower and upper bounds for [A, x0, gamma].
         """
-        return ([-np.inf, -np.inf, 1e-10], [np.inf, np.inf, np.inf])
+        return ([1e-300, -np.inf, 1e-300], [np.inf, np.inf, np.inf])
 
     def jacobian(self, x: np.ndarray, **params: float) -> np.ndarray | None:
-        """Return None to use finite-difference Jacobian.
+        """Analytic Jacobian for Lorentzian (n_obs x 3).
+
+        Partial derivatives:
+            z = (x - x0) / gamma,   denom = (1 + z^2)^2
+            dY/dA     = 1 / (1 + z^2)
+            dY/dx0    = 2*A*z / (gamma * denom)
+            dY/dgamma = 2*A*z^2 / (gamma * denom)
+
+        Parameters
+        ----------
+        x : np.ndarray
+            Independent-variable values.
+        **params : float
+            Must include A, x0, gamma.
 
         Returns
         -------
         np.ndarray | None
-            None.
+            Jacobian matrix of shape (n, 3).
         """
-        return None
+        a = params["A"]
+        x0 = params["x0"]
+        gamma = params["gamma"]
+        gamma_safe = gamma if gamma != 0.0 else 1e-10
+        z = (x - x0) / gamma_safe
+        z2 = z**2
+        inv_denom = 1.0 / (1.0 + z2)
+        denom2 = (1.0 + z2) ** 2
+        da = inv_denom
+        dx0 = 2.0 * a * z / (gamma_safe * denom2)
+        dgamma = 2.0 * a * z2 / (gamma_safe * denom2)
+        return np.column_stack([da, dx0, dgamma])

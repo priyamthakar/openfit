@@ -108,6 +108,7 @@ MUST_PASS_NAMES: list[str] = [
 # Internal .dat file parser
 # ---------------------------------------------------------------------------
 
+
 def _parse_nist_dat(filepath: Path) -> dict[str, Any]:
     """Parse one NIST StRD nonlinear .dat file.
 
@@ -177,9 +178,7 @@ def _parse_nist_dat(filepath: Path) -> dict[str, Any]:
 
         # Parameter lines:
         #   "  b1 =   500         250           2.3894212918E+02  2.7070075241E+00"
-        m = re.match(
-            r"\s*(b\d+)\s*=\s+(\S+)\s+(\S+)\s+([\d.E+\-]+)\s+([\d.E+\-]+)", line
-        )
+        m = re.match(r"\s*(b\d+)\s*=\s+(\S+)\s+(\S+)\s+([\d.E+\-]+)\s+([\d.E+\-]+)", line)
         if m:
             pname = m.group(1)
             param_names.append(pname)
@@ -201,9 +200,7 @@ def _parse_nist_dat(filepath: Path) -> dict[str, Any]:
                 continue
             # Extract all numeric tokens.
             # Pattern handles numbers starting with a decimal point (e.g. ".500E0").
-            nums = re.findall(
-                r"[-+]?(?:\d+\.?\d*|\.\d+)(?:[Ee][+\-]?\d+)?", stripped
-            )
+            nums = re.findall(r"[-+]?(?:\d+\.?\d*|\.\d+)(?:[Ee][+\-]?\d+)?", stripped)
             if n_predictors == 1 and len(nums) >= 2:
                 try:
                     data_y.append(float(nums[0]))

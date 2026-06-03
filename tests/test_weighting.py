@@ -12,34 +12,33 @@ import pytest
 
 from openfit.weighting import WeightScheme, apply_weights, parse_weight_scheme
 
-
 # ---------------------------------------------------------------------------
 # apply_weights correctness
 # ---------------------------------------------------------------------------
 
 
-def test_uniform_weights_are_ones():
+def test_uniform_weights_are_ones() -> None:
     """apply_weights(y, 'uniform') returns an array of all 1.0."""
     y = np.array([1.0, 2.0, 5.0, 10.0])
     w = apply_weights(y, "uniform")
     np.testing.assert_array_equal(w, np.ones_like(y))
 
 
-def test_1_over_y_weights():
+def test_1_over_y_weights() -> None:
     """apply_weights(y, '1/y') returns 1/y elementwise."""
     y = np.array([1.0, 2.0, 4.0, 8.0])
     w = apply_weights(y, "1/y")
     np.testing.assert_allclose(w, 1.0 / y)
 
 
-def test_1_over_y2_weights():
+def test_1_over_y2_weights() -> None:
     """apply_weights(y, '1/y2') returns 1/y^2 elementwise."""
     y = np.array([1.0, 2.0, 4.0])
     w = apply_weights(y, "1/y2")
-    np.testing.assert_allclose(w, 1.0 / (y ** 2))
+    np.testing.assert_allclose(w, 1.0 / (y**2))
 
 
-def test_poisson_weights():
+def test_poisson_weights() -> None:
     """apply_weights(y, 'poisson') returns 1/y (Poisson variance = mean)."""
     y = np.array([3.0, 6.0, 12.0])
     w = apply_weights(y, "poisson")
@@ -51,7 +50,7 @@ def test_poisson_weights():
 # ---------------------------------------------------------------------------
 
 
-def test_string_aliases_accepted():
+def test_string_aliases_accepted() -> None:
     """Case-insensitive aliases resolve to the correct WeightScheme member."""
     assert parse_weight_scheme("1/Y") == WeightScheme.ONE_OVER_Y
     assert parse_weight_scheme("1/Y2") == WeightScheme.ONE_OVER_Y2
@@ -67,21 +66,21 @@ def test_string_aliases_accepted():
 # ---------------------------------------------------------------------------
 
 
-def test_negative_y_raises_for_1_over_y():
+def test_negative_y_raises_for_1_over_y() -> None:
     """Negative y values raise ValueError for '1/y'."""
     y = np.array([1.0, -0.5, 2.0])
     with pytest.raises(ValueError, match="strictly positive"):
         apply_weights(y, "1/y")
 
 
-def test_zero_y_raises_for_1_over_y2():
+def test_zero_y_raises_for_1_over_y2() -> None:
     """Zero in y raises ValueError for '1/y2' (non-positive guard)."""
     y = np.array([1.0, 0.0, 2.0])
     with pytest.raises(ValueError, match="strictly positive"):
         apply_weights(y, "1/y2")
 
 
-def test_unknown_scheme_raises():
+def test_unknown_scheme_raises() -> None:
     """An unrecognised scheme string raises ValueError."""
     with pytest.raises(ValueError, match="Unknown weight scheme"):
         parse_weight_scheme("not_a_scheme")

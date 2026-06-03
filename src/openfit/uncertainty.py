@@ -7,14 +7,15 @@ FitResult fields used:
 
 Model protocol: model.equation(x, **params) -> np.ndarray
 """
+
 from __future__ import annotations
 
 import warnings
 from dataclasses import dataclass, field
+from typing import TYPE_CHECKING
 
 import numpy as np
 from scipy import optimize, stats
-from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
     from openfit.results import FitResult
@@ -93,7 +94,7 @@ def asymptotic_ci(
 
 
 def profile_likelihood_ci(
-    result: "FitResult",
+    result: FitResult,
     confidence: float = 0.95,
     n_steps: int = 30,
 ) -> ProfileCIResult:
@@ -176,8 +177,7 @@ def profile_likelihood_ci(
         # are typically <5% of the total LR range for well-behaved profiles.
         _UNI_TOL = 5.0  # absolute tolerance on LR statistic
         is_unimodal = bool(
-            np.all(np.diff(lr_lo) <= _UNI_TOL)
-            and np.all(np.diff(lr_hi) >= -_UNI_TOL)
+            np.all(np.diff(lr_lo) <= _UNI_TOL) and np.all(np.diff(lr_hi) >= -_UNI_TOL)
         )
         unimodal[target_name] = is_unimodal
 
@@ -203,7 +203,7 @@ def profile_likelihood_ci(
 
 
 def bootstrap_ci(
-    result: "FitResult",
+    result: FitResult,
     n_bootstrap: int = 1000,
     method: str = "residual",
     confidence: float = 0.95,
@@ -269,17 +269,21 @@ def bootstrap_ci(
             idx = rng.integers(0, n_obs, size=n_obs)
             x_star = x[idx]
             y_star = y[idx]
-            weights_star = weights[idx] if weights is not None else None
+            weights[idx] if weights is not None else None
 
-        weights_for_fit = weights if method == "residual" else (
-            weights[idx] if weights is not None else None  # type: ignore[index]
+        weights_for_fit = (
+            weights
+            if method == "residual"
+            else (
+                weights[idx] if weights is not None else None  # type: ignore[index]
+            )
         )
 
         try:
             p0 = list(params_fit.values())
             fitted = _refit(result._model, x_star, y_star, weights_for_fit, p0, param_names)
             if fitted is not None:
-                for name, val in zip(param_names, fitted):
+                for name, val in zip(param_names, fitted, strict=False):
                     boot_params[name].append(val)
         except Exception:
             pass  # failed resample: skip silently (will reduce effective n)
@@ -364,9 +368,9 @@ def _profile_rss_grid(
         val = grid[idx]
         fixed: dict[str, float] = {target_name: val}
 
-        def objective(p_free: np.ndarray) -> np.ndarray:
-            full = {n: pv for n, pv in zip(free_names, p_free)}
-            full.update(fixed)
+        def objective(p_free: np.ndarray, fixed_params: dict[str, float] = fixed) -> np.ndarray:
+            full = {n: pv for n, pv in zip(free_names, p_free, strict=False)}
+            full.update(fixed_params)
             y_hat = _predict(model, x, full)
             res = y - y_hat
             if weights is not None:
@@ -379,7 +383,7 @@ def _profile_rss_grid(
         except Exception:
             pass  # keep best_free from previous successful step
 
-        full_params = {n: pv for n, pv in zip(free_names, best_free)}
+        full_params = {n: pv for n, pv in zip(free_names, best_free, strict=False)}
         full_params[target_name] = val
         rss_vals[idx] = _compute_rss(model, x, y, weights, full_params)
 
@@ -413,7 +417,7 @@ def _refit(
     """Refit model to (x, y) from starting point p0. Returns parameter array or None."""
 
     def objective(p: np.ndarray) -> np.ndarray:
-        params = dict(zip(param_names, p))
+        params = dict(zip(param_names, p, strict=False))
         y_hat = _predict(model, x, params)
         res = y - y_hat
         if weights is not None:
@@ -453,7 +457,7 @@ def _bca_interval(
     z0 = float(stats.norm.ppf(frac_below))
 
     # Acceleration: jackknife estimate of skewness of the influence function
-    n_obs = len(samples)  # Note: approximation -- proper jackknife refits the model
+    len(samples)  # Note: approximation -- proper jackknife refits the model
     # We use the sample itself as a proxy for the jackknife distribution
     # (full jackknife requires n_obs model refits; approximation is standard
     # when bootstrap samples are already available)
@@ -462,10 +466,7 @@ def _bca_interval(
     numerator = float(np.sum(jack_diffs**3))
     denominator = float(6.0 * (np.sum(jack_diffs**2) ** 1.5))
 
-    if abs(denominator) < 1e-12:
-        a_hat = 0.0
-    else:
-        a_hat = numerator / denominator
+    a_hat = 0.0 if abs(denominator) < 1e-12 else numerator / denominator
 
     # BCa quantile adjustment
     z_lo = float(stats.norm.ppf(alpha / 2.0))

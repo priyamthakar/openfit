@@ -14,10 +14,10 @@ from enum import Enum
 
 import numpy as np
 
-
 # ---------------------------------------------------------------------------
 # Enum
 # ---------------------------------------------------------------------------
+
 
 class WeightScheme(str, Enum):
     """Named weight schemes for nonlinear fitting.
@@ -61,6 +61,7 @@ _ALIASES: dict[str, WeightScheme] = {
 # Public API
 # ---------------------------------------------------------------------------
 
+
 def parse_weight_scheme(s: str | WeightScheme) -> WeightScheme:
     """Parse a string or WeightScheme into a canonical WeightScheme member.
 
@@ -92,10 +93,7 @@ def parse_weight_scheme(s: str | WeightScheme) -> WeightScheme:
     result = _ALIASES.get(key)
     if result is None:
         valid = ", ".join(sorted(_ALIASES.keys()))
-        raise ValueError(
-            f"Unknown weight scheme: {s!r}. "
-            f"Valid values and aliases are: {valid}"
-        )
+        raise ValueError(f"Unknown weight scheme: {s!r}. Valid values and aliases are: {valid}")
     return result
 
 
@@ -140,9 +138,7 @@ def apply_weights(
     """
     y = np.asarray(y, dtype=float)
     if not np.isfinite(y).all():
-        raise ValueError(
-            "y contains NaN or Inf values. Clean the input data before fitting."
-        )
+        raise ValueError("y contains NaN or Inf values. Clean the input data before fitting.")
 
     resolved = parse_weight_scheme(scheme)
 
@@ -165,7 +161,7 @@ def apply_weights(
                 "but y contains values <= 0.  Remove or replace non-positive observations "
                 "before using this scheme."
             )
-        weights = 1.0 / (y ** 2)
+        weights = 1.0 / (y**2)
 
     elif resolved is WeightScheme.ONE_OVER_SD2:
         if sd is None:
@@ -180,16 +176,14 @@ def apply_weights(
                 "sd must have one standard deviation per observation."
             )
         if not np.isfinite(sd).all():
-            raise ValueError(
-                "sd contains NaN or Inf values. Provide finite standard deviations."
-            )
+            raise ValueError("sd contains NaN or Inf values. Provide finite standard deviations.")
         if np.any(sd <= 0):
             raise ValueError(
                 "Weight scheme '1/sd2' requires all sd values to be strictly positive, "
                 "but sd contains values <= 0.  Zero or negative standard deviations "
                 "are not physically meaningful."
             )
-        weights = 1.0 / (sd ** 2)
+        weights = 1.0 / (sd**2)
 
     elif resolved is WeightScheme.POISSON:
         if np.any(y <= 0):

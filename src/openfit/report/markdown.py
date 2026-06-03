@@ -44,7 +44,7 @@ def _fmt(value: float | None) -> str:
 # ---------------------------------------------------------------------------
 
 
-def render_markdown_report(result: "FitResult") -> str:
+def render_markdown_report(result: FitResult) -> str:
     """Render a Markdown fit report for a FitResult.
 
     Parameters
@@ -118,23 +118,29 @@ def render_markdown_report(result: "FitResult") -> str:
         lines.append("|--------|-------|")
         lines.append(f"| Total points | {len(result.x)} |")
         lines.append(f"| Flagged outliers | {rout_result.n_outliers} |")
-        lines.append(f"| Q parameter | {rout_result.Q*100:.1f}% |")
-        
+        lines.append(f"| Q parameter | {rout_result.Q * 100:.1f}% |")
+
         if rout_result.n_outliers > 0:
             outlier_indices = rout_result.outlier_indices
             outlier_x_values = result.x[rout_result.outlier_mask]
-            
+
             # Show first 20 outliers
             if len(outlier_indices) > 20:
-                idx_str = ", ".join(str(i) for i in outlier_indices[:20]) + f"... ({len(outlier_indices)} total)"
-                x_str = ", ".join(f"{x:.3g}" for x in outlier_x_values[:20]) + f"... ({len(outlier_x_values)} total)"
+                idx_str = (
+                    ", ".join(str(i) for i in outlier_indices[:20])
+                    + f"... ({len(outlier_indices)} total)"
+                )
+                x_str = (
+                    ", ".join(f"{x:.3g}" for x in outlier_x_values[:20])
+                    + f"... ({len(outlier_x_values)} total)"
+                )
             else:
                 idx_str = ", ".join(str(i) for i in outlier_indices)
                 x_str = ", ".join(f"{x:.3g}" for x in outlier_x_values)
-            
+
             lines.append(f"| Outlier indices | {idx_str} |")
             lines.append(f"| Outlier x-values | {x_str} |")
-        
+
         lines.append("")
 
     # --- FitSpec ---

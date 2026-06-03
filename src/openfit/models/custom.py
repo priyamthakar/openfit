@@ -7,7 +7,7 @@ compatible with the openfit Fit engine without requiring a new class.
 from __future__ import annotations
 
 import inspect
-from typing import Callable
+from collections.abc import Callable
 
 import numpy as np
 
@@ -108,7 +108,8 @@ class CustomModel:
         params = [
             name
             for name, p in sig.parameters.items()
-            if p.kind in (
+            if p.kind
+            in (
                 inspect.Parameter.POSITIONAL_ONLY,
                 inspect.Parameter.POSITIONAL_OR_KEYWORD,
             )

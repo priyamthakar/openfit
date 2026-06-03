@@ -2,10 +2,11 @@
 
 Models
 ------
-Logistic3P -- 3-parameter logistic (Verhulst)
-Logistic4P -- 4-parameter generalized logistic (simplified, Bottom=0)
-Gompertz   -- Gompertz sigmoidal growth curve
-Richards   -- Richards / generalized logistic (5 parameters)
+Logistic3P       -- 3-parameter logistic (Verhulst)
+Logistic4P       -- 4-parameter generalized logistic (simplified, Bottom=0)
+Gompertz         -- Gompertz sigmoidal growth curve
+AsymmetricGompertz -- asymmetric Gompertz with different left/right growth rates
+Richards         -- Richards / generalized logistic (5 parameters)
 """
 
 from __future__ import annotations
@@ -229,14 +230,31 @@ class Logistic4P:
         return ([1e-300, 1e-300, -np.inf], [np.inf, np.inf, np.inf])
 
     def jacobian(self, x: np.ndarray, **params: float) -> np.ndarray | None:
-        """Return None to use finite-difference Jacobian.
+        """Analytic Jacobian for Logistic4P.
+
+        Parameters
+        ----------
+        x : np.ndarray
+            Independent-variable values.
+        **params : float
+            Must include K, r, x_mid.
 
         Returns
         -------
-        np.ndarray | None
-            None.
+        np.ndarray
+            Jacobian matrix (n, 3) with columns [dK, dr, dx_mid].
         """
-        return None
+        k = params["K"]
+        r = params["r"]
+        x_mid = params["x_mid"]
+        z = r * (x - x_mid)
+        exp_neg_z = _safe_exp(-z)
+        denom = 1.0 + exp_neg_z
+        dK = 1.0 / denom
+        dr = k * (x - x_mid) * exp_neg_z / (denom * denom)
+        dx_mid = -k * r * exp_neg_z / (denom * denom)
+        J = np.column_stack([dK, dr, dx_mid])
+        return J
 
 
 # ---------------------------------------------------------------------------
@@ -324,14 +342,32 @@ class Gompertz:
         return ([1e-300, 1e-300, -np.inf], [np.inf, np.inf, np.inf])
 
     def jacobian(self, x: np.ndarray, **params: float) -> np.ndarray | None:
-        """Return None to use finite-difference Jacobian.
+        """Analytic Jacobian for Gompertz.
+
+        Parameters
+        ----------
+        x : np.ndarray
+            Time values.
+        **params : float
+            Must include K, r, t_inf.
 
         Returns
         -------
-        np.ndarray | None
-            None.
+        np.ndarray
+            Jacobian matrix (n, 3) with columns [dK, dr, dt_inf].
         """
-        return None
+        k = params["K"]
+        r = params["r"]
+        t_inf = params["t_inf"]
+        z = r * (x - t_inf)
+        exp_neg_z = _safe_exp(-z)
+        inner = np.clip(-z - exp_neg_z, -_EXP_CLIP, _EXP_CLIP)
+        common = np.exp(inner)  # exp(-z - exp(-z))
+        dK = _safe_exp(-exp_neg_z)  # exp(-exp(-z))
+        dr = k * (x - t_inf) * common
+        dt_inf = -k * r * common
+        J = np.column_stack([dK, dr, dt_inf])
+        return J
 
 
 # ---------------------------------------------------------------------------
@@ -422,6 +458,111 @@ class Richards:
             Lower and upper bounds for [K, r, x_mid, v].
         """
         return ([1e-300, 1e-300, -np.inf, 1e-10], [np.inf, np.inf, np.inf, np.inf])
+
+    def jacobian(self, x: np.ndarray, **params: float) -> np.ndarray | None:
+        """Return None to use finite-difference Jacobian.
+
+        Returns
+        -------
+        np.ndarray | None
+            None.
+        """
+        return None
+
+
+# ---------------------------------------------------------------------------
+# AsymmetricGompertz
+# ---------------------------------------------------------------------------
+
+
+class AsymmetricGompertz:
+    """Asymmetric Gompertz sigmoidal growth curve with different left/right rates.
+
+    Equation
+    --------
+    y = K * exp(-exp(-r_left  * (x - t_inf)))  for x <= t_inf
+    y = K * exp(-exp(-r_right * (x - t_inf)))  for x >  t_inf
+
+    Parameters
+    ----------
+    K : float
+        Asymptotic maximum (carrying capacity).
+    r_left : float
+        Growth rate constant for the left side (x <= t_inf), >0.
+    r_right : float
+        Growth rate constant for the right side (x > t_inf), >0.
+    t_inf : float
+        Inflection point (time of maximum growth rate).
+    """
+
+    model_id: str = "gompertz_asym"
+    param_names: list[str] = ["K", "r_left", "r_right", "t_inf"]
+
+    def equation(self, x: np.ndarray, **params: float) -> np.ndarray:
+        """Evaluate asymmetric Gompertz at *x*.
+
+        Parameters
+        ----------
+        x : np.ndarray
+            Time values.
+        **params : float
+            Must include K, r_left, r_right, t_inf.
+
+        Returns
+        -------
+        np.ndarray
+            Predicted population values.
+        """
+        k = params["K"]
+        r_left = params["r_left"]
+        r_right = params["r_right"]
+        t_inf = params["t_inf"]
+
+        left_mask = x <= t_inf
+        inner_left = np.clip(-r_left * (x - t_inf), -_EXP_CLIP, _EXP_CLIP)
+        inner_right = np.clip(-r_right * (x - t_inf), -_EXP_CLIP, _EXP_CLIP)
+        outer_left = np.clip(-np.exp(inner_left), -_EXP_CLIP, _EXP_CLIP)
+        outer_right = np.clip(-np.exp(inner_right), -_EXP_CLIP, _EXP_CLIP)
+        y_left = k * np.exp(outer_left)
+        y_right = k * np.exp(outer_right)
+        return np.asarray(np.where(left_mask, y_left, y_right))
+
+    def initial_guess(self, x: np.ndarray, y: np.ndarray) -> dict[str, float]:
+        """Compute data-driven initial estimates for asymmetric Gompertz.
+
+        Parameters
+        ----------
+        x : np.ndarray
+            Time values.
+        y : np.ndarray
+            Observed population values.
+
+        Returns
+        -------
+        dict[str, float]
+            Keys: K, r_left, r_right, t_inf.
+        """
+        k = float(np.max(y)) * 1.05
+        if k <= 0:
+            k = 1.0
+        r = _growth_rate_guess(x, y, k)
+        # Inflection at ~37% of K for Gompertz.
+        inflection_y = k / np.e
+        sort_idx = np.argsort(y)
+        t_inf = float(np.interp(inflection_y, y[sort_idx], x[sort_idx]))
+        if not np.isfinite(t_inf):
+            t_inf = float(np.median(x))
+        return {"K": k, "r_left": r, "r_right": r, "t_inf": t_inf}
+
+    def bounds(self) -> tuple[list[float], list[float]]:
+        """Return box bounds for asymmetric Gompertz parameters.
+
+        Returns
+        -------
+        tuple[list[float], list[float]]
+            Lower and upper bounds for [K, r_left, r_right, t_inf].
+        """
+        return ([1e-300, 1e-300, 1e-300, -np.inf], [np.inf, np.inf, np.inf, np.inf])
 
     def jacobian(self, x: np.ndarray, **params: float) -> np.ndarray | None:
         """Return None to use finite-difference Jacobian.

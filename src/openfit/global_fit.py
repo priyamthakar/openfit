@@ -127,9 +127,11 @@ class GlobalFitResult:
     weight_scheme: str
     f_test_sharing: FTestSharing | None
     specs: list[FitSpec]
-    
+
     # Private fields for report generation and plotting
-    _datasets: list[tuple[np.ndarray, np.ndarray]] = field(repr=False, compare=False, default_factory=list)
+    _datasets: list[tuple[np.ndarray, np.ndarray]] = field(
+        repr=False, compare=False, default_factory=list
+    )
     _model: BaseModel = field(repr=False, compare=False, default=None)
     _weights_per_ds: list[np.ndarray] = field(repr=False, compare=False, default_factory=list)
 
@@ -154,10 +156,9 @@ class GlobalFitResult:
         """
         _valid = {"html", "markdown"}
         if fmt not in _valid:
-            raise ValueError(
-                f"fmt must be one of {sorted(_valid)}, got {fmt!r}."
-            )
+            raise ValueError(f"fmt must be one of {sorted(_valid)}, got {fmt!r}.")
         from openfit.report.global_fit import report_global_fit
+
         report_global_fit(self, path=path, fmt=fmt)
 
     # ------------------------------------------------------------------
@@ -246,13 +247,11 @@ def _check_finite(x: np.ndarray, y: np.ndarray, index: int) -> None:
     """
     if not np.isfinite(x).all():
         raise ValueError(
-            f"Dataset {index}: x contains NaN or Inf values. "
-            "Clean the input data before fitting."
+            f"Dataset {index}: x contains NaN or Inf values. Clean the input data before fitting."
         )
     if not np.isfinite(y).all():
         raise ValueError(
-            f"Dataset {index}: y contains NaN or Inf values. "
-            "Clean the input data before fitting."
+            f"Dataset {index}: y contains NaN or Inf values. Clean the input data before fitting."
         )
 
 
@@ -357,7 +356,7 @@ def _fit_single(
 
     fitted_params = dict(zip(param_order, result.x, strict=True))
     # Weighted RSS = sum of squared weighted residuals.
-    weighted_rss = float(np.sum(result.fun ** 2))
+    weighted_rss = float(np.sum(result.fun**2))
     return fitted_params, weighted_rss
 
 
@@ -478,9 +477,7 @@ class GlobalFit:
 
         n_datasets = len(self._datasets_raw)
         if n_datasets < 2:
-            raise ValueError(
-                f"GlobalFit requires at least 2 datasets; got {n_datasets}."
-            )
+            raise ValueError(f"GlobalFit requires at least 2 datasets; got {n_datasets}.")
 
         # Shared/local coverage check.
         shared_set = set(self._shared_raw)
@@ -527,8 +524,7 @@ class GlobalFit:
 
         if len(self._sd) != n_datasets:
             raise ValueError(
-                f"sd list length ({len(self._sd)}) must equal number of "
-                f"datasets ({n_datasets})."
+                f"sd list length ({len(self._sd)}) must equal number of datasets ({n_datasets})."
             )
 
         weights_per_ds: list[np.ndarray] = []
@@ -552,9 +548,7 @@ class GlobalFit:
         # Shared: average per-dataset initial_guess across all datasets.
         # Local: per-dataset initial_guess.
 
-        per_ds_guesses: list[dict[str, float]] = [
-            model.initial_guess(x, y) for x, y in datasets
-        ]
+        per_ds_guesses: list[dict[str, float]] = [model.initial_guess(x, y) for x, y in datasets]
 
         p0_shared: list[float] = []
         for name in shared_names:
@@ -591,9 +585,7 @@ class GlobalFit:
             chunks: list[np.ndarray] = []
             for i, (xi, yi) in enumerate(datasets):
                 offset = n_shared + i * n_local
-                local_vals = dict(
-                    zip(local_names, p_flat[offset : offset + n_local], strict=True)
-                )
+                local_vals = dict(zip(local_names, p_flat[offset : offset + n_local], strict=True))
                 params = {**shared_vals, **local_vals}
                 y_pred = model.equation(xi, **params)
                 r = sqrt_w_per_ds[i] * (yi - y_pred)
@@ -622,9 +614,7 @@ class GlobalFit:
         all_params_per_ds: list[dict[str, float]] = []
         for i in range(n_datasets):
             offset = n_shared + i * n_local
-            lp = dict(
-                zip(local_names, p_opt[offset : offset + n_local].tolist(), strict=True)
-            )
+            lp = dict(zip(local_names, p_opt[offset : offset + n_local].tolist(), strict=True))
             fitted_local.append(lp)
             all_params_per_ds.append({**fitted_shared, **lp})
 
@@ -647,9 +637,7 @@ class GlobalFit:
             # Fit each dataset independently using the same weight scheme.
             rss_independent_total = 0.0
             for i, (xi, yi) in enumerate(datasets):
-                _, rss_i_indep = _fit_single(
-                    model, xi, yi, weights_per_ds[i]
-                )
+                _, rss_i_indep = _fit_single(model, xi, yi, weights_per_ds[i])
                 rss_independent_total += rss_i_indep
 
             # Extra-sum-of-squares F-test.

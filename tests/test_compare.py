@@ -8,7 +8,6 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).parent.parent / "src"))
 
 import numpy as np
-import pytest
 
 from openfit import Fit, compare_models
 
@@ -39,7 +38,7 @@ def _make_hill3p_data():
 # ---------------------------------------------------------------------------
 
 
-def test_compare_models_returns_comparison_result():
+def test_compare_models_returns_comparison_result() -> None:
     """compare_models([r1, r2]) returns a ComparisonResult without error."""
     y, x = _make_hill3p_data()
     r3 = _hill3p_result(x, y)
@@ -49,7 +48,7 @@ def test_compare_models_returns_comparison_result():
     assert len(cr.model_ids) == 2
 
 
-def test_aicc_lower_for_better_model():
+def test_aicc_lower_for_better_model() -> None:
     """For data from a linear model, Poly1 has strictly lower AICc than Poly3."""
     rng = np.random.default_rng(99)
     x = np.linspace(0, 10, 30)
@@ -64,7 +63,7 @@ def test_aicc_lower_for_better_model():
     )
 
 
-def test_best_model_has_lowest_aicc():
+def test_best_model_has_lowest_aicc() -> None:
     """ComparisonResult.best_model_by_aicc has the minimum AICc value."""
     y, x = _make_hill3p_data()
     r3 = _hill3p_result(x, y)
@@ -80,7 +79,7 @@ def test_best_model_has_lowest_aicc():
 # ---------------------------------------------------------------------------
 
 
-def test_f_test_nested_hill3_in_hill4():
+def test_f_test_nested_hill3_in_hill4() -> None:
     """Hill3P is nested in Hill4P; compare_models should run the F-test."""
     y, x = _make_hill3p_data()
     r3 = _hill3p_result(x, y)
@@ -90,7 +89,7 @@ def test_f_test_nested_hill3_in_hill4():
     assert cr.f_test is not None
 
 
-def test_f_test_not_run_for_non_nested():
+def test_f_test_not_run_for_non_nested() -> None:
     """Non-nested models (Hill4P vs Michaelis-Menten): f_test must be None."""
     rng = np.random.default_rng(0)
     x = np.logspace(-1, 2, 20)
@@ -107,7 +106,7 @@ def test_f_test_not_run_for_non_nested():
 # ---------------------------------------------------------------------------
 
 
-def test_akaike_weights_sum_to_one():
+def test_akaike_weights_sum_to_one() -> None:
     """Akaike weights across all models sum to approximately 1.0."""
     y, x = _make_hill3p_data()
     r3 = _hill3p_result(x, y)

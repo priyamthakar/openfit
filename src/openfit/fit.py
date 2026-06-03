@@ -147,13 +147,9 @@ class Fit:
         y = np.asarray(self._y_raw, dtype=np.float64).ravel()
 
         if not np.isfinite(x).all():
-            raise ValueError(
-                "x contains NaN or Inf values. Clean the input data before fitting."
-            )
+            raise ValueError("x contains NaN or Inf values. Clean the input data before fitting.")
         if not np.isfinite(y).all():
-            raise ValueError(
-                "y contains NaN or Inf values. Clean the input data before fitting."
-            )
+            raise ValueError("y contains NaN or Inf values. Clean the input data before fitting.")
 
         n_obs = len(x)
         n_params = len(model.param_names)
@@ -168,9 +164,7 @@ class Fit:
         # 2. Compute weights
         # ----------------------------------------------------------------
         sd_arr: np.ndarray | None = (
-            np.asarray(self._sd, dtype=np.float64).ravel()
-            if self._sd is not None
-            else None
+            np.asarray(self._sd, dtype=np.float64).ravel() if self._sd is not None else None
         )
         w = apply_weights(y, self._weight_scheme, sd=sd_arr)  # shape (n,), w_i > 0
         sqrt_w = np.sqrt(w)
@@ -200,9 +194,8 @@ class Fit:
         # ----------------------------------------------------------------
         # 4. Choose optimization method
         # ----------------------------------------------------------------
-        has_finite_bounds = (
-            np.any(np.isfinite(lb_arr) & (lb_arr > -np.inf))
-            or np.any(np.isfinite(ub_arr) & (ub_arr < np.inf))
+        has_finite_bounds = np.any(np.isfinite(lb_arr) & (lb_arr > -np.inf)) or np.any(
+            np.isfinite(ub_arr) & (ub_arr < np.inf)
         )
 
         if self._user_method is not None:
@@ -240,7 +233,7 @@ class Fit:
         # 5. Build residual function
         # ----------------------------------------------------------------
         def _residuals(p: np.ndarray) -> np.ndarray:
-            params = dict(zip(model.param_names, p))
+            params = dict(zip(model.param_names, p, strict=False))
             y_pred = model.equation(x, **params)
             return sqrt_w * (y - y_pred)
 
@@ -252,8 +245,9 @@ class Fit:
         jac_fn = None
         _test_jac = model.jacobian(x, **p0_dict)
         if _test_jac is not None:
+
             def jac_fn(p: np.ndarray) -> np.ndarray:  # type: ignore[misc]
-                params = dict(zip(model.param_names, p))
+                params = dict(zip(model.param_names, p, strict=False))
                 J = model.jacobian(x, **params)  # shape (n_obs, n_params)
                 if J is None:
                     return np.empty((n_obs, n_params))  # fallback, should not happen
@@ -313,7 +307,7 @@ class Fit:
         #    Cov = (J^T J)^{-1} * (weighted_RSS / df)
         # ----------------------------------------------------------------
         J = result_opt.jac  # shape (n_obs, n_params), sqrt(w)-scaled
-        rss_weighted = float(np.sum(result_opt.fun ** 2))
+        rss_weighted = float(np.sum(result_opt.fun**2))
         df = n_obs - n_params
 
         try:
@@ -335,16 +329,20 @@ class Fit:
         # ----------------------------------------------------------------
         try:
             from openfit.uncertainty import asymptotic_ci
+
             ci = asymptotic_ci(params, se, n_obs, n_params)
         except (ImportError, ValueError):
             # Fallback inline t-distribution CI if uncertainty module unavailable
             import scipy.stats as _stats
+
             df_ci = max(n_obs - n_params, 1)
             alpha = 0.05
             t_crit = float(_stats.t.ppf(1.0 - alpha / 2.0, df_ci))
             ci = {
-                name: (float(params[name] - t_crit * se[name]),
-                       float(params[name] + t_crit * se[name]))
+                name: (
+                    float(params[name] - t_crit * se[name]),
+                    float(params[name] + t_crit * se[name]),
+                )
                 for name in model.param_names
             }
 
@@ -353,17 +351,17 @@ class Fit:
         # ----------------------------------------------------------------
         y_fitted = model.equation(x, **params)
         residuals = y - y_fitted
-        rss_unweighted = float(np.sum(residuals ** 2))
+        rss_unweighted = float(np.sum(residuals**2))
 
         # R^2: for weighted fits use weighted SS (CLAUDE.md rule 9)
         # For uniform weighting w is all-ones, so weighted == unweighted
         is_uniform = self._weight_scheme is WeightScheme.UNIFORM
         if is_uniform:
-            ss_res = float(np.sum(residuals ** 2))
+            ss_res = float(np.sum(residuals**2))
             ss_tot = float(np.sum((y - float(np.mean(y))) ** 2))
         else:
             y_wmean = float(np.average(y, weights=w))
-            ss_res = float(np.sum(w * residuals ** 2))
+            ss_res = float(np.sum(w * residuals**2))
             ss_tot = float(np.sum(w * (y - y_wmean) ** 2))
 
         r_squared = 1.0 - ss_res / ss_tot if ss_tot > 0.0 else 0.0

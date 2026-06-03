@@ -35,9 +35,8 @@ import numpy as np
 import scipy.optimize
 import scipy.stats
 
-from openfit.models.base import BaseModel
 from openfit.models import get_model
-
+from openfit.models.base import BaseModel
 
 # ---------------------------------------------------------------------------
 # Result dataclass
@@ -170,7 +169,7 @@ def _lorentzian_objective(
     np.ndarray
         Transformed residual vector of shape (n,).
     """
-    param_dict = dict(zip(model.param_names, params_vec))
+    param_dict = dict(zip(model.param_names, params_vec, strict=False))
     y_hat = model.equation(x, **param_dict)
     raw_res = y - y_hat
     # Avoid overflow: clip the argument of ln
@@ -202,7 +201,7 @@ def _ordinary_residuals(
     np.ndarray
         Residual vector (y - y_hat) of shape (n,).
     """
-    param_dict = dict(zip(model.param_names, params_vec))
+    param_dict = dict(zip(model.param_names, params_vec, strict=False))
     y_hat = model.equation(x, **param_dict)
     return y - y_hat
 
@@ -298,7 +297,7 @@ def _robust_fit(
     ols_params, _ = _fit_ols(x, y, model, p0)
     params = ols_params.copy()
 
-    param_dict = dict(zip(model.param_names, params))
+    param_dict = dict(zip(model.param_names, params, strict=False))
     y_hat = model.equation(x, **param_dict)
     residuals = y - y_hat
     current_rsdr = _rsdr(residuals, n_params)
@@ -325,7 +324,7 @@ def _robust_fit(
         params = result.x
 
         # Update RSDR using new residuals
-        param_dict = dict(zip(model.param_names, params))
+        param_dict = dict(zip(model.param_names, params, strict=False))
         y_hat = model.equation(x, **param_dict)
         residuals = y - y_hat
         new_rsdr = _rsdr(residuals, n_params)
@@ -521,9 +520,7 @@ def rout_outliers(
             f"x and y must have the same shape. Got x.shape={x.shape}, y.shape={y.shape}."
         )
     if not (0.0 < Q < 1.0):
-        raise ValueError(
-            f"Q must be strictly between 0 and 1. Got Q={Q}."
-        )
+        raise ValueError(f"Q must be strictly between 0 and 1. Got Q={Q}.")
 
     # --- Resolve model ---
     if isinstance(model, str):
@@ -546,14 +543,12 @@ def rout_outliers(
     p0_dict = model_obj.initial_guess(x, y)
     p0 = np.array([p0_dict[name] for name in model_obj.param_names], dtype=float)
 
-    robust_params_vec, final_rsdr = _robust_fit(
-        x, y, model_obj, p0, max_iter=max_iter, tol=tol
-    )
+    robust_params_vec, final_rsdr = _robust_fit(x, y, model_obj, p0, max_iter=max_iter, tol=tol)
 
-    robust_param_dict = dict(zip(model_obj.param_names, robust_params_vec))
+    robust_param_dict = dict(zip(model_obj.param_names, robust_params_vec, strict=False))
     y_hat_robust = model_obj.equation(x, **robust_param_dict)
     raw_residuals = y - y_hat_robust
-    robust_rss = float(np.sum(raw_residuals ** 2))
+    robust_rss = float(np.sum(raw_residuals**2))
 
     # Recompute RSDR from final residuals (ensure consistency)
     final_rsdr = _rsdr(raw_residuals, n_params)
@@ -576,11 +571,9 @@ def rout_outliers(
         x_clean = x[clean_mask]
         y_clean = y[clean_mask]
         p0_clean_dict = model_obj.initial_guess(x_clean, y_clean)
-        p0_clean = np.array(
-            [p0_clean_dict[name] for name in model_obj.param_names], dtype=float
-        )
+        p0_clean = np.array([p0_clean_dict[name] for name in model_obj.param_names], dtype=float)
         clean_params_vec, _ = _fit_ols(x_clean, y_clean, model_obj, p0_clean)
-        clean_param_dict = dict(zip(model_obj.param_names, clean_params_vec))
+        clean_param_dict = dict(zip(model_obj.param_names, clean_params_vec, strict=False))
         y_hat_clean = model_obj.equation(x_clean, **clean_param_dict)
         clean_rss = float(np.sum((y_clean - y_hat_clean) ** 2))
     else:
@@ -706,9 +699,7 @@ def _build_summary(
     if n_outliers == 0:
         lines.append("Clean re-fit   : not needed (no outliers)")
     elif not can_refit:
-        lines.append(
-            "Clean re-fit   : skipped (too few clean points to re-fit model)"
-        )
+        lines.append("Clean re-fit   : skipped (too few clean points to re-fit model)")
         lines.append("                 clean_params = robust_params")
     else:
         n_clean = n_obs - n_outliers

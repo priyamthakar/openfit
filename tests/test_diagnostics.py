@@ -8,24 +8,21 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).parent.parent / "src"))
 
 import numpy as np
-import pytest
 
 from openfit import Fit
 from openfit.diagnostics import (
-    DiagnosticsResult,
+    normality_test,
+    replicates_test,
     residual_analysis,
     runs_test,
-    replicates_test,
-    normality_test,
 )
-
 
 # ---------------------------------------------------------------------------
 # runs_test (standalone)
 # ---------------------------------------------------------------------------
 
 
-def test_runs_test_random_residuals():
+def test_runs_test_random_residuals() -> None:
     """Uniformly random residuals pass the runs test (p > 0.05)."""
     rng = np.random.default_rng(0)
     residuals = rng.standard_normal(100)
@@ -34,7 +31,7 @@ def test_runs_test_random_residuals():
     assert p > 0.05, f"Expected p>0.05 for random residuals, got {p:.4f}"
 
 
-def test_runs_test_systematic_residuals():
+def test_runs_test_systematic_residuals() -> None:
     """Perfectly alternating +/- residuals produce a p-value < 0.05."""
     # Alternating signs: maximum number of runs -> too many, statistically significant
     n = 40
@@ -49,7 +46,7 @@ def test_runs_test_systematic_residuals():
 # ---------------------------------------------------------------------------
 
 
-def test_normality_test_normal_data():
+def test_normality_test_normal_data() -> None:
     """Gaussian residuals pass the normality test (p > 0.05)."""
     rng = np.random.default_rng(42)
     residuals = rng.standard_normal(40)
@@ -58,7 +55,7 @@ def test_normality_test_normal_data():
     assert name == "Shapiro-Wilk"
 
 
-def test_normality_test_non_normal():
+def test_normality_test_non_normal() -> None:
     """Highly skewed (exponential) residuals fail the normality test (p < 0.05)."""
     rng = np.random.default_rng(7)
     # Exponential distribution is strongly right-skewed
@@ -67,7 +64,7 @@ def test_normality_test_non_normal():
     assert p < 0.05, f"Expected p<0.05 for skewed data, got {p:.4f}"
 
 
-def test_normality_test_large_uses_dagostino():
+def test_normality_test_large_uses_dagostino() -> None:
     """n > 50 uses D'Agostino-Pearson."""
     rng = np.random.default_rng(0)
     residuals = rng.standard_normal(60)
@@ -80,7 +77,7 @@ def test_normality_test_large_uses_dagostino():
 # ---------------------------------------------------------------------------
 
 
-def test_replicates_test_returns_none_without_replicates():
+def test_replicates_test_returns_none_without_replicates() -> None:
     """All unique x values: replicates_test returns None."""
     x = np.array([1.0, 2.0, 3.0, 4.0])
     y = np.array([1.0, 2.0, 3.0, 4.0])
@@ -89,7 +86,7 @@ def test_replicates_test_returns_none_without_replicates():
     assert result is None
 
 
-def test_replicates_test_pvalue_with_replicates():
+def test_replicates_test_pvalue_with_replicates() -> None:
     """x has duplicates: replicates_test returns a float p-value."""
     x = np.array([1.0, 1.0, 2.0, 2.0, 3.0, 3.0])
     y = np.array([1.0, 1.1, 2.0, 2.1, 3.0, 3.1])
@@ -114,14 +111,14 @@ def _make_fit_result():
     return Fit("hill4p", x, y, weights="uniform").run()
 
 
-def test_outlier_flags_shape():
+def test_outlier_flags_shape() -> None:
     """DiagnosticsResult.outlier_flags has shape (n_obs,)."""
     result = _make_fit_result()
     diag = residual_analysis(result)
     assert diag.outlier_flags.shape == (result.n_obs,)
 
 
-def test_outlier_flags_false_for_clean_data():
+def test_outlier_flags_false_for_clean_data() -> None:
     """Clean Hill4P fit: no points flagged as outliers at 3-sigma."""
     result = _make_fit_result()
     diag = residual_analysis(result)
@@ -130,7 +127,7 @@ def test_outlier_flags_false_for_clean_data():
     )
 
 
-def test_summary_is_string():
+def test_summary_is_string() -> None:
     """DiagnosticsResult.summary is a non-empty string."""
     result = _make_fit_result()
     diag = residual_analysis(result)

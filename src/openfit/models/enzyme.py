@@ -80,10 +80,7 @@ class MichaelisMenten:
         sort_idx = np.argsort(x)
         x_sorted = x[sort_idx]
         y_sorted = y[sort_idx]
-        if len(x_sorted) >= 2:
-            km = float(np.interp(half_vmax, y_sorted, x_sorted))
-        else:
-            km = float(x[0])
+        km = float(np.interp(half_vmax, y_sorted, x_sorted)) if len(x_sorted) >= 2 else float(x[0])
         if km <= 0 or not np.isfinite(km):
             km = float(np.median(x[x > 0])) if np.any(x > 0) else 1.0
         return {"Vmax": vmax, "Km": km}
@@ -121,7 +118,7 @@ class MichaelisMenten:
         km = params["Km"]
         km_safe = km if km != 0.0 else _X_EPS
         denom = km_safe + x
-        denom2 = denom ** 2
+        denom2 = denom**2
         d_vmax = x / denom
         d_km = -vmax * x / denom2
         return np.column_stack([d_vmax, d_km])
@@ -199,10 +196,7 @@ class SubstrateInhibition:
         sort_idx = np.argsort(x)
         x_sorted = x[sort_idx]
         y_sorted = y[sort_idx]
-        if len(x_sorted) >= 2:
-            km = float(np.interp(half_vmax, y_sorted, x_sorted))
-        else:
-            km = float(x[0])
+        km = float(np.interp(half_vmax, y_sorted, x_sorted)) if len(x_sorted) >= 2 else float(x[0])
         if km <= 0 or not np.isfinite(km):
             km = float(np.median(x[x > 0])) if np.any(x > 0) else 1.0
         # Ki: typically 10x the x value at peak velocity.
@@ -278,7 +272,7 @@ class Allosteric:
         n = params["n"]
         s_half_safe = s_half if s_half != 0.0 else _X_EPS
         x_n = np.power(np.clip(x, 0.0, None), n)
-        s_n = s_half_safe ** n
+        s_n = s_half_safe**n
         denom = s_n + x_n
         denom_safe = np.where(denom == 0.0, _X_EPS, denom)
         return np.asarray(vmax * x_n / denom_safe)

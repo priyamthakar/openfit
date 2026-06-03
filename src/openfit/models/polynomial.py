@@ -28,7 +28,7 @@ def _poly_equation(x: np.ndarray, coeffs: list[float]) -> np.ndarray:
     """
     result = np.zeros_like(x, dtype=float)
     for j, c in enumerate(coeffs):
-        result = result + c * x ** j
+        result = result + c * x**j
     return result
 
 
@@ -47,7 +47,7 @@ def _poly_jacobian(x: np.ndarray, degree: int) -> np.ndarray:
     np.ndarray
         Jacobian matrix of shape (n, degree+1); column j is x^j.
     """
-    cols = [x ** j for j in range(degree + 1)]
+    cols = [x**j for j in range(degree + 1)]
     return np.column_stack(cols)
 
 

@@ -57,25 +57,21 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).parent.parent / "src"))
 
 import numpy as np
-import pytest
 from scipy import stats
 
 from openfit import GlobalFit
-
 
 # ---------------------------------------------------------------------------
 # Synthetic dataset: dose-response with shared Top/Bottom across 3 cell lines
 # ---------------------------------------------------------------------------
 
 
-def _hill4p(x: np.ndarray, Bottom: float, Top: float, EC50: float,
-            HillSlope: float) -> np.ndarray:
+def _hill4p(x: np.ndarray, Bottom: float, Top: float, EC50: float, HillSlope: float) -> np.ndarray:
     """Reference 4PL equation (matching openfit.models.sigmoidal.Hill4P)."""
     x_safe = np.where(x == 0.0, 1e-300, x)
-    ratio = np.exp(np.clip(
-        HillSlope * (np.log(np.abs(EC50)) - np.log(np.abs(x_safe))),
-        -700.0, 700.0
-    ))
+    ratio = np.exp(
+        np.clip(HillSlope * (np.log(np.abs(EC50)) - np.log(np.abs(x_safe))), -700.0, 700.0)
+    )
     return Bottom + (Top - Bottom) / (1.0 + ratio)
 
 
@@ -110,8 +106,9 @@ def make_shared_top_bottom_data(seed: int = 2504) -> list[tuple[np.ndarray, np.n
 
     datasets = []
     for lp in local_params:
-        y_true = _hill4p(x, Bottom=shared_bottom, Top=shared_top,
-                         EC50=lp["EC50"], HillSlope=lp["HillSlope"])
+        y_true = _hill4p(
+            x, Bottom=shared_bottom, Top=shared_top, EC50=lp["EC50"], HillSlope=lp["HillSlope"]
+        )
         noise = 0.02 * y_true * rng.standard_normal(len(x))
         y = y_true + noise
         y = np.maximum(y, 0.01)  # clamp positive for 1/y2 weights
@@ -157,7 +154,7 @@ def make_different_top_data(seed: int = 2505) -> list[tuple[np.ndarray, np.ndarr
 # ---------------------------------------------------------------------------
 
 
-def test_shared_params_recovered_accurately():
+def test_shared_params_recovered_accurately() -> None:
     """Shared Top and Bottom are recovered within 5% of true values.
 
     Reference: M&C Chapter 25, Table example showing shared-parameter fit
@@ -189,7 +186,7 @@ def test_shared_params_recovered_accurately():
 # ---------------------------------------------------------------------------
 
 
-def test_local_params_differ_across_datasets():
+def test_local_params_differ_across_datasets() -> None:
     """Local EC50 and HillSlope differ per dataset, matching true values.
 
     Reference: M&C Chapter 25, showing that local parameters (potency, slope)
@@ -227,9 +224,7 @@ def test_local_params_differ_across_datasets():
 
     # EC50 values should be ordered: ds0 < ds1 < ds2
     ec50_vals = [result.local_params[i]["EC50"] for i in range(3)]
-    assert ec50_vals[0] < ec50_vals[1] < ec50_vals[2], (
-        f"EC50 ordering violated: {ec50_vals}"
-    )
+    assert ec50_vals[0] < ec50_vals[1] < ec50_vals[2], f"EC50 ordering violated: {ec50_vals}"
 
 
 # ---------------------------------------------------------------------------
@@ -237,7 +232,7 @@ def test_local_params_differ_across_datasets():
 # ---------------------------------------------------------------------------
 
 
-def test_f_test_sharing_justified_when_params_truly_shared():
+def test_f_test_sharing_justified_when_params_truly_shared() -> None:
     """F-test p > 0.05 when datasets truly share Top and Bottom.
 
     Reference: M&C Chapter 25, extra sum-of-squares F-test. When the
@@ -270,7 +265,7 @@ def test_f_test_sharing_justified_when_params_truly_shared():
 # ---------------------------------------------------------------------------
 
 
-def test_f_test_rejects_sharing_when_top_differs():
+def test_f_test_rejects_sharing_when_top_differs() -> None:
     """F-test p < 0.05 when datasets have genuinely different Top values.
 
     Reference: M&C Chapter 25, extra sum-of-squares F-test. When sharing
@@ -304,7 +299,7 @@ def test_f_test_rejects_sharing_when_top_differs():
 # ---------------------------------------------------------------------------
 
 
-def test_f_test_formula_matches_manual_calculation():
+def test_f_test_formula_matches_manual_calculation() -> None:
     """Verify F-statistic and degrees of freedom match the M&C Chapter 25 formula.
 
     F = ((RSS_restricted - RSS_full) / df_num) / (RSS_full / df_den)
@@ -332,7 +327,7 @@ def test_f_test_formula_matches_manual_calculation():
     # Verify degrees of freedom
     n_datasets = 3
     n_shared = 2  # Top, Bottom
-    n_local = 2   # EC50, HillSlope
+    n_local = 2  # EC50, HillSlope
     n_total = sum(len(y) for _, y in datasets)  # 3 * 15 = 45
 
     expected_df_num = n_shared * (n_datasets - 1)  # 2 * 2 = 4
@@ -346,9 +341,9 @@ def test_f_test_formula_matches_manual_calculation():
     )
 
     # Recompute F-statistic from stored RSS values
-    f_recomputed = (
-        (ft.rss_shared - ft.rss_independent) / ft.df_numerator
-    ) / (ft.rss_independent / ft.df_denominator)
+    f_recomputed = ((ft.rss_shared - ft.rss_independent) / ft.df_numerator) / (
+        ft.rss_independent / ft.df_denominator
+    )
 
     assert np.isclose(ft.f_statistic, f_recomputed, rtol=1e-10), (
         f"F-statistic ({ft.f_statistic:.6f}) does not match recomputed "
@@ -369,7 +364,7 @@ def test_f_test_formula_matches_manual_calculation():
 # ---------------------------------------------------------------------------
 
 
-def test_shared_params_identical_in_all_params_per_dataset():
+def test_shared_params_identical_in_all_params_per_dataset() -> None:
     """all_params_per_dataset[i] uses the same shared values for every i.
 
     Reference: M&C Chapter 25 core principle -- shared parameters are
@@ -409,7 +404,7 @@ def test_shared_params_identical_in_all_params_per_dataset():
 # ---------------------------------------------------------------------------
 
 
-def test_rss_independent_leq_rss_shared():
+def test_rss_independent_leq_rss_shared() -> None:
     """Independent fits must have RSS <= shared fit RSS (nesting property).
 
     The independent (full) model is a superset of the shared (restricted)
@@ -433,13 +428,10 @@ def test_rss_independent_leq_rss_shared():
     assert ft is not None
 
     assert ft.rss_independent <= ft.rss_shared + 1e-10, (
-        f"Independent RSS ({ft.rss_independent:.6f}) should be <= "
-        f"shared RSS ({ft.rss_shared:.6f})"
+        f"Independent RSS ({ft.rss_independent:.6f}) should be <= shared RSS ({ft.rss_shared:.6f})"
     )
     # F-statistic should be non-negative
-    assert ft.f_statistic >= 0.0, (
-        f"F-statistic should be >= 0, got {ft.f_statistic:.6f}"
-    )
+    assert ft.f_statistic >= 0.0, f"F-statistic should be >= 0, got {ft.f_statistic:.6f}"
 
 
 # ---------------------------------------------------------------------------
@@ -447,7 +439,7 @@ def test_rss_independent_leq_rss_shared():
 # ---------------------------------------------------------------------------
 
 
-def test_r_squared_per_dataset_reasonable():
+def test_r_squared_per_dataset_reasonable() -> None:
     """R^2 per dataset should be high (>0.95) for well-behaved dose-response data.
 
     Reference: M&C Chapter 25 discussion of goodness-of-fit for shared fits.
@@ -465,9 +457,7 @@ def test_r_squared_per_dataset_reasonable():
 
     assert len(result.r_squared_per_dataset) == 3
     for i, r2 in enumerate(result.r_squared_per_dataset):
-        assert r2 > 0.95, (
-            f"Dataset {i}: R^2 = {r2:.4f} < 0.95, expected good fit"
-        )
+        assert r2 > 0.95, f"Dataset {i}: R^2 = {r2:.4f} < 0.95, expected good fit"
 
 
 # ---------------------------------------------------------------------------
@@ -475,7 +465,7 @@ def test_r_squared_per_dataset_reasonable():
 # ---------------------------------------------------------------------------
 
 
-def test_f_test_with_1y2_weights():
+def test_f_test_with_1y2_weights() -> None:
     """F-test sharing justification also works with 1/y^2 weighting.
 
     Reference: M&C Chapter 25 notes that weighted regression uses the
@@ -497,8 +487,7 @@ def test_f_test_with_1y2_weights():
 
     # With 1/y^2 weights, sharing should still be justified
     assert ft.sharing_justified, (
-        f"With 1/y2 weights, sharing should be justified but "
-        f"p={ft.p_value:.4f}"
+        f"With 1/y2 weights, sharing should be justified but p={ft.p_value:.4f}"
     )
 
     # Verify F-statistic is non-negative and finite

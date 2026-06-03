@@ -28,13 +28,13 @@ if TYPE_CHECKING:
 # ---------------------------------------------------------------------------
 
 _STYLE = "seaborn-v0_8-whitegrid"
-_COLOR_DATA = "#2563EB"   # blue
-_COLOR_FIT = "#DC2626"    # red
+_COLOR_DATA = "#2563EB"  # blue
+_COLOR_FIT = "#DC2626"  # red
 _COLOR_OUTLIER = "#DC2626"  # red for outliers
-_COLOR_NORMAL = "#2563EB"   # blue for normal points
-_COLOR_POS = "#2563EB"    # positive residuals -- blue
-_COLOR_NEG = "#DC2626"    # negative residuals -- red
-_COLOR_ZERO = "#6B7280"   # dashed zero line -- gray
+_COLOR_NORMAL = "#2563EB"  # blue for normal points
+_COLOR_POS = "#2563EB"  # positive residuals -- blue
+_COLOR_NEG = "#DC2626"  # negative residuals -- red
+_COLOR_ZERO = "#6B7280"  # dashed zero line -- gray
 
 
 def _make_axes(
@@ -110,8 +110,7 @@ def fit_overlay_plot(
 
     if log_x and np.any(x <= 0):
         raise ValueError(
-            "log_x=True requires all x values to be strictly positive, "
-            "but x contains values <= 0."
+            "log_x=True requires all x values to be strictly positive, but x contains values <= 0."
         )
 
     # Build smooth x range for the fitted curve.
@@ -338,7 +337,7 @@ def qq_plot(
 def rout_outlier_plot(
     x: np.ndarray,
     y: np.ndarray,
-    rout_result: "ROUTResult",
+    rout_result: ROUTResult,
     model_equation=None,
     model_params: dict | None = None,
     ax: matplotlib.axes.Axes | None = None,
@@ -411,7 +410,7 @@ def rout_outlier_plot(
                 x[normal_mask],
                 y[normal_mask],
                 color=_COLOR_NORMAL,
-                marker='o',
+                marker="o",
                 alpha=0.85,
                 s=40,
                 zorder=3,
@@ -424,15 +423,15 @@ def rout_outlier_plot(
                 x[outlier_mask],
                 y[outlier_mask],
                 color=_COLOR_OUTLIER,
-                marker='x',
+                marker="x",
                 s=100,
                 linewidth=2.5,
                 zorder=4,
-                label=f"Outlier (ROUT Q={rout_result.Q*100:.0f}%)",
+                label=f"Outlier (ROUT Q={rout_result.Q * 100:.0f}%)",
             )
 
         if title is None:
-            title = f"ROUT Outlier Detection (Q={rout_result.Q*100:.0f}%)"
+            title = f"ROUT Outlier Detection (Q={rout_result.Q * 100:.0f}%)"
         current_ax.set_title(title)
         current_ax.set_xlabel(xlabel)
         current_ax.set_ylabel(ylabel)
@@ -488,9 +487,7 @@ def figure_to_base64(
     """
     _valid_fmts = {"png", "svg"}
     if fmt not in _valid_fmts:
-        raise ValueError(
-            f"fmt must be one of {sorted(_valid_fmts)}, got {fmt!r}."
-        )
+        raise ValueError(f"fmt must be one of {sorted(_valid_fmts)}, got {fmt!r}.")
 
     buf = io.BytesIO()
     fig.savefig(buf, format=fmt, dpi=dpi, bbox_inches="tight")
