@@ -13,7 +13,7 @@ implemented. The next work is validation catch-up, not new features.
 
 **Status:** Complete. NIST parameter recovery done, synthetic 4PL/5PL
 datasets done, published-reference validation done, engine fix done,
-reports extended. 264 tests passing, 1 skip.
+reports extended. 343 tests passing (342 passed, 1 skipped as of 2026-06-03).
 
 ### 1. Synthetic 4PL/5PL certified datasets [DONE]
 
@@ -27,37 +27,64 @@ Done:
 - Stored as `tests/validation/fourpl_certified_values.py`
 - Created `tests/validation/test_fourpl_synth.py` (16 tests)
 
-### 2. R drda cross-validation [MOVED TO v0.1.2]
+### 2. R drda cross-validation [IN PROGRESS -- see issue #4 in AGENT_GUIDANCE]
 
 Cross-validate openfit Hill4P/Hill5P on a shared dataset against R's `drda`
 package (Marasini et al., J Stat Softw 2023, DOI: 10.18637/jss.v106.i04).
 
-Plan:
-- Use the `voropm2` dataset from R `drda` (publicly documented)
-- Run both R drda and openfit on identical data
-- Assert parameter agreement within 6 sig figs
-- Document the R command and openfit equivalent side-by-side in the test file
-- Do NOT copy R source code; study behavior and reference outputs only
+Current state: `tests/validation/test_drda_crossvalidation.py` checks
+convergence, parameter plausibility, AICc improvement, RSS improvement, and
+the parameter-mapping math. It does NOT assert against stored R `drda`
+coefficient values from a reproducible R run. That gap must be closed before
+claiming drda cross-validation is complete.
 
-Deliverable: `tests/validation/test_drda_crossvalidation.py`
+Plan for the remaining work:
+- Run R `drda` on `voropm2`, record `coef(fit_l4)` and `AIC(fit_l4)` with
+  package version (drda >= 2.0.4) as comments.
+- Assert openfit Hill4P parameters match (via alpha/delta/eta/phi mapping)
+  within tolerance (rtol=1e-3 or better, accounting for weighting differences).
+- For Hill5P vs drda logistic5: document parameterization differences clearly
+  and limit assertions to directional checks (AICc improvement).
+- Do NOT copy R source code; reference outputs and document the R command only.
+
+Deliverable: update `tests/validation/test_drda_crossvalidation.py`
 
 ---
 
 ## Near-term: v0.1.2 -- PyPI publish
 
-1. **Trusted Publishing via GitHub Actions**
-   - Create `.github/workflows/publish.yml`
-   - Trigger on version tags (v0.x.y)
-   - Use PyPI Trusted Publishing (no API key required)
-   - Build and upload wheel + sdist
+Before tagging v0.1.2, resolve in order:
 
-2. **README validation badge**
+1. **Resolve binding model validation gap (BLOCKING -- see issue #3 in AGENT_GUIDANCE)**
+   - OneSiteBinding, TwoSiteBinding, CompetitiveBinding: committed to master
+     and listed under "29 built-in" in README, but no published-reference
+     validation test exists.
+   - Option A: Add published-reference test (e.g., saturation binding data from
+     Motulsky & Christopoulos, or a pharmacology textbook dataset).
+   - Option B: Mark all three as `experimental` in the registry, rename the
+     README count to "25 validated + 3 experimental binding models", and add
+     a disclaimer.
+   - Do not ship v0.1.2 without resolving this.
+
+2. **Triage scratch R files**
+   - `drda.R`, `drda_data.R`, `drda_main.R`, `drda_vignette.R`, `extract_drda.py`,
+     `testdata.R`, `voropm2.Rd`, `voropm2.rda` are tracked in git.
+   - Move any needed test fixtures to `tests/validation/reference/`.
+   - Remove the rest. Update `.gitignore`. Verify the wheel excludes them.
+
+3. **Complete drda coefficient cross-check (see item 2 above)**
+
+4. **Fix README test count** (currently stale: says 339/338, actual 343/342)
+   Update only after the final test inventory is stable.
+
+5. **README validation badge**
    - CI matrix showing NIST dataset pass/fail (GitHub Actions badge)
-   - "200 tests / 27 NIST datasets" claim in README
+   - Verify the badge points to a real passing workflow before publishing
 
-3. **Version bump to 0.1.2**
+6. **Version bump to 0.1.2**
    - Update `pyproject.toml`
    - Add CHANGELOG entry
+   - Align README and ROADMAP status text
    - Tag: `git tag v0.1.2`
 
 ---
@@ -66,87 +93,50 @@ Deliverable: `tests/validation/test_drda_crossvalidation.py`
 
 The unit tests prove correctness in the sense of "runs + basic math."
 The ROADMAP.md ties each feature to a specific published example that must match.
-These cross-checks are not yet written:
 
-### compare.py -- Motulsky & Christopoulos (2003) tables
+### compare.py -- Motulsky & Christopoulos (2003) tables [DONE]
 
-The F-test and AICc comparison logic is implemented. Validate it against
-"Fitting Models to Biological Data Using Linear and Nonlinear Regression"
-(GraphPad Software, 2003). Key table to target: F-test examples in Ch. 15-16
-(comparing one-site vs. two-site binding models).
+F-test validation against M&C 2003 formula: `tests/test_compare_reference.py`
 
-File: `tests/test_compare_reference.py`
-Citation: Motulsky & Christopoulos 2003, specific table/equation numbers in test.
+### uncertainty.py -- Profile CI asymmetric intervals [DONE]
 
-### uncertainty.py -- Profile CI asymmetric intervals
+Profile-likelihood CI validation against M&C Table 22.1:
+`tests/test_uncertainty_reference.py` (6 tests)
 
-Profile-likelihood CI is implemented. Validate against M&C Table 22.1 (known
-asymmetric CI example for a 4PL parameter).
+### outliers.py -- ROUT paper Figure 2 / Table 1 [DONE]
 
-File: `tests/test_uncertainty_reference.py`
-Acceptance: the profile CI on the textbook dataset matches the published bounds
-within tolerance.
+ROUT validation against Motulsky & Brown 2006:
+`tests/test_rout_reference.py` (10 tests)
 
-### outliers.py -- ROUT paper Figure 2 / Table 1
+### global_fit.py -- M&C Chapter 25 examples [DONE]
 
-ROUT is implemented using Motulsky & Brown 2006 (BMC Bioinformatics 7:123).
-Validate against Figure 2 (the 10-outlier synthetic dataset) and Table 1
-(Q vs detection rate). The paper is open access at PMC.
+Global fit validation against textbook shared-parameter examples:
+`tests/test_global_fit_reference.py`
 
-File: `tests/test_rout_reference.py`
-Note: requires digitizing the paper data -- the paper contains exact numerical
-examples in the appendix.
+### binding.py -- published saturation-binding reference [PENDING -- see above]
 
-### global_fit.py -- M&C Chapter 25 examples
-
-Global fitting is implemented. Validate against the shared-parameter fitting
-examples in Motulsky & Christopoulos Ch. 25. These are the dose-response
-examples with shared Top/Bottom across multiple cell lines.
-
-File: `tests/test_global_fit_reference.py`
+No published-reference test exists. Blocked until resolved.
 
 ---
 
-## Engine improvement: silent argument dropping
+## Engine improvement: silent argument dropping [DONE]
 
-**Issue surfaced during NIST testing:** When `Fit()` is called with
-`method='lm'` (the default when no bounds), the `x_scale` and `diff_method`
-parameters are silently accepted but never passed to scipy. This violates the
-ROADMAP's "explicit over implicit" principle.
-
-**Options:**
-1. Warn when `x_scale` or `diff_method` is provided with `method='lm'`
-2. Auto-switch to TRF when `x_scale='jac'` is requested
-3. Accept that the validation test explicitly passes `method='trf'` -- document
-   the limitation, do nothing to the engine
-
-**Recommendation:** Option 1 (warn). The user asked for x_scale; silently
-ignoring it is a footgun. A `UserWarning` on construction costs nothing.
-
-File to change: `src/openfit/fit.py` (lines 258-260)
+`UserWarning` when `x_scale` or `diff_method` is provided with `method='lm'`
+was added in v0.1.1. Confirmed in CHANGELOG.
 
 ---
 
-## Hahn1 and BoxBOD: test-only workarounds
+## Hahn1 and BoxBOD: test-only workarounds [DOCUMENTED, ACCEPTABLE]
 
 The NIST validation tests for Hahn1 and BoxBOD use workarounds that live only
 in the test file, not in the core engine:
 
 - **Hahn1:** `_AnalyticJacModel` subclass providing an analytic Jacobian.
-  The shipped `CustomModel` returns `None` (finite-difference only). The
-  analytic Jacobian is needed because the cubic/cubic rational objective has a
-  flat ridge that numerical Jacobians traverse incorrectly.
+- **BoxBOD:** `bounds_dict={"b2": (0.0, 10.0)}` prevents a spurious basin.
 
-- **BoxBOD:** `bounds_dict={"b2": (0.0, 10.0)}` prevents the b2 ~ 88 spurious
-  basin. A user fitting BoxBOD through the default CustomModel with no bounds
-  would hit this issue from a bad starting point.
-
-These are not bugs in the engine -- they are correct behaviors (an analytic
-Jacobian is always better; physical bounds are a user responsibility). But the
-README and docs should not imply the default engine handles these automatically.
-
-Future work (optional, low priority): document in the CustomModel docstring
-that analytic Jacobians significantly improve convergence for ill-conditioned
+These are correct behaviors (analytic Jacobian is always better; physical
+bounds are a user responsibility). The CustomModel docstring should note that
+analytic Jacobians significantly improve convergence for ill-conditioned
 rational-polynomial models.
 
 ---
@@ -154,9 +144,9 @@ rational-polynomial models.
 ## Phase 2+ features (from ROADMAP.md)
 
 These remain as-is in ROADMAP.md. No changes to the sequence. Key note:
-**do not start Phase 6 (model library expansion) until the validation catch-up
-above is complete.** Every existing model needs its published-reference test
-before new models are added.
+**do not start Phase 6 (model library expansion) until the binding model
+validation is resolved.** Every existing model needs its published-reference
+test before new models are added.
 
 Phases at a glance:
 - v0.2.x-v0.3.x: Documentation only (code already shipped ahead of schedule)
@@ -168,21 +158,19 @@ Phases at a glance:
 
 ## openassayflow (downstream package)
 
-`openassayflow` (D:/openassay/OPENASSAYFLOW_CLAUDE.md) is blocked until openfit
-v0.1.1 ships the synthetic 4PL/5PL certified datasets (item 1 above). Those
-datasets will be openassayflow's primary validation reference for its
-StandardCurve module.
+`openassayflow` is blocked until openfit v0.1.2 is tagged and CI-clean.
 
 Do not start openassayflow until:
-1. openfit v0.1.1 is tagged
-2. 4PL/5PL synthetic certified values are committed to openfit
+1. openfit v0.1.2 is tagged
+2. Binding model validation is resolved
+3. CI badge is green
 
 ---
 
 ## What NOT to do next
 
-- Do not build new models (Gaussian2, binding isotherm, etc.) before validation
-  catch-up is complete.
-- Do not start openassayflow before openfit v0.1.1 is tagged.
+- Do not add new models before resolving the binding model validation gap.
+- Do not start openassayflow before openfit v0.1.2 is tagged.
 - Do not implement Bayesian fitting (out of scope per CLAUDE.md).
 - Do not add a GUI (out of scope per ROADMAP.md).
+- Do not tag v0.1.2 with scratch R files still committed at the repo root.

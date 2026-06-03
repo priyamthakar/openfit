@@ -5,7 +5,7 @@
 Reproducible, open-source nonlinear curve fitting with publication-quality reports.
 Every fit you can rerun, every result you can cite.
 
-> **Status:** v0.1.2 (in progress). 339 tests collected (338 passed, 1 skipped;
+> **Status:** v0.1.2 (in progress). 343 tests collected (342 passed, 1 skipped;
 > NIST StRD all 27 datasets, synthetic 4PL/5PL certified, published-reference
 > validation). PyPI publish planned for v0.1.2.
 

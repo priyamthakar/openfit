@@ -22,12 +22,12 @@ def report_fit(result: FitResult, path: str, fmt: str = "html") -> None:
     path : str
         Output file path.
     fmt : str
-        "html", "markdown", or "pdf". Default "html".
+        "html", "markdown", "pdf", or "docx". Default "html".
 
     Raises
     ------
     ValueError
-        If fmt is not one of "html", "markdown", or "pdf".
+        If fmt is not one of "html", "markdown", "pdf", or "docx".
     """
     if fmt == "html":
         html = render_html_report(result)
