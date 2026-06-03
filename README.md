@@ -74,7 +74,7 @@ pip install "openfit[dev]"            # + development tools (pytest, ruff, mypy)
 - Fitted parameters + asymptotic standard errors
 - Full parameter covariance matrix via `FitResult.covariance` in
   `model.param_names` order; singular Jacobians return a NaN-filled matrix
-  and infinite standard errors
+  with infinite standard errors and undefined (`nan`) asymptotic CIs
 - Confidence intervals: asymptotic, profile-likelihood, bootstrap (BCa)
 - R^2 (correct nonlinear definition), AICc, BIC, residuals (raw, weighted, standardized)
 - `FitSpec` reproducibility manifest: data SHA-256 hash, version pins, random seed

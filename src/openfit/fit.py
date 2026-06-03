@@ -323,13 +323,16 @@ class Fit:
             cov = np.full((n_params, n_params), np.nan)
 
         # ----------------------------------------------------------------
-        # 10. Asymptotic confidence intervals (lazy import for future-proofing)
+        # 10. Asymptotic confidence intervals
         # ----------------------------------------------------------------
         try:
             from openfit.uncertainty import asymptotic_ci
 
             ci = asymptotic_ci(params, se, n_obs, n_params)
-        except (ImportError, ValueError):
+        except ValueError:
+            # Singular fit: SE is inf/nan, so CI is undefined
+            ci = {name: (float("nan"), float("nan")) for name in model.param_names}
+        except ImportError:
             # Fallback inline t-distribution CI if uncertainty module unavailable
             import scipy.stats as _stats
 
