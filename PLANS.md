@@ -9,24 +9,25 @@ implemented. The next work is validation catch-up, not new features.
 
 ---
 
-## Immediate: v0.1.1 completion (partially done)
+## Immediate: v0.1.1 completion (DONE)
 
-**Status:** NIST parameter recovery complete (all 27 datasets, both starts).
-Still missing:
+**Status:** Complete. NIST parameter recovery done, synthetic 4PL/5PL
+datasets done, published-reference validation done, engine fix done,
+reports extended. 264 tests passing, 1 skip.
 
-### 1. Synthetic 4PL/5PL certified datasets
+### 1. Synthetic 4PL/5PL certified datasets [DONE]
 
 No NIST-equivalent exists for logistic models (confirmed by the NIST StRD and
-the openassayflow validation research). We must generate our own ground truth.
+the openassayflow validation research). We generated our own ground truth.
 
-Plan:
-- Generate synthetic 4PL datasets with known exact parameters (Bottom=0,
+Done:
+- Generated synthetic 4PL datasets with known exact parameters (Bottom=0,
   Top=100, EC50=1.0, HillSlope=1.0) plus controlled noise levels (0%, 1%, 5%)
-- Generate 5PL datasets similarly (add HillAsym)
-- Store as `tests/validation/fourpl_certified_values.py`
-- Create `tests/validation/test_fourpl_synth.py`
+- Generated 5PL datasets similarly (add HillAsym=0.5)
+- Stored as `tests/validation/fourpl_certified_values.py`
+- Created `tests/validation/test_fourpl_synth.py` (16 tests)
 
-### 2. R drda cross-validation
+### 2. R drda cross-validation [MOVED TO v0.1.2]
 
 Cross-validate openfit Hill4P/Hill5P on a shared dataset against R's `drda`
 package (Marasini et al., J Stat Softw 2023, DOI: 10.18637/jss.v106.i04).

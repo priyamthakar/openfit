@@ -3,8 +3,9 @@
 Reproducible, open-source nonlinear curve fitting with publication-quality reports.
 Every fit you can rerun, every result you can cite.
 
-> **Status:** v0.1.0 released. NIST StRD validation suite passing (all 27 datasets,
-> 200 tests). PyPI publish planned for v0.1.2.
+> **Status:** v0.1.1 (in progress). 264 tests passing (NIST StRD all 27 datasets,
+> synthetic 4PL/5PL certified, published-reference validation). PyPI publish
+> planned for v0.1.2.
 
 ---
 

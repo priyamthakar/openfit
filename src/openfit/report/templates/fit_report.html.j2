@@ -165,6 +165,31 @@
       </tbody>
     </table>
 
+    {% if rout_summary %}
+    <h2>ROUT Outlier Detection</h2>
+    <div class="plots">
+      {% if rout_img %}
+        <img src="{{ rout_img }}" alt="ROUT Outlier Detection" class="plot-full">
+      {% else %}
+        <p class="plot-full">[ROUT outlier plot unavailable]</p>
+      {% endif %}
+    </div>
+    <table>
+      <thead><tr><th>Metric</th><th>Value</th></tr></thead>
+      <tbody>
+        <tr><td>Total points</td><td>{{ rout_summary.n_total }}</td></tr>
+        <tr><td>Flagged outliers</td><td>{{ rout_summary.n_outliers }}</td></tr>
+        <tr><td>Q parameter</td><td>{{ "%.1f" | format(rout_summary.Q * 100) }}%</td></tr>
+        {% if rout_summary.outlier_indices %}
+        <tr><td>Outlier indices</td><td>{{ rout_summary.outlier_indices | join(", ") }}</td></tr>
+        {% endif %}
+        {% if rout_summary.outlier_x_values %}
+        <tr><td>Outlier x-values</td><td>{{ rout_summary.outlier_x_values | map("float") | map("round", 3) | map("string") | join(", ") }}</td></tr>
+        {% endif %}
+      </tbody>
+    </table>
+    {% endif %}
+
     <h2>Reproducibility Spec</h2>
     <details>
       <summary>FitSpec JSON (click to expand)</summary>

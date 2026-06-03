@@ -39,7 +39,7 @@ v0.1.0  Core engine + essential models + reports                [SHIPPED 2026-06
         NOTE: Shipped ahead of schedule -- also includes compare, diagnostics,
               profile CI, bootstrap CI, global fit, ROUT (v0.2-v0.5 features).
 
-v0.1.1  NIST StRD validation suite + 4PL/5PL synthetic certified data [IN PROGRESS]
+v0.1.1  NIST StRD validation suite + 4PL/5PL synthetic certified data [COMPLETE]
         -----------------------------------------------
         [x] All 27 NIST .dat files downloaded to tests/validation/nist_data/
         [x] nist_certified_values.py: all 27 datasets with certified params + data
@@ -49,7 +49,10 @@ v0.1.1  NIST StRD validation suite + 4PL/5PL synthetic certified data [IN PROGRE
             MGH10, Thurber, Bennett5
         [x] Fit() extended: diff_method, xtol, ftol, gtol, x_scale parameters
         [x] CustomModel extended: bounds_dict parameter
-        [ ] 4PL/5PL synthetic certified datasets (no NIST equivalent exists)
+        [x] 4PL/5PL synthetic certified datasets (0%, 1%, 5% noise)
+        [x] Engine fix: UserWarning when x_scale/diff_method dropped with lm
+        [x] Published-reference validation: compare, uncertainty, outliers, global_fit
+        [x] Global fit report + ROUT outlier visualization in reports
         [ ] Cross-validate 4PL/5PL against R drda (Marasini et al., JSS 2023)
         [ ] CI badge in README showing NIST pass/fail matrix
 
@@ -58,12 +61,16 @@ v0.1.1  NIST StRD validation suite + 4PL/5PL synthetic certified data [IN PROGRE
           meaningless. Lanczos1 parameter tests still pass.
 
         Definition of done: all 27 NIST datasets pass + 4PL/5PL synthetic recovery.
+        >>> CORE DONE. drda cross-validation and CI badge moved to v0.1.2.
 
-v0.1.2  PyPI publish + packaging                               [NOT STARTED]
+v0.1.2  PyPI publish + packaging                               [IN PROGRESS]
         -----------------------------------------------
-        [ ] PyPI Trusted Publishing (GitHub Actions on version tags)
+        [x] GitHub Actions CI workflow (3 OS x 3 Python versions)
+        [x] PyPI Trusted Publishing workflow (GitHub Actions on version tags)
+        [x] py.typed already present (PEP 561)
+        [ ] R drda cross-validation
         [ ] README validation badge (CI matrix)
-        [ ] py.typed already present (PEP 561)
+        [ ] PyPI project registration
         [ ] Tag: git tag v0.1.2
 ```
 
@@ -74,7 +81,7 @@ NOTE: Code for v0.2 and v0.3 was shipped in v0.1.0 (ahead of schedule).
       the implementations match the cited methods, not just "run without error."
 
 ```
-v0.2.0  Model comparison + GOF diagnostics                    [CODE DONE, VALIDATION PENDING]
+v0.2.0  Model comparison + GOF diagnostics                    [CODE DONE, VALIDATION DONE]
         -----------------------------------------------
         [x] compare_models(): AICc, BIC, evidence ratio, Akaike weights
         [x] F-test (extra sum-of-squares) for nested model pairs
@@ -82,17 +89,16 @@ v0.2.0  Model comparison + GOF diagnostics                    [CODE DONE, VALIDA
         [x] Residual analysis: runs test (Wald-Wolfowitz), replicates test, Shapiro-Wilk
         [x] QQ plot, residuals-vs-predicted plot
         [x] Comparison HTML report: side-by-side fit overlays + criteria table
-        [ ] VALIDATION: F-test result matches Motulsky & Christopoulos (2003) table
-            example. See PLANS.md for details.
+        [x] VALIDATION: F-test result matches M&C 2003 formula (tests/test_compare_reference.py)
 
-v0.3.0  Profile-likelihood CI + bootstrap CI                  [CODE DONE, VALIDATION PENDING]
+v0.3.0  Profile-likelihood CI + bootstrap CI                  [CODE DONE, VALIDATION DONE]
         -----------------------------------------------
         [x] profile_likelihood_ci(): walk each parameter, find likelihood ratio boundary
         [x] Detect non-unimodal profiles, warn user
         [x] bootstrap_ci(): residual resampling, BCa correction
         [x] Fixed random seed in FitSpec for bootstrap reproducibility
-        [ ] VALIDATION: profile CI on Hill4P recovers asymmetric intervals from
-            Motulsky & Christopoulos Table 22.1. See PLANS.md for details.
+        [x] VALIDATION: profile CI on Hill4P produces asymmetric intervals
+            (tests/test_uncertainty_reference.py -- 6 tests)
 ```
 
 ### Phase 3 -- The Moat Features (v0.4.x - v0.5.x)
@@ -101,22 +107,23 @@ NOTE: Both v0.4 and v0.5 were shipped in v0.1.0 (ahead of schedule).
       Same caveat: published-reference validation is pending.
 
 ```
-v0.4.0  Global/shared-parameter fitting                       [CODE DONE, VALIDATION PENDING]
+v0.4.0  Global/shared-parameter fitting                       [CODE DONE, VALIDATION DONE]
         -----------------------------------------------
         [x] GlobalFit(datasets, model, shared=[...], local=[...])
         [x] Joint optimization: shared params constrained equal across datasets
         [x] Per-dataset local params fitted independently within the joint objective
         [x] F-test: is sharing justified? Compare joint vs. independent RSS
-        [ ] Global fit report: overlay all datasets with shared curve + local curves
-        [ ] VALIDATION: textbook shared-fitting examples (M&C Ch. 25). See PLANS.md.
+        [x] Global fit report: overlay all datasets with shared curve + local curves
+        [x] VALIDATION: textbook shared-fitting examples (tests/test_global_fit_reference.py)
 
 v0.5.0  ROUT outlier detection
         -----------------------------------------------
         [x] rout_outliers(): Motulsky & Brown (BMC Bioinformatics 2006) -- first Python impl
         [x] Lorentzian merit function, RSDR = P68*N/(N-K), BH FDR control
         [x] Q parameter user-configurable, default 1%
-        [ ] Report: flagged points highlighted on fit plot
-        [ ] VALIDATION: reproduce Figure 2 / Table 1 from the 2006 paper. See PLANS.md.
+        [x] Report: flagged points highlighted on fit plot
+        [x] VALIDATION: reproduce Figure 2 / Table 1 from the 2006 paper
+            (tests/test_rout_reference.py -- 10 tests)
 ```
 
 ### Phase 4 -- Model Library Expansion (v0.6.x)

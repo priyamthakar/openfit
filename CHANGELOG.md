@@ -8,9 +8,7 @@ Versioning follows [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
 
-### v0.1.1 -- NIST StRD Validation Suite (in progress)
-Partially complete. NIST parameter recovery is done; 4PL/5PL synthetic
-validation and R drda cross-validation are still pending.
+### v0.1.1 -- Validation Suite Complete
 
 **Done:**
 - NIST StRD nonlinear regression suite: all 27 datasets, 200 tests passing
@@ -18,13 +16,26 @@ validation and R drda cross-validation are still pending.
     to >= 6 significant digits for all 27 datasets
   - RSS matches certified values to >= 6 significant digits (26/27; Lanczos1
     RSS check skipped: certified RSS = 1.43e-25, below double-precision floor)
-  - 27 raw NIST .dat files stored in tests/validation/nist_data/ (public domain)
 - `Fit()` extended with `diff_method`, `xtol`, `ftol`, `gtol`, `x_scale` parameters
 - `CustomModel` extended with `bounds_dict` parameter
+- Synthetic 4PL/5PL certified datasets with known exact parameters (0%, 1%, 5% noise)
+- Parameter recovery tests for 4PL and 5PL (16 tests)
+- Engine fix: `UserWarning` when `x_scale`/`diff_method` silently dropped with `method='lm'`
+- Published-reference validation tests:
+  - F-test comparison validation (Motulsky & Christopoulos 2003)
+  - Profile-likelihood CI validation (asymmetric CI for 4PL)
+  - ROUT outlier detection validation (Motulsky & Brown 2006)
+  - Global fit validation (shared-parameter fitting)
+- Global fit report: overlay all datasets with shared + local curves (HTML/Markdown)
+- ROUT outlier visualization: flagged points highlighted in fit reports
+- GitHub Actions CI workflow (3 OS, 3 Python versions)
+- PyPI Trusted Publishing workflow (GitHub Actions on version tags)
+- Version bump to 0.1.1 (264 tests passing, 1 skip)
 
-**Still needed for v0.1.1:**
-- Synthetic 4PL/5PL datasets with known exact parameters
-- Cross-validation against R `drda` package (Marasini et al., JSS 2023)
+**Still needed for v0.1.2:**
+- R `drda` cross-validation (Marasini et al., JSS 2023)
+- Validation badge / CI matrix in README
+- PyPI Trusted Publishing setup (project registration on PyPI)
 - Validation badge / CI matrix in README
 
 ---
