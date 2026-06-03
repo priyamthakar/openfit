@@ -3,6 +3,7 @@
 
 from __future__ import annotations
 
+import warnings
 from typing import Any
 
 import numpy as np
@@ -217,6 +218,23 @@ class Fit:
             bounds_arg: tuple[Any, Any] = (-np.inf, np.inf)
         else:
             bounds_arg = (lb_arr, ub_arr)
+
+        # Warn if user provided parameters that lm doesn't support
+        if method == "lm":
+            if self._x_scale is not None:
+                warnings.warn(
+                    'Parameter x_scale is not supported with method="lm" and will be ignored. '
+                    'Use method="trf" to enable this parameter.',
+                    UserWarning,
+                    stacklevel=2,
+                )
+            if self._diff_method is not None:
+                warnings.warn(
+                    'Parameter diff_method is not supported with method="lm" and will be ignored. '
+                    'Use method="trf" to enable this parameter.',
+                    UserWarning,
+                    stacklevel=2,
+                )
 
         # ----------------------------------------------------------------
         # 5. Build residual function

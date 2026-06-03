@@ -184,3 +184,42 @@ def test_ci_lower_lt_upper(hill4p_data):
     result = Fit("hill4p", x, y, weights="uniform").run()
     for name, (lo, hi) in result.ci.items():
         assert lo < hi, f"CI for {name!r} is inverted: [{lo}, {hi}]"
+
+
+# ---------------------------------------------------------------------------
+# Warnings for unsupported parameters with method='lm'
+# ---------------------------------------------------------------------------
+
+
+def test_warns_x_scale_with_lm():
+    """UserWarning when x_scale is provided but method='lm' ignores it."""
+    x = np.array([1.0, 2.0, 3.0, 4.0, 5.0])
+    y = np.array([1.0, 4.0, 9.0, 16.0, 25.0])
+    with pytest.warns(UserWarning, match="not supported with method"):
+        Fit("poly2", x, y, weights="uniform", method="lm", x_scale="jac").run()
+
+
+def test_warns_diff_method_with_lm():
+    """UserWarning when diff_method is provided but method='lm' ignores it."""
+    x = np.array([1.0, 2.0, 3.0, 4.0, 5.0])
+    y = np.array([1.0, 4.0, 9.0, 16.0, 25.0])
+    with pytest.warns(UserWarning, match="not supported with method"):
+        Fit("poly2", x, y, weights="uniform", method="lm", diff_method="3-point").run()
+
+
+def test_no_warn_x_scale_with_trf(hill4p_data):
+    """No warning when x_scale is used with method='trf' (supported)."""
+    import warnings
+    x, y = hill4p_data
+    with warnings.catch_warnings():
+        warnings.simplefilter("error", UserWarning)
+        Fit("hill4p", x, y, weights="uniform", method="trf", x_scale="jac").run()
+
+
+def test_no_warn_diff_method_with_trf(hill4p_data):
+    """No warning when diff_method is used with method='trf' (supported)."""
+    import warnings
+    x, y = hill4p_data
+    with warnings.catch_warnings():
+        warnings.simplefilter("error", UserWarning)
+        Fit("hill4p", x, y, weights="uniform", method="trf", diff_method="3-point").run()
