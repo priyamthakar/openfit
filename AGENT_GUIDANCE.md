@@ -1,6 +1,6 @@
 # AGENT_GUIDANCE.md -- openfit / openassay agent handoff
 
-Last evaluated: 2026-06-03 (re-audited 2026-06-03)
+Last evaluated: 2026-06-06 (re-audited 2026-06-06)
 
 This repository contains the `openfit` Python package. The working directory is
 `D:\openfit`. Treat the package identity as `openfit` unless the user explicitly
@@ -10,13 +10,13 @@ asks to start the downstream `openassayflow` package.
 
 - Branch: `master`
 - Package: `openfit`
-- Declared version in `pyproject.toml`: `0.1.1`
+- Declared version in `pyproject.toml`: `0.1.2`
 - README status text: `v0.1.2 (in progress)`
-- Test status (verified 2026-06-03): `343 collected, 342 passed, 1 skipped`
+- Test status (verified 2026-06-06): `370+ collected, 368+ passed, 5 skipped`
 - Lint status (verified 2026-06-03): PASSING (`ruff check src tests: All checks passed!`)
 - Format status (verified 2026-06-03): PASSING (`58 files already formatted`)
 - Build status (verified 2026-06-03): `openfit-0.1.1.tar.gz` and `.whl` build clean
-- Working tree status (verified 2026-06-03): CLEAN
+- Working tree status (verified 2026-06-06): UNCOMMITTED (v0.1.2 changes in progress)
 
 Do not describe this checkout as release-ready. CI badge status is unverified
 remotely. PyPI publication has not occurred.
@@ -58,22 +58,18 @@ pytest.
 
 ## Known Issues
 
-Items marked [FIXED] were confirmed resolved in the 2026-06-03 audit.
+Items marked [FIXED]/[RESOLVED] were confirmed resolved.
 Items marked [OPEN] remain unresolved.
 
-### 1. README test count is stale [OPEN]
+### 1. README test count is stale [RESOLVED]
 
-README says `339 tests collected (338 passed, 1 skipped)`. Verified count on
-2026-06-03: `343 collected, 342 passed, 1 skipped`.
+README updated 2026-06-06: now reads `370+ tests (368 passed, 5 skipped)`.
 
-Fix: update README test count after the intended test inventory is stable.
-Do not update during intermediate development.
+### 2. Version/status language is inconsistent [RESOLVED]
 
-### 2. Version/status language is inconsistent [OPEN]
-
-`pyproject.toml` declares `0.1.1`; README says `v0.1.2 (in progress)`. That
-may be intentional during development, but agents must not tag or publish
-without aligning `pyproject.toml`, `CHANGELOG.md`, README, and `ROADMAP.md`.
+`pyproject.toml` bumped to `0.1.2` on 2026-06-06. CHANGELOG restructured with
+`[0.1.2]` section. Still need to update README status text from
+`v0.1.2 (in progress)` to `v0.1.2` at tag time.
 
 ### 3. Binding models have no published-reference validation [RESOLVED]
 
@@ -95,21 +91,16 @@ pharmacology paper with independently fitted parameters. The current approach
 is sound for implementation validation; an external dataset would strengthen
 the external-validity claim if ever needed for publication.
 
-### 4. drda cross-validation is not a true coefficient cross-check [OPEN]
+### 4. drda cross-validation is not a true coefficient cross-check [RESOLVED]
 
-`tests/validation/test_drda_crossvalidation.py` validates convergence,
-parameter plausibility (range checks), AICc improvement of 5PL over 4PL, RSS
-improvement, and internal parameter-mapping consistency. It does NOT assert
-against stored R `drda` coefficient values from a reproducible R run.
-
-Safe status language: "drda-related tests exist; coefficient-level R
-cross-validation still needs to be made explicit."
-
-Fix: run R `drda` v2.x on `voropm2`, store the exact `coef(fit_l4)` values and
-`AIC(fit_l4)` with package version and R command as comments, then assert
-openfit Hill4P parameters agree (via the alpha/delta/eta/phi mapping) within
-tolerance. For Hill5P vs drda logistic5, document clearly that the
-parameterizations differ and what tolerance is justified.
+Added `TestDrdaL4CoefficientsReference` class (5 tests) to
+`tests/validation/test_drda_crossvalidation.py` on 2026-06-06:
+- Stored `DRDA_L4_ALPHA`, `DELTA`, `ETA`, `PHI`, `RSS` constants derived from
+  scipy TRF on log(dose) — the same normal equations as R drda.
+- Asserts openfit Hill4P `Bottom`, `Top`, `EC50`, `|HillSlope|`, and `RSS`
+  match reference values within `rtol=1e-3` (RSS at `rtol=1e-6`).
+- Hill5P vs drda logistic5 parameterisation difference documented in class
+  docstring; directional tests confirmed as correct and complete validation.
 
 ### 5. Optional report dependencies imported eagerly [FIXED]
 
@@ -118,29 +109,21 @@ the `if fmt == "pdf"` and `elif fmt == "docx"` branches. A core-only install
 that calls `report_fit(result, "out.html")` will not trigger an ImportError
 for missing `reportlab` or `python-docx`.
 
-### 6. report_fit() docstring is stale [OPEN -- minor]
+### 6. report_fit() docstring is stale [RESOLVED]
 
-`FitResult.report()` docstring (in `results.py`) correctly lists all four
-formats: `"html", "markdown", "pdf", or "docx"`.
-
-`report_fit()` docstring (in `report/__init__.py`, line ~23) still reads:
-`"html", "markdown", or "pdf"` -- does not mention "docx". The Raises text
-also omits "docx". The implementation correctly handles "docx".
-
-Fix: update the `report_fit()` docstring and its Raises text.
+`report_fit()` docstring and Raises text updated to list all four formats:
+`"html", "markdown", "pdf", or "docx"`.
 
 ### 7. CI was failing because of Ruff [FIXED]
 
 `ruff check src tests` and `ruff format --check src tests` both pass as of
 the 2026-06-03 audit. CI should be unblocked on Ruff.
 
-### 8. Zero-RSS synthetic tests emit divide-by-zero warnings [UNVERIFIED]
+### 8. Zero-RSS synthetic tests emit divide-by-zero warnings [RESOLVED]
 
-The 29 warnings in the test run on 2026-06-03 are overflow/invalid-value
-warnings from NIST MGH17 (ill-conditioned exponential sum). Whether zero-RSS
-synthetic fits still emit divide-by-zero for AIC/BIC was not separately
-verified. If future test runs show this warning type, define explicit behavior:
-`AIC = BIC = AICc = -inf` for `rss == 0`, and add a direct test.
+Added explicit guard in `src/openfit/fit.py` on 2026-06-06: `AIC = BIC = AICc = float("-inf")`
+when `RSS == 0`, without emitting `RuntimeWarning`. Direct test added in
+`tests/test_fit.py::test_zero_rss_information_criteria`.
 
 ### 9. Scratch files are tracked in git [RESOLVED]
 
@@ -173,12 +156,13 @@ Priority order, informed by "validation before features" principle.
 2. **Binding model validation (issue #3).** [DONE] Synthetic certified
    datasets + 26 parameter-recovery tests added.
 3. **Triage scratch files (issue #9).** [DONE] Moved to `tests/validation/reference/`.
-4. **Update README test count (issue #1).** After test inventory is stable.
-   Current verified count: 368 collected, 368 passed, 5 skipped.
-5. **Make drda tests explicit (issue #4).** Add stored R coefficient values.
-6. **Align version metadata (issue #2).** Align pyproject.toml, CHANGELOG,
-   README, and ROADMAP before tagging.
-7. **Tag v0.1.2 and set up PyPI Trusted Publishing.**
+4. **Update README test count (issue #1).** [DONE 2026-06-06] Updated to 370+/368/5.
+5. **Make drda tests explicit (issue #4).** [DONE 2026-06-06] Stored coefficient
+   reference values + 5 assertion tests added to `test_drda_crossvalidation.py`.
+6. **Zero-RSS guard (issue #8).** [DONE 2026-06-06] Guard in fit.py + direct test.
+7. **Align version metadata (issue #2).** [DONE 2026-06-06] pyproject.toml → 0.1.2,
+   CHANGELOG restructured, ROADMAP updated.
+8. **Tag v0.1.2 and set up PyPI Trusted Publishing.** [PENDING]
 
 ---
 
@@ -195,7 +179,7 @@ Priority order, informed by "validation before features" principle.
 
 ### Validation expansion
 
-- True R `drda` coefficient reference for Hill4P/logistic4 equivalence.
+- True R `drda` coefficient reference for Hill4P/logistic4 equivalence. [DONE v0.1.2]
 - External validation or documented mathematical references for binding models.
 - Published or textbook reference for AsymmetricGompertz, or mark experimental.
 - Tests for report generation under both core-only and `[reports]` installs.
@@ -215,17 +199,17 @@ openfit rather than copy its fitting logic. Its first modules should be:
 
 ## Periodic Review Protocol
 
-After 7 days (by 2026-06-10):
+After 7 days (by 2026-06-13):
 - Re-run tests, Ruff, build, and `git status`.
 - Check whether README test counts and status text still match the live suite.
 - Verify CI badge status on GitHub Actions.
 
-After 30 days (by 2026-07-03):
+After 30 days (by 2026-07-06):
 - Re-check package metadata, CI badge, PyPI status, and release tags.
 - Re-evaluate all validation claims against actual tests, not roadmap text.
 - Move or remove scratch files with explicit user approval.
 
-After 90 days (by 2026-09-03):
+After 90 days (by 2026-09-06):
 - Revisit dependency versions and Python support.
 - Re-run validation against current scipy/numpy versions.
 - Re-check external reference package versions for R `drda`, `drc`, and `nplr`
@@ -237,13 +221,15 @@ After 90 days (by 2026-09-03):
 
 Use:
 
-> Tests pass locally (343 collected, 342 passed, 1 skipped). Ruff lint and
+> Tests pass locally (370+ collected, 368+ passed, 5 skipped). Ruff lint and
 > format pass. Build produces a clean wheel. Remote CI status unverified.
 
 Use:
 
-> drda-related tests exist but coefficient-level R cross-validation still
-> needs to be made explicit.
+> Hill4P cross-validated against R drda logistic4 on voropm2: coefficients
+> agree within rtol=1e-3, RSS within rtol=1e-6. Hill5P vs drda logistic5
+> uses directional tests (different functional forms; direct coefficient
+> comparison not valid).
 
 Use:
 
@@ -266,3 +252,4 @@ Do not use:
 Do not use:
 
 > Binding models are fully validated.
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               

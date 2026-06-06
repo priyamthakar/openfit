@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "openfit"
-version = "0.1.1"
+version = "0.1.2"
 description = "Reproducible, open-source nonlinear curve fitting with publication-quality reports."
 readme = "README.md"
 license = { text = "MIT" }

@@ -368,11 +368,16 @@ class Fit:
         r_squared = 1.0 - ss_res / ss_tot if ss_tot > 0.0 else 0.0
 
         # Information criteria (unweighted RSS -- task spec)
+        # np.errstate(divide="ignore") suppresses the divide-by-zero warning when
+        # RSS == 0 (perfect fit); np.log(0) correctly returns -inf in that case.
         rss = rss_unweighted
         k = n_params
         n = n_obs
-        aic = n * np.log(rss / n) + 2.0 * k
-        bic = n * np.log(rss / n) + k * np.log(n)
+        with np.errstate(divide="ignore", invalid="ignore"):
+            _log_rss_n = float(np.log(rss / n))
+            _log_n = float(np.log(n))
+        aic = n * _log_rss_n + 2.0 * k
+        bic = n * _log_rss_n + k * _log_n
         denom_aicc = n - k - 1
         aicc = float(aic + 2.0 * k * (k + 1) / denom_aicc) if denom_aicc > 0 else float("inf")
 

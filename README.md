@@ -208,7 +208,7 @@ never imports openassay.
 git clone https://github.com/priyamthakar/openfit
 cd openfit
 pip install -e ".[dev]"
-pytest                              # 339 tests (338 passed, 1 skipped)
+pytest                              # 370+ tests (368 passed, 5 skipped)
 pytest tests/validation/ -v        # NIST StRD suite
 ruff check src/ tests/ --fix
 mypy src/openfit
@@ -221,4 +221,4 @@ mypy src/openfit
 MIT. Author: Priyam Thakar <priyamthakar1@gmail.com>
 
 Reproducible, open-source nonlinear curve fitting with publication-quality reports.
-Every fit you can rerun, every result you can cite.
+Every fit you can rerun, every result you can cite.

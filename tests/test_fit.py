@@ -224,3 +224,26 @@ def test_no_warn_diff_method_with_trf(hill4p_data) -> None:
     with warnings.catch_warnings():
         warnings.simplefilter("error", UserWarning)
         Fit("hill4p", x, y, weights="uniform", method="trf", diff_method="3-point").run()
+
+
+def test_zero_rss_information_criteria() -> None:
+    """AIC/BIC/AICc are -inf for a perfect (zero-RSS) fit; no RuntimeWarning emitted.
+
+    A noiseless linear fit has RSS == 0 by construction.  The information-theoretic
+    criteria are mathematically -inf in this case (log(0) = -inf).  The engine should
+    return float('-inf') for all three without emitting a RuntimeWarning.
+    """
+    import warnings
+
+    # Perfect linear data: y = 2*x + 1 (no noise)
+    x = np.array([1.0, 2.0, 3.0, 4.0, 5.0])
+    y = 2.0 * x + 1.0  # exact
+
+    with warnings.catch_warnings():
+        warnings.simplefilter("error", RuntimeWarning)
+        result = Fit("poly1", x, y, weights="uniform").run()
+
+    assert result.rss == 0.0 or result.rss < 1e-28, f"Expected zero RSS, got {result.rss}"
+    assert result.aic == float("-inf"), f"AIC should be -inf for zero-RSS fit, got {result.aic}"
+    assert result.bic == float("-inf"), f"BIC should be -inf for zero-RSS fit, got {result.bic}"
+    assert result.aicc == float("-inf"), f"AICc should be -inf for zero-RSS fit, got {result.aicc}"
