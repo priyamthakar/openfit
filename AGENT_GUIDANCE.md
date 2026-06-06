@@ -11,11 +11,11 @@ asks to start the downstream `openassayflow` package.
 - Branch: `master`
 - Package: `openfit`
 - Declared version in `pyproject.toml`: `0.1.2`
-- README status text: `v0.1.2 (in progress)`
-- Test status (verified 2026-06-06): `370+ collected, 368+ passed, 5 skipped`
-- Lint status (verified 2026-06-03): PASSING (`ruff check src tests: All checks passed!`)
-- Format status (verified 2026-06-03): PASSING (`58 files already formatted`)
-- Build status (verified 2026-06-03): `openfit-0.1.1.tar.gz` and `.whl` build clean
+- README status text: `v0.1.2`
+- Test status (verified 2026-06-06): `379 collected, 374 passed, 5 skipped`
+- Lint status (verified 2026-06-06): PASSING (`ruff check src tests: All checks passed!`)
+- Format status (verified 2026-06-06): PASSING (`61 files already formatted`)
+- Build status (verified 2026-06-06): `openfit-0.1.2.tar.gz` and `.whl` build clean
 - Working tree status (verified 2026-06-06): UNCOMMITTED (v0.1.2 changes in progress)
 
 Do not describe this checkout as release-ready. CI badge status is unverified
@@ -63,13 +63,12 @@ Items marked [OPEN] remain unresolved.
 
 ### 1. README test count is stale [RESOLVED]
 
-README updated 2026-06-06: now reads `370+ tests (368 passed, 5 skipped)`.
+README updated 2026-06-06: now reads `379 tests (374 passed, 5 skipped)`.
 
 ### 2. Version/status language is inconsistent [RESOLVED]
 
 `pyproject.toml` bumped to `0.1.2` on 2026-06-06. CHANGELOG restructured with
-`[0.1.2]` section. Still need to update README status text from
-`v0.1.2 (in progress)` to `v0.1.2` at tag time.
+`[0.1.2]` section. README status text now says `v0.1.2`.
 
 ### 3. Binding models have no published-reference validation [RESOLVED]
 
@@ -156,13 +155,13 @@ Priority order, informed by "validation before features" principle.
 2. **Binding model validation (issue #3).** [DONE] Synthetic certified
    datasets + 26 parameter-recovery tests added.
 3. **Triage scratch files (issue #9).** [DONE] Moved to `tests/validation/reference/`.
-4. **Update README test count (issue #1).** [DONE 2026-06-06] Updated to 370+/368/5.
+4. **Update README test count (issue #1).** [DONE 2026-06-06] Updated to 379/374/5.
 5. **Make drda tests explicit (issue #4).** [DONE 2026-06-06] Stored coefficient
    reference values + 5 assertion tests added to `test_drda_crossvalidation.py`.
 6. **Zero-RSS guard (issue #8).** [DONE 2026-06-06] Guard in fit.py + direct test.
 7. **Align version metadata (issue #2).** [DONE 2026-06-06] pyproject.toml → 0.1.2,
    CHANGELOG restructured, ROADMAP updated.
-8. **Tag v0.1.2 and set up PyPI Trusted Publishing.** [PENDING]
+8. **Tag v0.1.2 and set up PyPI Trusted Publishing.** [IN PROGRESS]
 
 ---
 
@@ -221,7 +220,7 @@ After 90 days (by 2026-09-06):
 
 Use:
 
-> Tests pass locally (370+ collected, 368+ passed, 5 skipped). Ruff lint and
+> Tests pass locally (379 collected, 374 passed, 5 skipped). Ruff lint and
 > format pass. Build produces a clean wheel. Remote CI status unverified.
 
 Use:
@@ -252,4 +251,3 @@ Do not use:
 Do not use:
 
 > Binding models are fully validated.
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               

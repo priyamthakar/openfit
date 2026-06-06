@@ -24,12 +24,12 @@ Versioning follows [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
   `tests/test_fit.py` asserts this behaviour.
 
 ### Fixed
-- `AGENT_GUIDANCE.md`: stale test count updated (343 → 368 passed, 5 skipped);
+- `AGENT_GUIDANCE.md`: stale test count updated (343 → 374 passed, 5 skipped);
   issues #4 and #6 marked resolved; periodic review dates refreshed.
 
 ### Changed
 - Version bump to 0.1.2.
-- README development section test count corrected (339 → 368+, 5 skipped).
+- README development section test count corrected (339 → 379 collected, 374 passed, 5 skipped).
 - `ROADMAP.md`: R drda cross-validation marked done `[x]`.
 
 ---
@@ -169,4 +169,25 @@ v0.1.0 roadmap features plus several v0.2-v0.5 features built ahead of schedule.
 - ASCII-safe output (no Unicode punctuation, cp1252-compatible)
 
 **Plotting**
-- `fit_overlay_plot()` -- fit curve over data, au
+- `fit_overlay_plot()` -- fit curve over data, auto log-x when max/min > 100
+- `residual_plot()` -- residuals vs. predicted
+- `qq_plot()` -- normal Q-Q plot of standardized residuals
+- `figure_to_base64()` -- PNG for HTML embedding
+
+**Packaging**
+- `src/` layout (PEP 517/518), hatchling build backend
+- `py.typed` marker (PEP 561, enables downstream type checking)
+- Optional dep groups: `[cli]`, `[reports]`, `[dev]`
+- Python >= 3.10
+
+**Tests**
+- 93 unit tests across: spec, weighting, models, fit, uncertainty, compare,
+  diagnostics, global_fit, outliers, io
+- All tests pass: 200 total, 0 failures, 1 skip (Lanczos1 RSS precision limit)
+
+---
+
+[Unreleased]: https://github.com/priyamthakar/openfit/compare/v0.1.2...HEAD
+[0.1.2]: https://github.com/priyamthakar/openfit/compare/v0.1.1...v0.1.2
+[0.1.1]: https://github.com/priyamthakar/openfit/compare/v0.1.0...v0.1.1
+[0.1.0]: https://github.com/priyamthakar/openfit/releases/tag/v0.1.0

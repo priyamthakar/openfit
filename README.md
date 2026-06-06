@@ -5,9 +5,9 @@
 Reproducible, open-source nonlinear curve fitting with publication-quality reports.
 Every fit you can rerun, every result you can cite.
 
-> **Status:** v0.1.2 (in progress). 368 tests collected (368 passed, 5 skipped;
+> **Status:** v0.1.2. 379 tests collected (374 passed, 5 skipped;
 > NIST StRD all 27 datasets, synthetic 4PL/5PL and binding-model certified,
-> published-reference validation). PyPI publish planned for v0.1.2.
+> published-reference validation). PyPI publication is pending tag workflow verification.
 
 ---
 
@@ -208,7 +208,7 @@ never imports openassay.
 git clone https://github.com/priyamthakar/openfit
 cd openfit
 pip install -e ".[dev]"
-pytest                              # 370+ tests (368 passed, 5 skipped)
+pytest                              # 379 tests (374 passed, 5 skipped)
 pytest tests/validation/ -v        # NIST StRD suite
 ruff check src/ tests/ --fix
 mypy src/openfit
@@ -221,4 +221,4 @@ mypy src/openfit
 MIT. Author: Priyam Thakar <priyamthakar1@gmail.com>
 
 Reproducible, open-source nonlinear curve fitting with publication-quality reports.
-Every fit you can rerun, every result you can cite.
+Every fit you can rerun, every result you can cite.

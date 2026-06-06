@@ -245,4 +245,4 @@ Each downstream package:
 - Motulsky, H.J. & Brown, R.E. (2006). Detecting outliers when fitting data with nonlinear regression: a new method based on robust nonlinear regression and the false discovery rate. *BMC Bioinformatics*, 7, 123. -- The ROUT paper.
 - NIST StRD: https://www.itl.nist.gov/div898/strd/nls/nls_main.shtml -- Certified reference datasets.
 - Ritz, C. et al. (2015). Dose-Response Analysis Using R. *PLOS ONE*, 10(12), e0146021. -- The R `drc` package paper.
-- DeLean, A., Munson, P.J. & Rodbard, D. (1978). Simultaneous analysis of families of sigmoidal curves. *Am. J. Physiol.*, 235(2), E97-
+- DeLean, A., Munson, P.J. & Rodbard, D. (1978). Simultaneous analysis of families of sigmoidal curves. *Am. J. Physiol.*, 235(2), E97-E102. -- The original 4PL/ALLFIT paper.
