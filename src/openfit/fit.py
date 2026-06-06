@@ -367,19 +367,23 @@ class Fit:
 
         r_squared = 1.0 - ss_res / ss_tot if ss_tot > 0.0 else 0.0
 
-        # Information criteria (unweighted RSS -- task spec)
-        # np.errstate(divide="ignore") suppresses the divide-by-zero warning when
-        # RSS == 0 (perfect fit); np.log(0) correctly returns -inf in that case.
+        # Information criteria (unweighted RSS -- task spec). Treat numerical
+        # noise at the scale of machine precision as a perfect zero-RSS fit.
         rss = rss_unweighted
         k = n_params
         n = n_obs
-        with np.errstate(divide="ignore", invalid="ignore"):
+        rss_zero_atol = 100.0 * float(np.finfo(np.float64).eps) * max(float(np.sum(y**2)), 1.0)
+        if rss <= rss_zero_atol:
+            aic = float("-inf")
+            bic = float("-inf")
+            aicc = float("-inf")
+        else:
             _log_rss_n = float(np.log(rss / n))
             _log_n = float(np.log(n))
-        aic = n * _log_rss_n + 2.0 * k
-        bic = n * _log_rss_n + k * _log_n
-        denom_aicc = n - k - 1
-        aicc = float(aic + 2.0 * k * (k + 1) / denom_aicc) if denom_aicc > 0 else float("inf")
+            aic = n * _log_rss_n + 2.0 * k
+            bic = n * _log_rss_n + k * _log_n
+            denom_aicc = n - k - 1
+            aicc = float(aic + 2.0 * k * (k + 1) / denom_aicc) if denom_aicc > 0 else float("inf")
 
         # Residual diagnostics
         raw_resid = residuals  # y - y_fitted
