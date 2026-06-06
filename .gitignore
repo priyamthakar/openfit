@@ -17,4 +17,6 @@ htmlcov/
 coverage.xml
 *.log
 *.tmp
+test_out.html
+test_*.html
 .DS_Store
