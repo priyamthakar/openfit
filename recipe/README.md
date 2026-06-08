@@ -1,0 +1,1 @@
+This directory contains the conda-forge feedstock recipe for openfit. To submit to conda-forge: (1) publish to PyPI, (2) get the sdist SHA-256 (run `sha256sum openfit-0.1.2.tar.gz`), (3) replace the SET_AFTER_PYPI_PUBLISH placeholder in meta.yaml, (4) fork https://github.com/conda-forge/staged-recipes, copy this recipe into recipes/openfit/, open a PR.
