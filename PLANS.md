@@ -9,34 +9,6 @@ implemented. The next work is validation catch-up, not new features.
 
 ---
 
-## Citation infrastructure [IN PROGRESS — 2026-06-08]
-
-Citability is the core value proposition ("every result you can cite") and
-requires closing the loop so openfit itself can be cited.
-
-### Done
-- `CITATION.cff` added at repo root (GitHub renders a "Cite this repository"
-  button automatically; CFF version 1.2.0, includes abstract, keywords,
-  ORCID placeholder).
-- `paper/paper.md` and `paper/paper.bib` drafted for JOSS submission.
-  Covers: statement of need, ROUT novelty, NIST validation, FitSpec
-  reproducibility, comparison table. Seven references included.
-
-### Still needed
-- **Replace ORCID placeholder** in `CITATION.cff` (line `orcid: "https://orcid.org/0000-0000-0000-0000"`).
-  Register at https://orcid.org if needed.
-- **Zenodo–GitHub integration**: go to https://zenodo.org, link the GitHub
-  repo, then enable "GitHub releases". On the next `git tag v0.1.2` push, Zenodo
-  auto-mints a DOI. Uncomment the `doi:` line in `CITATION.cff` with the
-  resulting DOI.
-- **JOSS submission**: once Zenodo DOI exists and PyPI is published, submit at
-  https://joss.theoj.org. JOSS will require `CONTRIBUTING.md`,
-  `CODE_OF_CONDUCT.md`, and OSS community files — do those before submitting.
-- **Add JOSS badge to README** after submission (JOSS provides the badge
-  markdown on the submission page).
-
----
-
 ## Immediate: v0.1.1 completion (DONE)
 
 **Status:** Complete. NIST parameter recovery done, synthetic 4PL/5PL
@@ -157,4 +129,42 @@ in the test file, not in the core engine:
 - **BoxBOD:** `bounds_dict={"b2": (0.0, 10.0)}` prevents a spurious basin.
 
 These are correct behaviors (analytic Jacobian is always better; physical
-bounds are a user responsibility). 
+bounds are a user responsibility). The CustomModel docstring should note that
+analytic Jacobians significantly improve convergence for ill-conditioned
+rational-polynomial models.
+
+---
+
+## Phase 2+ features (from ROADMAP.md)
+
+These remain as-is in ROADMAP.md. No changes to the sequence. Key note:
+**do not start Phase 6 (model library expansion) until the binding model
+validation is resolved.** Every existing model needs its published-reference
+test before new models are added.
+
+Phases at a glance:
+- v0.2.x-v0.3.x: Documentation only (code already shipped ahead of schedule)
+- v0.6.x: Full model library (~30 equations) -- blocked by validation catch-up
+- v0.7.x: PDF + Word reports + Prism import
+- v0.8.x+: Constraint fitting, batch fitting, stable v1.0.0
+
+---
+
+## openassayflow (downstream package)
+
+`openassayflow` is blocked until openfit v0.1.2 is tagged and CI-clean.
+
+Do not start openassayflow until:
+1. openfit v0.1.2 is tagged
+2. Binding model validation is resolved
+3. CI badge is green
+
+---
+
+## What NOT to do next
+
+- Do not add new models before resolving the binding model validation gap.
+- Do not start openassayflow before openfit v0.1.2 is tagged.
+- Do not implement Bayesian fitting (out of scope per CLAUDE.md).
+- Do not add a GUI (out of scope per ROADMAP.md).
+- Do not tag v0.1.2 with scratch R files still committed at the repo root.
