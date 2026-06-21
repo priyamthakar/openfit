@@ -225,20 +225,20 @@ Four-parameter and related sigmoidal equations for dose-response and activation 
 
 **Typical use:** Tumour growth; actuarial mortality curves; product adoption curves. Asymmetric by construction — rises more steeply initially than it approaches the asymptote.
 
----
+### `gompertz_asym` — Asymmetric Gompertz
 
-### `asymmetricgompertz` — Asymmetric Gompertz
-
-**Equation:** `Y = Asym * exp(-exp(-k * (X - xmid))) ^ d`
+**Equation:**  
+`Y = K * exp(-exp(-r_left * (X - t_inf)))` for `X <= t_inf`  
+`Y = K * exp(-exp(-r_right * (X - t_inf)))` for `X > t_inf`  
 
 | Parameter | Description |
 |---|---|
-| `Asym` | Upper asymptote. |
-| `k` | Growth rate constant. |
-| `xmid` | Inflection point. |
-| `d` | Asymmetry parameter. `d = 1` recovers the standard Gompertz. |
+| `K` | Asymptotic maximum (carrying capacity). |
+| `r_left` | Growth rate constant for the left side ($X \le t_{\text{inf}}$). |
+| `r_right` | Growth rate constant for the right side ($X > t_{\text{inf}}$). |
+| `t_inf` | Inflection point (time of maximum growth rate). |
 
-**Typical use:** Growth processes with tunable asymmetry beyond what the standard Gompertz provides.
+**Typical use:** Growth processes with different growth rates before and after reaching the inflection point.
 
 ---
 

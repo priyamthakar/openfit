@@ -2,6 +2,7 @@
 
 from importlib.metadata import PackageNotFoundError, version
 
+from openfit.batch import BatchFit
 from openfit.compare import compare_models
 from openfit.fit import Fit
 from openfit.global_fit import GlobalFit
@@ -27,5 +28,6 @@ __all__ = [
     "ROUTResult",
     "get_model",
     "list_models",
+    "BatchFit",
     "__version__",
 ]

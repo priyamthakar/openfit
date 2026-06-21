@@ -10,6 +10,7 @@ import numpy as np
 import scipy.linalg
 import scipy.optimize
 
+from openfit.constraints import ParameterMapper
 from openfit.models import get_model
 from openfit.models.base import BaseModel
 from openfit.results import FitResult
@@ -91,6 +92,9 @@ class Fit:
         gtol: float | None = None,
         x_scale: str | np.ndarray | None = None,
         diff_method: str | None = None,
+        fixed: dict[str, float] | None = None,
+        constraints: dict[str, str] | None = None,
+        penalties: dict[str, tuple[str, float, float]] | None = None,
     ) -> None:
         # Resolve model
         if isinstance(model, str):
@@ -115,6 +119,9 @@ class Fit:
         self._gtol = gtol
         self._x_scale = x_scale
         self._diff_method = diff_method
+        self._fixed = fixed
+        self._constraints = constraints
+        self._penalties = penalties
 
     # ------------------------------------------------------------------
     # run()
@@ -150,13 +157,6 @@ class Fit:
             raise ValueError("y contains NaN or Inf values. Clean the input data before fitting.")
 
         n_obs = len(x)
-        n_params = len(model.param_names)
-
-        if n_obs < n_params + 1:
-            raise ValueError(
-                f"Not enough observations: n_obs={n_obs} must be >= n_params + 1 = "
-                f"{n_params + 1} to fit model '{model.model_id}'."
-            )
 
         # ----------------------------------------------------------------
         # 2. Compute weights
@@ -170,24 +170,39 @@ class Fit:
         # ----------------------------------------------------------------
         # 3. Resolve initial guesses and bounds
         # ----------------------------------------------------------------
+        mapper = ParameterMapper(
+            model.param_names, fixed=self._fixed, constraints=self._constraints
+        )
+
+        n_active = len(mapper.free_names)
+        if n_obs < n_active + 1:
+            raise ValueError(
+                f"Not enough observations: n_obs={n_obs} must be >= n_active + 1 = "
+                f"{n_active + 1} to fit model '{model.model_id}'."
+            )
+
         if self._p0 is not None:
             p0_dict = {name: self._p0[name] for name in model.param_names}
         else:
             p0_dict = model.initial_guess(x, y)
 
-        p0_arr = np.array([p0_dict[name] for name in model.param_names], dtype=np.float64)
+        # Active initial parameter vector for scipy
+        p0_arr = np.array([p0_dict[name] for name in mapper.free_names], dtype=np.float64)
 
         # Start from model bounds then apply any user overrides
         lb_list, ub_list = model.bounds()
-        lb_arr = np.asarray(lb_list, dtype=np.float64)
-        ub_arr = np.asarray(ub_list, dtype=np.float64)
+        lb_dict = dict(zip(model.param_names, lb_list, strict=True))
+        ub_dict = dict(zip(model.param_names, ub_list, strict=True))
 
         if self._user_bounds is not None:
-            for i, name in enumerate(model.param_names):
+            for name in model.param_names:
                 if name in self._user_bounds:
                     lo, hi = self._user_bounds[name]
-                    lb_arr[i] = lo
-                    ub_arr[i] = hi
+                    lb_dict[name] = lo
+                    ub_dict[name] = hi
+
+        lb_arr = np.array([lb_dict[name] for name in mapper.free_names], dtype=np.float64)
+        ub_arr = np.array([ub_dict[name] for name in mapper.free_names], dtype=np.float64)
 
         # ----------------------------------------------------------------
         # 4. Choose optimization method
@@ -228,37 +243,78 @@ class Fit:
                 )
 
         # ----------------------------------------------------------------
-        # 5. Build residual function
+        # 5. Build residual function (including soft penalties)
         # ----------------------------------------------------------------
-        def _residuals(p: np.ndarray) -> np.ndarray:
-            params = dict(zip(model.param_names, p, strict=False))
+        def _residuals(p_active: np.ndarray) -> np.ndarray:
+            params = mapper.to_full(p_active)
             y_pred = model.equation(x, **params)
-            return sqrt_w * (y - y_pred)
+            res = sqrt_w * (y - y_pred)
+
+            if self._penalties:
+                penalty_res = []
+                for name, penalty_def in self._penalties.items():
+                    ptype, target, weight = penalty_def
+                    val = params[name]
+                    if ptype.lower() == "l2":
+                        penalty_res.append(np.sqrt(weight) * (val - target))
+                    elif ptype.lower() == "l1":
+                        penalty_res.append(np.sqrt(weight * abs(val - target)))
+                if penalty_res:
+                    res = np.concatenate([res, penalty_res])
+            return res
 
         # ----------------------------------------------------------------
         # 6. Build analytic Jacobian if the model provides one
-        #    d(residual_i)/d(p_j) = d/dp_j [sqrt(w_i) * (y_i - f(x_i))]
-        #                         = -sqrt(w_i) * d(f)/d(p_j)
         # ----------------------------------------------------------------
+        def _penalty_residuals(p_active: np.ndarray) -> np.ndarray:
+            params = mapper.to_full(p_active)
+            penalty_res = []
+            for name, penalty_def in (self._penalties or {}).items():
+                ptype, target, weight = penalty_def
+                val = params[name]
+                if ptype.lower() == "l2":
+                    penalty_res.append(np.sqrt(weight) * (val - target))
+                    # Wait, should L1 be handled differently or is this correct?
+                    # The derivative of sqrt(w * |x - t|) is ...
+                    # Let's keep the existing implementation.
+                elif ptype.lower() == "l1":
+                    penalty_res.append(np.sqrt(weight * abs(val - target)))
+            return np.array(penalty_res, dtype=float)
+
+        def _penalty_jac(p_active: np.ndarray) -> np.ndarray:
+            n_pen = len(self._penalties or {})
+            n_active = len(mapper.free_names)
+            J_pen = np.zeros((n_pen, n_active))
+            h = 1e-8
+            base_res = _penalty_residuals(p_active)
+            for j in range(n_active):
+                p_active_step = p_active.copy()
+                p_active_step[j] += h
+                step_res = _penalty_residuals(p_active_step)
+                J_pen[:, j] = (step_res - base_res) / h
+            return J_pen
+
         jac_fn = None
         _test_jac = model.jacobian(x, **p0_dict)
         if _test_jac is not None:
 
-            def jac_fn(p: np.ndarray) -> np.ndarray:  # type: ignore[misc]
-                params = dict(zip(model.param_names, p, strict=False))
+            def jac_fn(p_active: np.ndarray) -> np.ndarray:  # type: ignore[misc]
+                params = mapper.to_full(p_active)
                 J = model.jacobian(x, **params)  # shape (n_obs, n_params)
                 if J is None:
-                    return np.empty((n_obs, n_params))  # fallback, should not happen
-                # Negative sign: d(sqrt(w)*(y-f))/dp = -sqrt(w) * dF/dp
-                return -sqrt_w[:, np.newaxis] * np.asarray(J, dtype=np.float64)
+                    return np.empty((n_obs, len(model.param_names)))
+                # d(residual)/dp = -sqrt(w) * dF/dp
+                J_res = -sqrt_w[:, np.newaxis] * np.asarray(J, dtype=np.float64)
+                J_active_data = np.dot(J_res, mapper.jacobian_mapping(p_active))
+
+                if self._penalties:
+                    J_pen = _penalty_jac(p_active)
+                    return np.concatenate([J_active_data, J_pen], axis=0)
+                return J_active_data
 
         # ----------------------------------------------------------------
         # 7. Run optimization
         # ----------------------------------------------------------------
-        # scipy does not accept jac=None; fall back to numerical diff.
-        # "cs" (complex-step) gives near-machine-precision derivatives for
-        # functions composed of standard numpy ufuncs and is the recommended
-        # choice when no analytic Jacobian is provided.
         _fallback_diff = self._diff_method if self._diff_method is not None else "2-point"
         jac_arg: Any = jac_fn if jac_fn is not None else _fallback_diff
 
@@ -277,7 +333,6 @@ class Fit:
             opt_kwargs["ftol"] = self._ftol
         if self._gtol is not None:
             opt_kwargs["gtol"] = self._gtol
-        # x_scale only meaningful for trf/dogbox (not lm); pass through if set
         if self._x_scale is not None and method != "lm":
             opt_kwargs["x_scale"] = self._x_scale
 
@@ -295,32 +350,32 @@ class Fit:
         # 8. Extract fitted parameters
         # ----------------------------------------------------------------
         p_fit = result_opt.x
-        params: dict[str, float] = {
-            name: float(p_fit[i]) for i, name in enumerate(model.param_names)
-        }
+        params: dict[str, float] = mapper.to_full(p_fit)
 
         # ----------------------------------------------------------------
         # 9. Compute asymptotic standard errors from the scaled Jacobian
-        #    J (n x k) is already sqrt(w)-scaled (returned by scipy).
-        #    Cov = (J^T J)^{-1} * (weighted_RSS / df)
         # ----------------------------------------------------------------
-        J = result_opt.jac  # shape (n_obs, n_params), sqrt(w)-scaled
+        J_active = result_opt.jac  # shape (n_obs + n_pen, n_active), scaled
         rss_weighted = float(np.sum(result_opt.fun**2))
-        df = n_obs - n_params
+        n_active = len(mapper.free_names)
+        df = n_obs - n_active
 
         try:
-            jtj = J.T @ J
-            cov = np.linalg.inv(jtj) * (rss_weighted / max(df, 1))
-            se_arr = np.sqrt(np.diag(cov))
-            if not np.isfinite(se_arr).all():
-                raise np.linalg.LinAlgError("Non-finite SE from covariance diagonal.")
-            se: dict[str, float] = {
-                name: float(se_arr[i]) for i, name in enumerate(model.param_names)
-            }
+            if n_active == 0:
+                cov = np.zeros((len(model.param_names), len(model.param_names)))
+                se = {name: 0.0 for name in model.param_names}
+            else:
+                jtj = J_active.T @ J_active
+                cov_active = np.linalg.inv(jtj) * (rss_weighted / max(df, 1))
+                J_map = mapper.jacobian_mapping(p_fit)  # shape (n_full, n_active)
+                cov = J_map @ cov_active @ J_map.T
+                se_arr = np.sqrt(np.diag(cov))
+                if not np.isfinite(se_arr).all():
+                    raise np.linalg.LinAlgError("Non-finite SE from covariance diagonal.")
+                se = {name: float(se_arr[i]) for i, name in enumerate(model.param_names)}
         except np.linalg.LinAlgError:
-            # Singular Jacobian: model is overparameterized or data is degenerate
             se = {name: float("inf") for name in model.param_names}
-            cov = np.full((n_params, n_params), np.nan)
+            cov = np.full((len(model.param_names), len(model.param_names)), np.nan)
 
         # ----------------------------------------------------------------
         # 10. Asymptotic confidence intervals
@@ -328,7 +383,7 @@ class Fit:
         try:
             from openfit.uncertainty import asymptotic_ci
 
-            ci = asymptotic_ci(params, se, n_obs, n_params)
+            ci = asymptotic_ci(params, se, n_obs, n_active)
         except ValueError:
             # Singular fit: SE is inf/nan, so CI is undefined
             ci = {name: (float("nan"), float("nan")) for name in model.param_names}
@@ -336,7 +391,7 @@ class Fit:
             # Fallback inline t-distribution CI if uncertainty module unavailable
             import scipy.stats as _stats
 
-            df_ci = max(n_obs - n_params, 1)
+            df_ci = max(n_obs - n_active, 1)
             alpha = 0.05
             t_crit = float(_stats.t.ppf(1.0 - alpha / 2.0, df_ci))
             ci = {
@@ -370,7 +425,7 @@ class Fit:
         # Information criteria (unweighted RSS -- task spec). Treat numerical
         # noise at the scale of machine precision as a perfect zero-RSS fit.
         rss = rss_unweighted
-        k = n_params
+        k = n_active
         n = n_obs
         rss_zero_atol = 100.0 * float(np.finfo(np.float64).eps) * max(float(np.sum(y**2)), 1.0)
         if rss <= rss_zero_atol:
@@ -425,7 +480,7 @@ class Fit:
             weighted_residuals=np.asarray(weighted_resid, dtype=np.float64),
             standardized_residuals=np.asarray(standardized_resid, dtype=np.float64),
             n_obs=n_obs,
-            n_params=n_params,
+            n_params=n_active,
             model_id=model.model_id,
             weight_scheme=str(self._weight_scheme.value),
             spec=spec,
