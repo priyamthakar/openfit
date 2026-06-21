@@ -67,5 +67,5 @@ argument — there is no silent default.  Passing `weights="1/y2"` is equivalent
   statistical inference matter**: use openfit.  The overhead is modest and the
   correctness guarantees are substantial.
 
-See [06_benchmark_vs_scipy.ipynb](../notebooks/06_benchmark_vs_scipy.ipynb) for
+See [06_benchmark_vs_scipy.ipynb](notebooks/06_benchmark_vs_scipy.ipynb) for
 the full runnable comparison.

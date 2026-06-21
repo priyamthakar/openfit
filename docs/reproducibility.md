@@ -23,7 +23,7 @@ FitSpec is a JSON reproducibility manifest that openfit saves alongside every fi
 | `param_values` | The exact fitted parameter values, serialised using lossless `repr()` so no precision is lost in the JSON round-trip. |
 | `weight_scheme` | The weight scheme string, e.g. `"1/y2"`. |
 | `data_hash` | SHA-256 hash of the input `x` and `y` arrays, computed over their float64 little-endian byte representations. Used to verify that the FitSpec corresponds to the correct dataset. |
-| `openfit_version` | The openfit version at the time the fit was run (e.g. `"0.1.2"`). |
+| `openfit_version` | The openfit version at the time the fit was run (e.g. `"1.0.0"`). |
 | `scipy_version` | The scipy version at the time the fit was run. |
 | `numpy_version` | The numpy version at the time the fit was run. |
 | `random_seed` | The integer seed passed to the bootstrap CI sampler. |

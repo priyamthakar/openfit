@@ -10,6 +10,19 @@ Versioning follows [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ---
 
+## [1.0.0] - 2026-06-21
+
+### Added
+- Stable public release marker for the validated openfit feature set.
+- Hardened MkDocs site configuration for strict builds, canonical site metadata,
+  and reproducible notebook example pages.
+
+### Changed
+- Bumped package and citation metadata to 1.0.0.
+- Updated documentation release status and workflow dependency installation.
+
+---
+
 ## [0.1.3] - 2026-06-21
 
 ### Added
@@ -203,7 +216,8 @@ v0.1.0 roadmap features plus several v0.2-v0.5 features built ahead of schedule.
 
 ---
 
-[Unreleased]: https://github.com/priyamthakar/openfit/compare/v0.1.3...HEAD
+[Unreleased]: https://github.com/priyamthakar/openfit/compare/v1.0.0...HEAD
+[1.0.0]: https://github.com/priyamthakar/openfit/compare/v0.1.3...v1.0.0
 [0.1.3]: https://github.com/priyamthakar/openfit/compare/v0.1.2...v0.1.3
 [0.1.2]: https://github.com/priyamthakar/openfit/compare/v0.1.1...v0.1.2
 [0.1.1]: https://github.com/priyamthakar/openfit/compare/v0.1.0...v0.1.1

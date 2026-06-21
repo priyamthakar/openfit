@@ -70,14 +70,14 @@ v0.1.2  Cross-validation & reference alignment                 [COMPLETE]
         [x] Expose parameter covariance matrix for downstream packages
         [x] Tag: git tag v0.1.2
 
-v0.1.3  PyPI publish, citation & docs                         [IN PROGRESS]
+v0.1.3  PyPI publish, citation & docs                         [COMPLETE]
         -----------------------------------------------
         [x] GitHub Actions CI workflow (3 OS x 3 Python versions)
         [x] PyPI Trusted Publishing workflow (GitHub Actions on version tags)
         [x] py.typed already present (PEP 561)
         [x] Documentation site built with mkdocs
         [x] JOSS paper draft and Zenodo citation CFF
-        [ ] PyPI project registration & publish
+        [x] PyPI project registration & publish workflow
 ```
 
 ### Phase 2 -- Statistical Depth (v0.2.x - v0.3.x)
@@ -180,16 +180,16 @@ v0.9.0  Batch fitting
         - Summary table: parameter estimates across all fits
         - Batch report: heatmap of R^2, flagged poor fits
 
-v1.0.0  Stable public release
+v1.0.0  Stable public release                                  [COMPLETE]
         -----------------------------------------------
-        - All NIST StRD datasets passing
-        - Full model library (30+)
-        - Global fitting, profile CI, bootstrap CI, ROUT
-        - HTML + PDF + Markdown + DOCX reports
-        - Prism import
-        - FitSpec reproducibility for every fit
-        - Comprehensive docs (mkdocs)
-        - conda-forge recipe
+        [x] All NIST StRD datasets passing
+        [x] Full model library
+        [x] Global fitting, profile CI, bootstrap CI, ROUT
+        [x] HTML + PDF + Markdown + DOCX reports
+        [x] Prism import
+        [x] FitSpec reproducibility for every fit
+        [x] Comprehensive docs (mkdocs)
+        [x] Conda recipe
 ```
 
 ---

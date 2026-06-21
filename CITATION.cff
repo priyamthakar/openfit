@@ -22,8 +22,8 @@ authors:
 repository-code: "https://github.com/priyamthakar/openfit"
 url: "https://github.com/priyamthakar/openfit"
 license: MIT
-version: "0.1.2"
-date-released: "2026-06-06"
+version: "1.0.0"
+date-released: "2026-06-21"
 keywords:
   - nonlinear curve fitting
   - dose-response
@@ -42,8 +42,8 @@ preferred-citation:
       given-names: Priyam
       email: priyamthakar1@gmail.com
       orcid: "https://orcid.org/0000-0000-0000-0000"  # replace with real ORCID
-  version: "0.1.2"
-  date-released: "2026-06-06"
+  version: "1.0.0"
+  date-released: "2026-06-21"
   license: MIT
   repository-code: "https://github.com/priyamthakar/openfit"
   url: "https://github.com/priyamthakar/openfit"

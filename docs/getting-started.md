@@ -119,7 +119,7 @@ FitSpec is openfit's reproducibility manifest — a JSON record that captures ev
 
 ```json
 {
-  "openfit_version": "0.1.2",
+  "openfit_version": "1.0.0",
   "model": "hill4p",
   "weights": "1/y2",
   "solver": "lm",
