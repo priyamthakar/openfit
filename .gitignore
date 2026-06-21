@@ -21,3 +21,4 @@ test_out.html
 test_*.html
 .DS_Store
 .antigravitycli/
+site/

@@ -90,15 +90,28 @@ class OneSiteBinding:
         """
         return ([_X_EPS, _X_EPS], [np.inf, np.inf])
 
-    def jacobian(self, x: np.ndarray, **params: float) -> np.ndarray | None:
-        """Return None to use finite-difference Jacobian.
+    def jacobian(self, x: np.ndarray, **params: float) -> np.ndarray:
+        """Compute the analytic Jacobian of one-site binding at *x*.
+
+        Parameters
+        ----------
+        x : np.ndarray
+            Ligand concentration values.
+        **params : float
+            Must include Bmax, Kd.
 
         Returns
         -------
-        np.ndarray | None
-            None.
+        np.ndarray
+            Jacobian matrix of shape (n_obs, n_params) where columns are [Bmax, Kd].
         """
-        return None
+        bmax = params["Bmax"]
+        kd = params["Kd"]
+        kd_safe = kd if kd != 0.0 else _X_EPS
+        D = kd_safe + x
+        dy_dbmax = x / D
+        dy_dkd = -bmax * x / (D**2)
+        return np.column_stack([dy_dbmax, dy_dkd])
 
 
 # ---------------------------------------------------------------------------
@@ -204,15 +217,34 @@ class TwoSiteBinding:
             [np.inf, np.inf, np.inf, np.inf],
         )
 
-    def jacobian(self, x: np.ndarray, **params: float) -> np.ndarray | None:
-        """Return None to use finite-difference Jacobian.
+    def jacobian(self, x: np.ndarray, **params: float) -> np.ndarray:
+        """Compute the analytic Jacobian of two-site binding at *x*.
+
+        Parameters
+        ----------
+        x : np.ndarray
+            Ligand concentration values.
+        **params : float
+            Must include Bmax1, Kd1, Bmax2, Kd2.
 
         Returns
         -------
-        np.ndarray | None
-            None.
+        np.ndarray
+            Jacobian matrix where columns are [Bmax1, Kd1, Bmax2, Kd2].
         """
-        return None
+        bmax1 = params["Bmax1"]
+        kd1 = params["Kd1"]
+        bmax2 = params["Bmax2"]
+        kd2 = params["Kd2"]
+        kd1_safe = kd1 if kd1 != 0.0 else _X_EPS
+        kd2_safe = kd2 if kd2 != 0.0 else _X_EPS
+        D1 = kd1_safe + x
+        D2 = kd2_safe + x
+        dy_dbmax1 = x / D1
+        dy_dkd1 = -bmax1 * x / (D1**2)
+        dy_dbmax2 = x / D2
+        dy_dkd2 = -bmax2 * x / (D2**2)
+        return np.column_stack([dy_dbmax1, dy_dkd1, dy_dbmax2, dy_dkd2])
 
 
 # ---------------------------------------------------------------------------
@@ -307,12 +339,29 @@ class CompetitiveBinding:
         """
         return ([_X_EPS, _X_EPS, _X_EPS], [np.inf, np.inf, np.inf])
 
-    def jacobian(self, x: np.ndarray, **params: float) -> np.ndarray | None:
-        """Return None to use finite-difference Jacobian.
+    def jacobian(self, x: np.ndarray, **params: float) -> np.ndarray:
+        """Compute the analytic Jacobian of competitive binding at *x*.
+
+        Parameters
+        ----------
+        x : np.ndarray
+            Ligand concentration values.
+        **params : float
+            Must include Bmax, Kd, Ki.
 
         Returns
         -------
-        np.ndarray | None
-            None.
+        np.ndarray
+            Jacobian matrix where columns are [Bmax, Kd, Ki].
         """
-        return None
+        bmax = params["Bmax"]
+        kd = params["Kd"]
+        ki = params["Ki"]
+        kd_safe = kd if kd != 0.0 else _X_EPS
+        ki_safe = ki if ki != 0.0 else _X_EPS
+        app_kd = kd_safe * (1.0 + self.I / ki_safe)
+        D = app_kd + x
+        dy_dbmax = x / D
+        dy_dkd = -bmax * x * (1.0 + self.I / ki_safe) / (D**2)
+        dy_dki = bmax * x * kd_safe * self.I / (ki_safe**2 * D**2)
+        return np.column_stack([dy_dbmax, dy_dkd, dy_dki])

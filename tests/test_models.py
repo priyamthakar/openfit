@@ -379,9 +379,10 @@ def test_gompertz_asym_bounds() -> None:
     assert ub == [np.inf, np.inf, np.inf, np.inf]
 
 
-def test_gompertz_asym_jacobian_returns_none() -> None:
-    """AsymmetricGompertz jacobian returns None (finite-difference fallback)."""
+def test_gompertz_asym_jacobian_returns_array() -> None:
+    """AsymmetricGompertz jacobian returns analytical Jacobian array."""
     model = AsymmetricGompertz()
     x = np.linspace(0, 10, 20)
     J = model.jacobian(x, K=100.0, r_left=0.5, r_right=0.8, t_inf=5.0)
-    assert J is None
+    assert isinstance(J, np.ndarray)
+    assert J.shape == (20, 4)

@@ -564,12 +564,44 @@ class AsymmetricGompertz:
         """
         return ([1e-300, 1e-300, 1e-300, -np.inf], [np.inf, np.inf, np.inf, np.inf])
 
-    def jacobian(self, x: np.ndarray, **params: float) -> np.ndarray | None:
-        """Return None to use finite-difference Jacobian.
+    def jacobian(self, x: np.ndarray, **params: float) -> np.ndarray:
+        """Compute the analytic Jacobian of asymmetric Gompertz at *x*.
+
+        Parameters
+        ----------
+        x : np.ndarray
+            Time values.
+        **params : float
+            Must include K, r_left, r_right, t_inf.
 
         Returns
         -------
-        np.ndarray | None
-            None.
+        np.ndarray
+            Jacobian matrix where columns are [K, r_left, r_right, t_inf].
         """
-        return None
+        k = params["K"]
+        r_left = params["r_left"]
+        r_right = params["r_right"]
+        t_inf = params["t_inf"]
+
+        left_mask = x <= t_inf
+        inner_left = np.clip(-r_left * (x - t_inf), -_EXP_CLIP, _EXP_CLIP)
+        inner_right = np.clip(-r_right * (x - t_inf), -_EXP_CLIP, _EXP_CLIP)
+        y_l = k * np.exp(-np.exp(inner_left))
+        y_r = k * np.exp(-np.exp(inner_right))
+
+        # dy/dK
+        dy_dk = np.where(left_mask, np.exp(-np.exp(inner_left)), np.exp(-np.exp(inner_right)))
+
+        # dy/dr_left
+        dy_drl = np.where(left_mask, y_l * np.exp(inner_left) * (x - t_inf), 0.0)
+
+        # dy/dr_right
+        dy_drr = np.where(left_mask, 0.0, y_r * np.exp(inner_right) * (x - t_inf))
+
+        # dy/dt_inf
+        dy_dt = np.where(
+            left_mask, -y_l * np.exp(inner_left) * r_left, -y_r * np.exp(inner_right) * r_right
+        )
+
+        return np.column_stack([dy_dk, dy_drl, dy_drr, dy_dt])

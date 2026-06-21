@@ -82,11 +82,12 @@ def test_one_site_bounds() -> None:
     assert hi == [np.inf, np.inf]
 
 
-def test_one_site_jacobian_returns_none() -> None:
-    """OneSiteBinding.jacobian returns None (finite-diff fallback)."""
+def test_one_site_jacobian_returns_array() -> None:
+    """OneSiteBinding.jacobian returns analytical Jacobian array."""
     model = OneSiteBinding()
     J = model.jacobian(np.array([1.0, 2.0]), Bmax=100.0, Kd=10.0)
-    assert J is None
+    assert isinstance(J, np.ndarray)
+    assert J.shape == (2, 2)
 
 
 # ---------------------------------------------------------------------------
@@ -170,11 +171,12 @@ def test_two_site_bounds() -> None:
     assert hi == [np.inf, np.inf, np.inf, np.inf]
 
 
-def test_two_site_jacobian_returns_none() -> None:
-    """TwoSiteBinding.jacobian returns None (finite-diff fallback)."""
+def test_two_site_jacobian_returns_array() -> None:
+    """TwoSiteBinding.jacobian returns analytical Jacobian array."""
     model = TwoSiteBinding()
     J = model.jacobian(np.array([1.0, 2.0]), Bmax1=60.0, Kd1=1.0, Bmax2=40.0, Kd2=100.0)
-    assert J is None
+    assert isinstance(J, np.ndarray)
+    assert J.shape == (2, 4)
 
 
 # ---------------------------------------------------------------------------
@@ -265,8 +267,9 @@ def test_competitive_bounds() -> None:
     assert hi == [np.inf, np.inf, np.inf]
 
 
-def test_competitive_jacobian_returns_none() -> None:
-    """CompetitiveBinding.jacobian returns None (finite-diff fallback)."""
+def test_competitive_jacobian_returns_array() -> None:
+    """CompetitiveBinding.jacobian returns analytical Jacobian array."""
     model = CompetitiveBinding(inhibitor_conc=5.0)
     J = model.jacobian(np.array([1.0, 2.0]), Bmax=100.0, Kd=5.0, Ki=1.0)
-    assert J is None
+    assert isinstance(J, np.ndarray)
+    assert J.shape == (2, 3)

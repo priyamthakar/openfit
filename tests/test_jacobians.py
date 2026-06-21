@@ -10,8 +10,9 @@ sys.path.insert(0, str(Path(__file__).parent.parent / "src"))
 import numpy as np
 from scipy.optimize import approx_fprime
 
+from openfit.models.binding import CompetitiveBinding, OneSiteBinding, TwoSiteBinding
 from openfit.models.gaussian import Gaussian, Lorentzian
-from openfit.models.growth import Gompertz, Logistic4P
+from openfit.models.growth import AsymmetricGompertz, Gompertz, Logistic4P
 from openfit.models.sigmoidal import Hill4P
 
 # ---------------------------------------------------------------------------
@@ -230,4 +231,48 @@ def test_gompertz_jacobian_shallow_r() -> None:
     model = Gompertz()
     x = np.linspace(0, 100, 40)
     params = {"K": 200.0, "r": 0.05, "t_inf": 50.0}
+    _check_jacobian(model, x, params)
+
+
+# ---------------------------------------------------------------------------
+# Receptor-Ligand Binding Jacobians
+# ---------------------------------------------------------------------------
+
+
+def test_one_site_binding_jacobian() -> None:
+    """OneSiteBinding analytic Jacobian matches scipy approx_fprime."""
+    model = OneSiteBinding()
+    x = np.logspace(-2, 2, 30)
+    params = {"Bmax": 150.0, "Kd": 5.0}
+    _check_jacobian(model, x, params)
+
+
+def test_two_site_binding_jacobian() -> None:
+    """TwoSiteBinding analytic Jacobian matches scipy approx_fprime."""
+    model = TwoSiteBinding()
+    x = np.logspace(-2, 2, 40)
+    params = {"Bmax1": 100.0, "Kd1": 2.0, "Bmax2": 50.0, "Kd2": 20.0}
+    _check_jacobian(model, x, params)
+
+
+def test_competitive_binding_jacobian() -> None:
+    """CompetitiveBinding analytic Jacobian matches scipy approx_fprime."""
+    # Test with non-zero inhibitor concentration
+    model = CompetitiveBinding(inhibitor_conc=5.0)
+    x = np.logspace(-2, 2, 30)
+    params = {"Bmax": 120.0, "Kd": 4.0, "Ki": 2.0}
+    _check_jacobian(model, x, params)
+
+
+# ---------------------------------------------------------------------------
+# Asymmetric Gompertz Jacobian
+# ---------------------------------------------------------------------------
+
+
+def test_asymmetric_gompertz_jacobian() -> None:
+    """AsymmetricGompertz analytic Jacobian matches scipy approx_fprime."""
+    model = AsymmetricGompertz()
+    # Test points both below and above t_inf (5.0)
+    x = np.array([1.0, 2.0, 4.0, 6.0, 8.0, 10.0])
+    params = {"K": 100.0, "r_left": 0.5, "r_right": 0.2, "t_inf": 5.0}
     _check_jacobian(model, x, params)
