@@ -16,6 +16,19 @@ if TYPE_CHECKING:
     from openfit.results import FitResult
 
 
+__all__ = [
+    "DiagnosticsResult",
+    "DurbinWatsonResult",
+    "LackOfFitResult",
+    "durbin_watson",
+    "lack_of_fit_test",
+    "normality_test",
+    "replicates_test",
+    "residual_analysis",
+    "runs_test",
+]
+
+
 # ---------------------------------------------------------------------------
 # Result dataclass
 # ---------------------------------------------------------------------------
@@ -35,6 +48,49 @@ class DiagnosticsResult:
     normality_test_name: str  # "Shapiro-Wilk" or "D'Agostino-Pearson"
     outlier_flags: np.ndarray  # bool array, True = potential outlier (3-sigma rule)
     summary: str  # human-readable ASCII summary
+
+
+@dataclass
+class DurbinWatsonResult:
+    """Result of the Durbin-Watson autocorrelation test.
+
+    Parameters
+    ----------
+    statistic : float
+        The Durbin-Watson statistic (between 0 and 4).
+    interpretation : str
+        Interpretation of the statistic: "positive autocorrelation",
+        "negative autocorrelation", or "no autocorrelation".
+    """
+
+    statistic: float
+    interpretation: str
+
+
+@dataclass
+class LackOfFitResult:
+    """Result of the Lack-of-Fit F-test.
+
+    Parameters
+    ----------
+    statistic : float or None
+        The F statistic, or None if the test cannot be performed.
+    p_value : float or None
+        The p-value of the F-test, or None if the test cannot be performed.
+    passed : bool or None
+        True if p_value > 0.05 (no significant lack of fit), False if <= 0.05,
+        or None if the test cannot be performed.
+    df_lof : int
+        Degrees of freedom for lack-of-fit.
+    df_pe : int
+        Degrees of freedom for pure error.
+    """
+
+    statistic: float | None
+    p_value: float | None
+    passed: bool | None
+    df_lof: int
+    df_pe: int
 
 
 # ---------------------------------------------------------------------------
@@ -270,9 +326,162 @@ def normality_test(residuals: np.ndarray) -> tuple[float, str]:
         return float(p_value), "D'Agostino-Pearson"
 
 
+def durbin_watson(result: FitResult) -> DurbinWatsonResult:
+    """Calculate the Durbin-Watson statistic for residuals.
+
+    The Durbin-Watson statistic tests for the presence of autocorrelation
+    at lag 1 in the residuals of a regression analysis.
+
+    Parameters
+    ----------
+    result : FitResult
+        A completed fit result.
+
+    Returns
+    -------
+    DurbinWatsonResult
+        A dataclass containing the statistic and its interpretation.
+    """
+    residuals = np.asarray(result.residuals, dtype=float)
+    if len(residuals) < 2:
+        return DurbinWatsonResult(statistic=2.0, interpretation="no autocorrelation")
+
+    numerator = float(np.sum(np.diff(residuals) ** 2))
+    denominator = float(np.sum(residuals**2))
+
+    dw = 2.0 if denominator == 0.0 else numerator / denominator
+
+    if dw < 1.5:
+        interpretation = "positive autocorrelation"
+    elif dw > 2.5:
+        interpretation = "negative autocorrelation"
+    else:
+        interpretation = "no autocorrelation"
+
+    return DurbinWatsonResult(statistic=dw, interpretation=interpretation)
+
+
+def lack_of_fit_test(
+    result: FitResult,
+    x_groups: np.ndarray | None = None,
+    tolerance: float = 1e-10,
+) -> LackOfFitResult:
+    """Perform a Lack-of-Fit F-test on the fit residuals.
+
+    This test partitions the residual sum of squares (SS_res) into pure error (SS_PE)
+    and lack of fit (SS_LOF) using replicate groups.
+
+    Parameters
+    ----------
+    result : FitResult
+        A completed fit result.
+    x_groups : np.ndarray, optional
+        Custom grouping labels/values for replicate groups. If None, groups are
+        determined by unique independent variable values (result.x) within tolerance.
+    tolerance : float, default 1e-10
+        Tolerance for grouping unique values.
+
+    Returns
+    -------
+    LackOfFitResult
+        A dataclass containing the F-statistic, p-value, and whether the test passed.
+    """
+    x = np.asarray(result.x, dtype=float)
+    y = np.asarray(result.y, dtype=float)
+    y_fitted = np.asarray(result.y_fitted, dtype=float)
+
+    if x_groups is not None:
+        x_groups = np.asarray(x_groups)
+        if len(x_groups) != len(x):
+            raise ValueError("x_groups must have the same length as the fit data.")
+        groups_source = x_groups
+    else:
+        groups_source = x
+
+    groups = _group_by_tolerance(groups_source, tolerance)
+    N = len(y)
+    M = len(groups)
+    K = result.n_params
+
+    df_pe = N - M
+    df_lof = M - K
+
+    if df_pe <= 0 or df_lof <= 0:
+        return LackOfFitResult(
+            statistic=None,
+            p_value=None,
+            passed=None,
+            df_lof=df_lof,
+            df_pe=df_pe,
+        )
+
+    # SS_PE = sum over all groups g of \sum_{i \in g} (y_i - \bar{y}_g)^2
+    ss_pe = 0.0
+    for g_indices in groups:
+        if len(g_indices) > 1:
+            y_g = y[g_indices]
+            mean_y_g = np.mean(y_g)
+            ss_pe += np.sum((y_g - mean_y_g) ** 2)
+
+    ss_res = np.sum((y - y_fitted) ** 2)
+    ss_lof = max(0.0, ss_res - ss_pe)
+
+    ms_lof = ss_lof / df_lof
+    ms_pe = ss_pe / df_pe
+
+    if ms_pe <= 0.0:
+        return LackOfFitResult(
+            statistic=None,
+            p_value=None,
+            passed=None,
+            df_lof=df_lof,
+            df_pe=df_pe,
+        )
+
+    f_stat = ms_lof / ms_pe
+    p_value = float(stats.f.sf(f_stat, df_lof, df_pe))
+    passed = p_value > 0.05
+
+    return LackOfFitResult(
+        statistic=f_stat,
+        p_value=p_value,
+        passed=passed,
+        df_lof=df_lof,
+        df_pe=df_pe,
+    )
+
+
 # ---------------------------------------------------------------------------
 # Private helpers
 # ---------------------------------------------------------------------------
+
+
+def _group_by_tolerance(values: np.ndarray, tolerance: float) -> list[np.ndarray]:
+    """Group indices of values that are within tolerance of each other.
+
+    Returns a list of 1D numpy arrays, each containing the indices belonging to a group.
+    """
+    v = np.asarray(values, dtype=float)
+    n = len(v)
+    if n == 0:
+        return []
+
+    # Sort values to group consecutive ones
+    sort_idx = np.argsort(v)
+    v_sorted = v[sort_idx]
+
+    # Find boundaries where difference exceeds tolerance
+    diffs = np.diff(v_sorted)
+    # A new group starts at index 0 and whenever diffs > tolerance
+    boundaries = np.concatenate(([0], np.where(diffs > tolerance)[0] + 1, [n]))
+
+    groups = []
+    for i in range(len(boundaries) - 1):
+        start = boundaries[i]
+        end = boundaries[i + 1]
+        group_indices = sort_idx[start:end]
+        groups.append(group_indices)
+    return groups
 
 
 def _standardize_residuals(residuals: np.ndarray) -> np.ndarray:

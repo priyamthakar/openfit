@@ -71,6 +71,9 @@ def fit_overlay_plot(
     ylabel: str = "y",
     show_ci: bool = False,
     figsize: tuple[float, float] = (7, 5),
+    show_confidence_band: bool = False,
+    show_prediction_band: bool = False,
+    confidence: float = 0.95,
 ) -> matplotlib.figure.Figure:
     """Plot observed data + fitted curve overlay.
 
@@ -91,9 +94,15 @@ def fit_overlay_plot(
     ylabel : str
         Y-axis label.
     show_ci : bool
-        If True and result.ci is populated, draw 95% CI band.  Default False.
+        Deprecated. Use show_confidence_band instead.
     figsize : tuple[float, float]
         Figure size in inches.  Default (7, 5).
+    show_confidence_band : bool
+        If True, compute and draw confidence band on the smooth grid. Default False.
+    show_prediction_band : bool
+        If True, compute and draw prediction band on the smooth grid. Default False.
+    confidence : float
+        The confidence level for the bands (between 0 and 1). Default 0.95.
 
     Returns
     -------
@@ -112,6 +121,27 @@ def fit_overlay_plot(
         raise ValueError(
             "log_x=True requires all x values to be strictly positive, but x contains values <= 0."
         )
+
+    # Map deprecated show_ci to show_confidence_band
+    has_custom_ci = False
+    if show_ci:
+        import warnings
+
+        warnings.warn(
+            "show_ci is deprecated and will be removed in a future version. "
+            "Use show_confidence_band instead.",
+            DeprecationWarning,
+            stacklevel=2,
+        )
+        ci = getattr(result, "ci", None)
+        if ci is not None:
+            lower = ci.get("lower") if isinstance(ci, dict) else getattr(ci, "lower", None)
+            upper = ci.get("upper") if isinstance(ci, dict) else getattr(ci, "upper", None)
+            if lower is not None and upper is not None:
+                has_custom_ci = True
+
+        if not has_custom_ci:
+            show_confidence_band = True
 
     # Build smooth x range for the fitted curve.
     if log_x:
@@ -135,22 +165,36 @@ def fit_overlay_plot(
             label="Observed",
         )
 
-        # Fitted curve.
-        current_ax.plot(
-            x_smooth,
-            y_smooth,
-            color=_COLOR_FIT,
-            linewidth=2,
-            zorder=2,
-            label="Fit",
-        )
+        # Optional confidence and prediction bands.
+        if show_confidence_band:
+            cb = result.confidence_band(x_pred=x_smooth, confidence=confidence)
+            current_ax.fill_between(
+                x_smooth,
+                cb.lower,
+                cb.upper,
+                alpha=0.15,
+                color=_COLOR_FIT,
+                zorder=1,
+                label=f"{confidence * 100:.0f}% Confidence Band",
+            )
 
-        # Optional CI band.
-        if show_ci:
+        if show_prediction_band:
+            pb = result.prediction_band(x_pred=x_smooth, confidence=confidence)
+            current_ax.fill_between(
+                x_smooth,
+                pb.lower,
+                pb.upper,
+                alpha=0.08,
+                color=_COLOR_FIT,
+                linestyle="--",
+                zorder=1,
+                label=f"{confidence * 100:.0f}% Prediction Band",
+            )
+
+        # Custom/deprecated show_ci band fallback.
+        if show_ci and has_custom_ci:
             ci = getattr(result, "ci", None)
             if ci is not None:
-                # ci is expected to be a dict or object with lower/upper arrays at x.
-                # Only draw if lower and upper keys are present.
                 lower = ci.get("lower") if isinstance(ci, dict) else getattr(ci, "lower", None)
                 upper = ci.get("upper") if isinstance(ci, dict) else getattr(ci, "upper", None)
                 if lower is not None and upper is not None:
@@ -160,8 +204,19 @@ def fit_overlay_plot(
                         np.asarray(upper, dtype=float),
                         alpha=0.20,
                         color=_COLOR_FIT,
+                        zorder=1,
                         label="95% CI",
                     )
+
+        # Fitted curve.
+        current_ax.plot(
+            x_smooth,
+            y_smooth,
+            color=_COLOR_FIT,
+            linewidth=2,
+            zorder=2,
+            label="Fit",
+        )
 
         # Axis scales and labels.
         if log_x:

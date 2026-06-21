@@ -11,6 +11,8 @@ import numpy as np
 if TYPE_CHECKING:
     import matplotlib.figure
 
+    from openfit.bands import BandResult
+    from openfit.leverage import LeverageResult
     from openfit.models.base import BaseModel
     from openfit.outliers import ROUTResult
     from openfit.spec import FitSpec
@@ -163,6 +165,10 @@ class FitResult:
         log_x: bool = False,
         xlabel: str = "x",
         ylabel: str = "y",
+        show_ci: bool = False,
+        show_confidence_band: bool = False,
+        show_prediction_band: bool = False,
+        confidence: float = 0.95,
     ) -> matplotlib.figure.Figure:
         """Return a fit overlay figure (observed data + fitted curve).
 
@@ -174,6 +180,14 @@ class FitResult:
             X-axis label.  Default "x".
         ylabel : str
             Y-axis label.  Default "y".
+        show_ci : bool
+            Deprecated. Use show_confidence_band instead.
+        show_confidence_band : bool
+            If True, draw confidence band. Default False.
+        show_prediction_band : bool
+            If True, draw prediction band. Default False.
+        confidence : float
+            Confidence level (0 to 1). Default 0.95.
 
         Returns
         -------
@@ -187,7 +201,85 @@ class FitResult:
             log_x=log_x,
             xlabel=xlabel,
             ylabel=ylabel,
+            show_ci=show_ci,
+            show_confidence_band=show_confidence_band,
+            show_prediction_band=show_prediction_band,
+            confidence=confidence,
         )
+
+    # ------------------------------------------------------------------
+    # Confidence and Prediction Bands
+    # ------------------------------------------------------------------
+
+    def confidence_band(
+        self,
+        x_pred: np.ndarray | None = None,
+        confidence: float = 0.95,
+        n_points: int = 200,
+    ) -> BandResult:
+        """Compute the confidence band for the fitted model.
+
+        Parameters
+        ----------
+        x_pred : np.ndarray | None
+            The grid of predictor values at which to evaluate the band.
+            If None, evaluates on a grid spanning the range of the observed x.
+        confidence : float
+            The confidence level (between 0 and 1). Default 0.95.
+        n_points : int
+            Number of grid points to use if x_pred is None. Default 200.
+
+        Returns
+        -------
+        BandResult
+            Object containing x, lower, and upper bounds of the confidence band.
+        """
+        from openfit.bands import confidence_band
+
+        return confidence_band(self, x_pred=x_pred, confidence=confidence, n_points=n_points)
+
+    def prediction_band(
+        self,
+        x_pred: np.ndarray | None = None,
+        confidence: float = 0.95,
+        n_points: int = 200,
+    ) -> BandResult:
+        """Compute the prediction band for the fitted model.
+
+        Parameters
+        ----------
+        x_pred : np.ndarray | None
+            The grid of predictor values at which to evaluate the band.
+            If None, evaluates on a grid spanning the range of the observed x.
+        confidence : float
+            The confidence level (between 0 and 1). Default 0.95.
+        n_points : int
+            Number of grid points to use if x_pred is None. Default 200.
+
+        Returns
+        -------
+        BandResult
+            Object containing x, lower, and upper bounds of the prediction band.
+        """
+        from openfit.bands import prediction_band
+
+        return prediction_band(self, x_pred=x_pred, confidence=confidence, n_points=n_points)
+
+    # ------------------------------------------------------------------
+    # Leverage Diagnostics
+    # ------------------------------------------------------------------
+
+    def leverage(self) -> LeverageResult:
+        """Compute leverage diagnostics for the fit.
+
+        Returns
+        -------
+        LeverageResult
+            Object containing hat values, leverage points, Cook's distances, etc.
+        """
+        from openfit.leverage import leverage_diagnostics
+
+        return leverage_diagnostics(self)
 
     # ------------------------------------------------------------------
     # report()
