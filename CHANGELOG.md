@@ -10,6 +10,22 @@ Versioning follows [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ---
 
+## [0.1.3] - 2026-06-21
+
+### Added
+- Zenodo citation metadata (`CITATION.cff`) and JOSS publication paper draft (`paper/`).
+- Full documentation site built with `mkdocs` (configured in `mkdocs.yml` and `docs/`).
+- GitHub workflow for deploying documentation (`.github/workflows/docs.yml`).
+- GitHub community templates (`.github/ISSUE_TEMPLATE/` and `.github/PULL_REQUEST_TEMPLATE.md`).
+- Conda package recipe (`recipe/`).
+- Jupyter notebooks (`notebooks/`) demonstrating dose-response curve fitting, model comparison, global fitting, and reproducibility.
+
+### Changed
+- Bumped version to 0.1.3.
+- Ignored local agent telemetry/logs directory (`.antigravitycli/`) in `.gitignore`.
+
+---
+
 ## [0.1.2] - 2026-06-06
 
 ### Added
@@ -187,7 +203,8 @@ v0.1.0 roadmap features plus several v0.2-v0.5 features built ahead of schedule.
 
 ---
 
-[Unreleased]: https://github.com/priyamthakar/openfit/compare/v0.1.2...HEAD
+[Unreleased]: https://github.com/priyamthakar/openfit/compare/v0.1.3...HEAD
+[0.1.3]: https://github.com/priyamthakar/openfit/compare/v0.1.2...v0.1.3
 [0.1.2]: https://github.com/priyamthakar/openfit/compare/v0.1.1...v0.1.2
 [0.1.1]: https://github.com/priyamthakar/openfit/compare/v0.1.0...v0.1.1
 [0.1.0]: https://github.com/priyamthakar/openfit/releases/tag/v0.1.0

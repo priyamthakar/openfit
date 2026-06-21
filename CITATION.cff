@@ -1,0 +1,50 @@
+cff-version: 1.2.0
+message: "If you use openfit in your research, please cite it as below."
+type: software
+title: openfit
+abstract: >-
+  openfit is a Python library for reproducible nonlinear curve fitting
+  with publication-quality reports. It provides 29 built-in models
+  (sigmoidal, exponential, enzyme-kinetic, growth, Gaussian, polynomial,
+  and binding), smart data-driven initial guesses, explicit weighting
+  (uniform, 1/Y, 1/Y^2, 1/SD^2, Poisson), asymptotic and
+  profile-likelihood and bootstrap confidence intervals, ROUT outlier
+  detection, global (shared-parameter) fitting, model comparison by
+  AICc/BIC/F-test, and a FitSpec reproducibility manifest (SHA-256 data
+  hash, version pins, random seed). Validated against all 27 NIST
+  Statistical Reference Datasets for nonlinear regression and
+  cross-validated against R drda for Hill4P/logistic4 equivalence.
+authors:
+  - family-names: Thakar
+    given-names: Priyam
+    email: priyamthakar1@gmail.com
+    orcid: "https://orcid.org/0000-0000-0000-0000"  # replace with real ORCID
+repository-code: "https://github.com/priyamthakar/openfit"
+url: "https://github.com/priyamthakar/openfit"
+license: MIT
+version: "0.1.2"
+date-released: "2026-06-06"
+keywords:
+  - nonlinear curve fitting
+  - dose-response
+  - reproducibility
+  - ROUT outlier detection
+  - NIST validation
+  - scientific computing
+  - Python
+  - pharmacology
+  - biochemistry
+preferred-citation:
+  type: software
+  title: openfit
+  authors:
+    - family-names: Thakar
+      given-names: Priyam
+      email: priyamthakar1@gmail.com
+      orcid: "https://orcid.org/0000-0000-0000-0000"  # replace with real ORCID
+  version: "0.1.2"
+  date-released: "2026-06-06"
+  license: MIT
+  repository-code: "https://github.com/priyamthakar/openfit"
+  url: "https://github.com/priyamthakar/openfit"
+  # doi: "10.5281/zenodo.XXXXXXX"  # uncomment after Zenodo registration

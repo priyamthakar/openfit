@@ -1,11 +1,14 @@
 # openfit
 
 ![CI](https://github.com/priyamthakar/openfit/actions/workflows/ci.yml/badge.svg)
+[![codecov](https://codecov.io/gh/priyamthakar/openfit/branch/master/graph/badge.svg)](https://codecov.io/gh/priyamthakar/openfit)
+[![PyPI](https://img.shields.io/pypi/v/openfit.svg)](https://pypi.org/project/openfit/)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
 Reproducible, open-source nonlinear curve fitting with publication-quality reports.
 Every fit you can rerun, every result you can cite.
 
-> **Status:** v0.1.2. 379 tests collected (374 passed, 5 skipped;
+> **Status:** v0.1.3. 379 tests collected (374 passed, 5 skipped;
 > NIST StRD all 27 datasets, synthetic 4PL/5PL and binding-model certified,
 > published-reference validation). PyPI publication is pending tag workflow verification.
 

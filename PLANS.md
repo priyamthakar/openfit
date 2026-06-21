@@ -9,6 +9,34 @@ implemented. The next work is validation catch-up, not new features.
 
 ---
 
+## Citation infrastructure [IN PROGRESS — 2026-06-08]
+
+Citability is the core value proposition ("every result you can cite") and
+requires closing the loop so openfit itself can be cited.
+
+### Done
+- `CITATION.cff` added at repo root (GitHub renders a "Cite this repository"
+  button automatically; CFF version 1.2.0, includes abstract, keywords,
+  ORCID placeholder).
+- `paper/paper.md` and `paper/paper.bib` drafted for JOSS submission.
+  Covers: statement of need, ROUT novelty, NIST validation, FitSpec
+  reproducibility, comparison table. Seven references included.
+
+### Still needed
+- **Replace ORCID placeholder** in `CITATION.cff` (line `orcid: "https://orcid.org/0000-0000-0000-0000"`).
+  Register at https://orcid.org if needed.
+- **Zenodo–GitHub integration**: go to https://zenodo.org, link the GitHub
+  repo, then enable "GitHub releases". On the next `git tag v0.1.2` push, Zenodo
+  auto-mints a DOI. Uncomment the `doi:` line in `CITATION.cff` with the
+  resulting DOI.
+- **JOSS submission**: once Zenodo DOI exists and PyPI is published, submit at
+  https://joss.theoj.org. JOSS will require `CONTRIBUTING.md`,
+  `CODE_OF_CONDUCT.md`, and OSS community files — do those before submitting.
+- **Add JOSS badge to README** after submission (JOSS provides the badge
+  markdown on the submission page).
+
+---
+
 ## Immediate: v0.1.1 completion (DONE)
 
 **Status:** Complete. NIST parameter recovery done, synthetic 4PL/5PL

@@ -63,15 +63,21 @@ v0.1.1  NIST StRD validation suite + 4PL/5PL synthetic certified data [COMPLETE]
         Definition of done: all 27 NIST datasets pass + 4PL/5PL synthetic recovery.
         >>> CORE DONE. drda cross-validation and CI badge moved to v0.1.2.
 
-v0.1.2  PyPI publish + packaging                               [IN PROGRESS]
+v0.1.2  Cross-validation & reference alignment                 [COMPLETE]
+        -----------------------------------------------
+        [x] R drda cross-validation (coefficient-level Hill4P vs logistic4)
+        [x] Zero-RSS guard for perfect fits
+        [x] Expose parameter covariance matrix for downstream packages
+        [x] Tag: git tag v0.1.2
+
+v0.1.3  PyPI publish, citation & docs                         [IN PROGRESS]
         -----------------------------------------------
         [x] GitHub Actions CI workflow (3 OS x 3 Python versions)
         [x] PyPI Trusted Publishing workflow (GitHub Actions on version tags)
         [x] py.typed already present (PEP 561)
-        [x] R drda cross-validation (coefficient-level Hill4P vs logistic4)
-        [ ] README validation badge (CI matrix)
-        [ ] PyPI project registration
-        [ ] Tag: git tag v0.1.2
+        [x] Documentation site built with mkdocs
+        [x] JOSS paper draft and Zenodo citation CFF
+        [ ] PyPI project registration & publish
 ```
 
 ### Phase 2 -- Statistical Depth (v0.2.x - v0.3.x)
