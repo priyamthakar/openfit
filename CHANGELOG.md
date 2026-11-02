@@ -8,6 +8,11 @@ Versioning follows [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
 
+### Changed
+- Publish workflow now runs the test suite and checks that the tag matches the
+  `pyproject.toml` version before uploading, publishes from a `pypi` environment
+  via Trusted Publishing, and can be re-run manually for an existing tag.
+
 ---
 
 ## [1.0.0] - 2026-06-21

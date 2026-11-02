@@ -1,25 +1,41 @@
 # AGENT_GUIDANCE.md -- openfit / openassay agent handoff
 
-Last evaluated: 2026-06-06 (re-audited 2026-06-06)
+Last evaluated: 2026-11-02
 
-This repository contains the `openfit` Python package. The working directory is
-`D:\openfit`. Treat the package identity as `openfit` unless the user explicitly
-asks to start the downstream `openassayflow` package.
+This repository contains the `openfit` Python package. Run commands from the
+repository root. Treat the package identity as `openfit` unless the user
+explicitly asks to start the downstream `openassayflow` package.
 
 ## Current Snapshot
 
-- Branch: `master`
+- Default branch: `master`
 - Package: `openfit`
-- Declared version in `pyproject.toml`: `0.1.2`
-- README status text: `v0.1.2`
-- Test status (verified 2026-06-06): `379 collected, 374 passed, 5 skipped`
-- Lint status (verified 2026-06-06): PASSING (`ruff check src tests: All checks passed!`)
-- Format status (verified 2026-06-06): PASSING (`61 files already formatted`)
-- Build status (verified 2026-06-06): `openfit-0.1.2.tar.gz` and `.whl` build clean
-- Working tree status (verified 2026-06-06): UNCOMMITTED (v0.1.2 changes in progress)
+- Declared version in `pyproject.toml`: `1.0.0`; tag `v1.0.0` and GitHub release exist
+- Test status (verified 2026-11-02): `412 passed, 7 skipped`
+- Lint/format status (verified 2026-11-02): PASSING (`ruff check`, `ruff format --check`)
+- Build status (verified 2026-11-02): wheel + sdist build clean, `twine check` passes
+- CI (GitHub Actions, master): green as of 2026-06-21; docs deploy green
+- **PyPI: NOT PUBLISHED.** Both `Publish to PyPI` runs for `v1.0.0` failed at the
+  upload step and `https://pypi.org/project/openfit/` returns 404. The README
+  and docs say `pip install openfit`, which does not work until this is fixed.
+  See "Publishing to PyPI" below.
 
-Do not describe this checkout as release-ready. CI badge status is unverified
-remotely. PyPI publication has not occurred.
+Do not claim PyPI publication until `https://pypi.org/pypi/openfit/json`
+returns 200.
+
+## Publishing to PyPI
+
+`.github/workflows/publish.yml` uses PyPI Trusted Publishing (OIDC, no token).
+The project owner must register a *pending publisher* on PyPI once:
+
+- PyPI project name: `openfit`
+- Owner: `priyamthakar`, Repository: `openfit`
+- Workflow name: `publish.yml`
+- Environment name: `pypi`
+
+Then re-run the workflow for the existing tag: Actions -> "Publish to PyPI" ->
+"Run workflow" -> choose tag `v1.0.0`. No retag is needed. If the name
+`openfit` is ever taken on PyPI, a rename is required before publishing.
 
 ## Agent Rules
 
@@ -161,7 +177,10 @@ Priority order, informed by "validation before features" principle.
 6. **Zero-RSS guard (issue #8).** [DONE 2026-06-06] Guard in fit.py + direct test.
 7. **Align version metadata (issue #2).** [DONE 2026-06-06] pyproject.toml → 0.1.2,
    CHANGELOG restructured, ROADMAP updated.
-8. **Tag v0.1.2 and set up PyPI Trusted Publishing.** [IN PROGRESS]
+8. **Tag a release and set up PyPI Trusted Publishing.** [PARTIAL] `v1.0.0` tagged
+   and released on GitHub; publish workflow hardened (tests + tag/version check +
+   `pypi` environment + manual re-run). PyPI pending-publisher registration by the
+   owner is still required.
 
 ---
 
