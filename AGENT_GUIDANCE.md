@@ -10,7 +10,7 @@ explicitly asks to start the downstream `openassayflow` package.
 
 - Default branch: `master`
 - Package: `openfit`
-- Declared version in `pyproject.toml`: `1.0.0`; tag `v1.0.0` and GitHub release exist
+- Declared version in `pyproject.toml`: `1.0.1` (untagged); tag `v1.0.0` and GitHub release exist
 - Test status (verified 2026-11-02): `412 passed, 7 skipped`
 - Lint/format status (verified 2026-11-02): PASSING (`ruff check`, `ruff format --check`)
 - Build status (verified 2026-11-02): wheel + sdist build clean, `twine check` passes

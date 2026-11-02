@@ -1,5 +1,5 @@
 {% set name = "openfit" %}
-{% set version = "0.1.2" %}
+{% set version = "1.0.1" %}
 
 package:
   name: {{ name|lower }}
@@ -7,7 +7,7 @@ package:
 
 source:
   url: https://pypi.io/packages/source/{{ name[0] }}/{{ name }}/openfit-{{ version }}.tar.gz
-  sha256: SET_AFTER_PYPI_PUBLISH  # replace with actual sha256 after `pip download openfit==0.1.2` + sha256sum
+  sha256: SET_AFTER_PYPI_PUBLISH  # replace with actual sha256 after `pip download openfit==1.0.1` + sha256sum
 
 build:
   noarch: python
