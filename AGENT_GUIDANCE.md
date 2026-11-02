@@ -33,9 +33,12 @@ The project owner must register a *pending publisher* on PyPI once:
 - Workflow name: `publish.yml`
 - Environment name: `pypi`
 
-Then re-run the workflow for the existing tag: Actions -> "Publish to PyPI" ->
-"Run workflow" -> choose tag `v1.0.0`. No retag is needed. If the name
-`openfit` is ever taken on PyPI, a rename is required before publishing.
+Then publish by tagging a new release from `master` (e.g. bump to `1.0.1`,
+`git tag v1.0.1 && git push origin v1.0.1`). The old `v1.0.0` tag cannot be
+re-published from Actions: its runs are older than GitHub's 30-day re-run window
+and the workflow at that tag has no manual trigger. Later releases can be
+re-published via Actions -> "Publish to PyPI" -> "Run workflow" on the tag.
+If the name `openfit` is ever taken on PyPI, a rename is required.
 
 ## Agent Rules
 
