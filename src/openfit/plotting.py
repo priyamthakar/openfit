@@ -9,7 +9,8 @@ from __future__ import annotations
 
 import base64
 import io
-from typing import TYPE_CHECKING
+from contextlib import AbstractContextManager
+from typing import TYPE_CHECKING, Any
 
 import matplotlib
 import matplotlib.axes
@@ -20,6 +21,8 @@ import numpy as np
 matplotlib.use("Agg")  # non-interactive backend -- safe for server/report use
 
 if TYPE_CHECKING:
+    from collections.abc import Callable
+
     from openfit.outliers import ROUTResult
     from openfit.results import FitResult
 
@@ -48,12 +51,14 @@ def _make_axes(
     return ax.figure, ax  # type: ignore[return-value]
 
 
-def _try_style() -> object:
+def _try_style() -> AbstractContextManager[Any]:
     """Return a style context manager, falling back to default if unavailable."""
+    ctx: AbstractContextManager[Any]
     try:
-        return plt.style.context(_STYLE)
+        ctx = plt.style.context(_STYLE)
     except OSError:
-        return plt.style.context("default")
+        ctx = plt.style.context("default")
+    return ctx
 
 
 # ---------------------------------------------------------------------------
@@ -393,8 +398,8 @@ def rout_outlier_plot(
     x: np.ndarray,
     y: np.ndarray,
     rout_result: ROUTResult,
-    model_equation=None,
-    model_params: dict | None = None,
+    model_equation: Callable[..., np.ndarray] | None = None,
+    model_params: dict[str, float] | None = None,
     ax: matplotlib.axes.Axes | None = None,
     x_smooth_points: int = 200,
     title: str | None = None,

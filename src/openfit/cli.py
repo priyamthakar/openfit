@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 from pathlib import Path
+from typing import Any
 
 import rich.box
 import typer
@@ -59,7 +60,7 @@ def _load_data(
     x_col: str | int,
     y_col: str | int,
     sd_col: str | int | None,
-) -> tuple:
+) -> tuple[Any, ...]:
     """Load data using load_csv or load_excel depending on file suffix.
 
     Parameters
@@ -141,9 +142,9 @@ def _print_param_table(result: object) -> None:
     tbl.add_column("SE", justify="right")
     tbl.add_column("95% CI", justify="right")
 
-    params: dict = getattr(result, "params", {})
-    se: dict | None = getattr(result, "se", None)
-    ci: dict | None = getattr(result, "ci", None)
+    params: dict[str, float] = getattr(result, "params", {})
+    se: dict[str, float] | None = getattr(result, "se", None)
+    ci: dict[str, tuple[float, float]] | None = getattr(result, "ci", None)
 
     for name, value in params.items():
         se_str = "n/a"
@@ -261,7 +262,7 @@ def fit(
 
     # -- Run fit --------------------------------------------------------------
     try:
-        fit_kwargs: dict = {"weights": weights}
+        fit_kwargs: dict[str, Any] = {"weights": weights}
         if sd is not None:
             fit_kwargs["sd"] = sd
         if log_x:
@@ -360,7 +361,7 @@ def compare(
         raise typer.Exit(code=1) from exc
 
     # -- Fit each model -------------------------------------------------------
-    fit_kwargs: dict = {"weights": weights}
+    fit_kwargs: dict[str, Any] = {"weights": weights}
     if sd is not None:
         fit_kwargs["sd"] = sd
 

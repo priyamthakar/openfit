@@ -261,7 +261,7 @@ class Fit:
                         penalty_res.append(np.sqrt(weight * abs(val - target)))
                 if penalty_res:
                     res = np.concatenate([res, penalty_res])
-            return res
+            return np.asarray(res)
 
         # ----------------------------------------------------------------
         # 6. Build analytic Jacobian if the model provides one
@@ -309,8 +309,8 @@ class Fit:
 
                 if self._penalties:
                     J_pen = _penalty_jac(p_active)
-                    return np.concatenate([J_active_data, J_pen], axis=0)
-                return J_active_data
+                    return np.asarray(np.concatenate([J_active_data, J_pen], axis=0))
+                return np.asarray(J_active_data)
 
         # ----------------------------------------------------------------
         # 7. Run optimization

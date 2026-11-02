@@ -27,7 +27,7 @@ def _hill_ratio_clipped(ec50: float, x: np.ndarray, slope: float) -> np.ndarray:
     x_safe = np.where(x == 0.0, _X_EPS, x)
     log_ratio = slope * (np.log(np.abs(ec50)) - np.log(np.abs(x_safe)))
     log_ratio_clipped = np.clip(log_ratio, -_EXP_CLIP, _EXP_CLIP)
-    return np.exp(log_ratio_clipped)
+    return np.asarray(np.exp(log_ratio_clipped))
 
 
 def _interp_ec50(x: np.ndarray, y: np.ndarray, bottom: float, top: float) -> float:

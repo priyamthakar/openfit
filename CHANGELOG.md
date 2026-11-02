@@ -8,6 +8,15 @@ Versioning follows [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
 
+### Changed
+- `mypy src/openfit` (strict) now passes and runs in CI (Ubuntu, Python 3.12).
+  Fixed the existing type errors: typed the model registry, plotting style
+  context and ROUT plot arguments, CLI helpers, report/leverage helper
+  signatures, and numpy return values. Unused `type: ignore` warnings are
+  disabled because they depend on which optional extras are installed.
+- Global-fit report plots take `Set1` colours from `plt.get_cmap` (RGBA) instead
+  of the untyped `.colors` attribute; the rendered colours are unchanged.
+
 ---
 
 ## [1.0.1] - 2026-11-02

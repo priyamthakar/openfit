@@ -132,7 +132,7 @@ class GlobalFitResult:
     _datasets: list[tuple[np.ndarray, np.ndarray]] = field(
         repr=False, compare=False, default_factory=list
     )
-    _model: BaseModel = field(repr=False, compare=False, default=None)
+    _model: BaseModel = field(repr=False, compare=False, default=None)  # type: ignore[assignment]
     _weights_per_ds: list[np.ndarray] = field(repr=False, compare=False, default_factory=list)
 
     # ------------------------------------------------------------------

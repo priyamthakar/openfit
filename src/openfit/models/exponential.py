@@ -18,7 +18,7 @@ _EXP_CLIP: float = 700.0
 
 def _safe_exp(z: np.ndarray) -> np.ndarray:
     """Evaluate exp(z) with argument clipped to [-700, 700] to prevent overflow."""
-    return np.exp(np.clip(z, -_EXP_CLIP, _EXP_CLIP))
+    return np.asarray(np.exp(np.clip(z, -_EXP_CLIP, _EXP_CLIP)))
 
 
 def _estimate_rate(x: np.ndarray, y: np.ndarray, plateau: float) -> float:

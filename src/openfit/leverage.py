@@ -9,6 +9,7 @@ from typing import TYPE_CHECKING
 import numpy as np
 
 if TYPE_CHECKING:
+    from openfit.models.base import BaseModel
     from openfit.results import FitResult
 
 
@@ -37,7 +38,7 @@ class LeverageResult:
     influential_mask: np.ndarray
 
 
-def _central_diff_jacobian(model, x: np.ndarray, params: dict[str, float]) -> np.ndarray:
+def _central_diff_jacobian(model: BaseModel, x: np.ndarray, params: dict[str, float]) -> np.ndarray:
     """Compute the central difference numerical Jacobian of shape (N, P)."""
     n = len(x)
     p_names = model.param_names
