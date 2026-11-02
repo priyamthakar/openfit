@@ -23,7 +23,7 @@
       
       
       <link rel="icon" href="../../assets/images/favicon.png">
-      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.6">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.8.0">
     
     
       
@@ -31,10 +31,10 @@
       
     
     
-      <link rel="stylesheet" href="../../assets/stylesheets/main.484c7ddc.min.css">
+      <link rel="stylesheet" href="../../assets/stylesheets/main.57a0d79d.min.css">
       
         
-        <link rel="stylesheet" href="../../assets/stylesheets/palette.ab4e12ef.min.css">
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.fb2fffe2.min.css">
       
       
 
@@ -1934,7 +1934,7 @@ result.y_fitted, result._weights, result._model, result.spec.random_seed</p>
 <span class="normal">35</span>
 <span class="normal">36</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@dataclass</span>
 <span class="k">class</span><span class="w"> </span><span class="nc">ProfileCIResult</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Container for profile-likelihood confidence interval results.&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""Container for profile-likelihood confidence interval results."""</span>
 
     <span class="n">ci</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="nb">float</span><span class="p">]]</span>  <span class="c1"># param_name -&gt; (lower, upper)</span>
     <span class="n">converged</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">bool</span><span class="p">]</span>  <span class="c1"># True if boundary found cleanly</span>
@@ -2062,7 +2062,7 @@ confidence : float
     <span class="n">n_params</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
     <span class="n">confidence</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.95</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="nb">float</span><span class="p">]]:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Compute asymptotic (Wald-type) confidence intervals.</span>
+<span class="w">    </span><span class="sd">"""Compute asymptotic (Wald-type) confidence intervals.</span>
 
 <span class="sd">    CI = estimate +/- t_{alpha/2, df} * SE</span>
 <span class="sd">    where df = n_obs - n_params.</span>
@@ -2090,11 +2090,11 @@ confidence : float
 <span class="sd">    ValueError</span>
 <span class="sd">        If n_obs &lt;= n_params (no degrees of freedom for t-distribution).</span>
 <span class="sd">        If any standard error is NaN or Inf.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
     <span class="k">if</span> <span class="n">n_obs</span> <span class="o">&lt;=</span> <span class="n">n_params</span><span class="p">:</span>
         <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
-            <span class="sa">f</span><span class="s2">&quot;n_obs (</span><span class="si">{</span><span class="n">n_obs</span><span class="si">}</span><span class="s2">) must be greater than n_params (</span><span class="si">{</span><span class="n">n_params</span><span class="si">}</span><span class="s2">) &quot;</span>
-            <span class="s2">&quot;to compute asymptotic confidence intervals.&quot;</span>
+            <span class="sa">f</span><span class="s2">"n_obs (</span><span class="si">{</span><span class="n">n_obs</span><span class="si">}</span><span class="s2">) must be greater than n_params (</span><span class="si">{</span><span class="n">n_params</span><span class="si">}</span><span class="s2">) "</span>
+            <span class="s2">"to compute asymptotic confidence intervals."</span>
         <span class="p">)</span>
     <span class="n">df</span> <span class="o">=</span> <span class="n">n_obs</span> <span class="o">-</span> <span class="n">n_params</span>
     <span class="n">alpha</span> <span class="o">=</span> <span class="mf">1.0</span> <span class="o">-</span> <span class="n">confidence</span>
@@ -2102,10 +2102,10 @@ confidence : float
 
     <span class="n">ci</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="nb">float</span><span class="p">]]</span> <span class="o">=</span> <span class="p">{}</span>
     <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">estimate</span> <span class="ow">in</span> <span class="n">params</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
-        <span class="n">se_val</span> <span class="o">=</span> <span class="n">se</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="nb">float</span><span class="p">(</span><span class="s2">&quot;nan&quot;</span><span class="p">))</span>
+        <span class="n">se_val</span> <span class="o">=</span> <span class="n">se</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="nb">float</span><span class="p">(</span><span class="s2">"nan"</span><span class="p">))</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="n">np</span><span class="o">.</span><span class="n">isfinite</span><span class="p">(</span><span class="n">se_val</span><span class="p">):</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
-                <span class="sa">f</span><span class="s2">&quot;Standard error for </span><span class="si">{</span><span class="n">name</span><span class="si">!r}</span><span class="s2"> is not finite; asymptotic CI is undefined.&quot;</span>
+                <span class="sa">f</span><span class="s2">"Standard error for </span><span class="si">{</span><span class="n">name</span><span class="si">!r}</span><span class="s2"> is not finite; asymptotic CI is undefined."</span>
             <span class="p">)</span>
         <span class="n">half_width</span> <span class="o">=</span> <span class="n">t_crit</span> <span class="o">*</span> <span class="n">se_val</span>
         <span class="n">ci</span><span class="p">[</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="n">estimate</span> <span class="o">-</span> <span class="n">half_width</span><span class="p">,</span> <span class="n">estimate</span> <span class="o">+</span> <span class="n">half_width</span><span class="p">)</span>
@@ -2120,7 +2120,7 @@ confidence : float
 
 
 <h2 id="openfit.uncertainty.bootstrap_ci" class="doc doc-heading">
-            <code class="highlight language-python"><span class="n">bootstrap_ci</span><span class="p">(</span><span class="n">result</span><span class="p">,</span> <span class="n">n_bootstrap</span><span class="o">=</span><span class="mi">1000</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="s1">&#39;residual&#39;</span><span class="p">,</span> <span class="n">confidence</span><span class="o">=</span><span class="mf">0.95</span><span class="p">,</span> <span class="n">random_seed</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span></code>
+            <code class="highlight language-python"><span class="n">bootstrap_ci</span><span class="p">(</span><span class="n">result</span><span class="p">,</span> <span class="n">n_bootstrap</span><span class="o">=</span><span class="mi">1000</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="s1">'residual'</span><span class="p">,</span> <span class="n">confidence</span><span class="o">=</span><span class="mf">0.95</span><span class="p">,</span> <span class="n">random_seed</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span></code>
 
 </h2>
 
@@ -2257,11 +2257,11 @@ The random_seed is consumed deterministically via numpy.random.default_rng.</p>
 <span class="normal">319</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">bootstrap_ci</span><span class="p">(</span>
     <span class="n">result</span><span class="p">:</span> <span class="n">FitResult</span><span class="p">,</span>
     <span class="n">n_bootstrap</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1000</span><span class="p">,</span>
-    <span class="n">method</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;residual&quot;</span><span class="p">,</span>
+    <span class="n">method</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">"residual"</span><span class="p">,</span>
     <span class="n">confidence</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.95</span><span class="p">,</span>
     <span class="n">random_seed</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="nb">float</span><span class="p">]]:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Bootstrap confidence intervals (BCa-corrected).</span>
+<span class="w">    </span><span class="sd">"""Bootstrap confidence intervals (BCa-corrected).</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
@@ -2270,7 +2270,7 @@ The random_seed is consumed deterministically via numpy.random.default_rng.</p>
 <span class="sd">    n_bootstrap : int</span>
 <span class="sd">        Number of bootstrap resamples. Default 1000.</span>
 <span class="sd">    method : str</span>
-<span class="sd">        &quot;residual&quot; (resample residuals) or &quot;case&quot; (resample x,y pairs).</span>
+<span class="sd">        "residual" (resample residuals) or "case" (resample x,y pairs).</span>
 <span class="sd">    confidence : float</span>
 <span class="sd">        Confidence level. Default 0.95.</span>
 <span class="sd">    random_seed : int | None</span>
@@ -2289,9 +2289,9 @@ The random_seed is consumed deterministically via numpy.random.default_rng.</p>
 <span class="sd">    Falls back to percentile CI if BCa is degenerate (all resamples identical</span>
 <span class="sd">    or jackknife fails).</span>
 <span class="sd">    The random_seed is consumed deterministically via numpy.random.default_rng.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">if</span> <span class="n">method</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">(</span><span class="s2">&quot;residual&quot;</span><span class="p">,</span> <span class="s2">&quot;case&quot;</span><span class="p">):</span>
-        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;method must be &#39;residual&#39; or &#39;case&#39;, got </span><span class="si">{</span><span class="n">method</span><span class="si">!r}</span><span class="s2">.&quot;</span><span class="p">)</span>
+<span class="sd">    """</span>
+    <span class="k">if</span> <span class="n">method</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">(</span><span class="s2">"residual"</span><span class="p">,</span> <span class="s2">"case"</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"method must be 'residual' or 'case', got </span><span class="si">{</span><span class="n">method</span><span class="si">!r}</span><span class="s2">."</span><span class="p">)</span>
 
     <span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">result</span><span class="o">.</span><span class="n">x</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">)</span>
     <span class="n">y</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">result</span><span class="o">.</span><span class="n">y</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">)</span>
@@ -2303,7 +2303,7 @@ The random_seed is consumed deterministically via numpy.random.default_rng.</p>
 
     <span class="c1"># Resolve seed: explicit arg wins, then spec, then None (non-reproducible)</span>
     <span class="n">seed</span> <span class="o">=</span> <span class="n">random_seed</span>
-    <span class="k">if</span> <span class="n">seed</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">and</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">result</span><span class="p">,</span> <span class="s2">&quot;spec&quot;</span><span class="p">)</span> <span class="ow">and</span> <span class="n">result</span><span class="o">.</span><span class="n">spec</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="k">if</span> <span class="n">seed</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">and</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">result</span><span class="p">,</span> <span class="s2">"spec"</span><span class="p">)</span> <span class="ow">and</span> <span class="n">result</span><span class="o">.</span><span class="n">spec</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
         <span class="n">seed</span> <span class="o">=</span> <span class="n">result</span><span class="o">.</span><span class="n">spec</span><span class="o">.</span><span class="n">random_seed</span>
     <span class="n">rng</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">default_rng</span><span class="p">(</span><span class="n">seed</span><span class="p">)</span>
 
@@ -2313,7 +2313,7 @@ The random_seed is consumed deterministically via numpy.random.default_rng.</p>
     <span class="n">raw_residuals</span> <span class="o">=</span> <span class="n">y</span> <span class="o">-</span> <span class="n">y_fitted</span>
 
     <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_bootstrap</span><span class="p">):</span>
-        <span class="k">if</span> <span class="n">method</span> <span class="o">==</span> <span class="s2">&quot;residual&quot;</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">method</span> <span class="o">==</span> <span class="s2">"residual"</span><span class="p">:</span>
             <span class="n">idx</span> <span class="o">=</span> <span class="n">rng</span><span class="o">.</span><span class="n">integers</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">n_obs</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="n">n_obs</span><span class="p">)</span>
             <span class="n">y_star</span> <span class="o">=</span> <span class="n">y_fitted</span> <span class="o">+</span> <span class="n">raw_residuals</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span>
             <span class="n">x_star</span> <span class="o">=</span> <span class="n">x</span>
@@ -2325,7 +2325,7 @@ The random_seed is consumed deterministically via numpy.random.default_rng.</p>
 
         <span class="n">weights_for_fit</span> <span class="o">=</span> <span class="p">(</span>
             <span class="n">weights</span>
-            <span class="k">if</span> <span class="n">method</span> <span class="o">==</span> <span class="s2">&quot;residual&quot;</span>
+            <span class="k">if</span> <span class="n">method</span> <span class="o">==</span> <span class="s2">"residual"</span>
             <span class="k">else</span> <span class="p">(</span>
                 <span class="n">weights</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span> <span class="k">if</span> <span class="n">weights</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="kc">None</span>  <span class="c1"># type: ignore[index]</span>
             <span class="p">)</span>
@@ -2347,7 +2347,7 @@ The random_seed is consumed deterministically via numpy.random.default_rng.</p>
 
         <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">samples</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mi">10</span><span class="p">:</span>
             <span class="c1"># Not enough successful resamples: fall back to asymptotic</span>
-            <span class="n">se_val</span> <span class="o">=</span> <span class="n">result</span><span class="o">.</span><span class="n">se</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="nb">float</span><span class="p">(</span><span class="s2">&quot;nan&quot;</span><span class="p">))</span>
+            <span class="n">se_val</span> <span class="o">=</span> <span class="n">result</span><span class="o">.</span><span class="n">se</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="nb">float</span><span class="p">(</span><span class="s2">"nan"</span><span class="p">))</span>
             <span class="n">alpha</span> <span class="o">=</span> <span class="mf">1.0</span> <span class="o">-</span> <span class="n">confidence</span>
             <span class="n">z</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">stats</span><span class="o">.</span><span class="n">norm</span><span class="o">.</span><span class="n">ppf</span><span class="p">(</span><span class="mf">1.0</span> <span class="o">-</span> <span class="n">alpha</span> <span class="o">/</span> <span class="mf">2.0</span><span class="p">))</span>
             <span class="n">ci</span><span class="p">[</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="n">theta_hat</span> <span class="o">-</span> <span class="n">z</span> <span class="o">*</span> <span class="n">se_val</span><span class="p">,</span> <span class="n">theta_hat</span> <span class="o">+</span> <span class="n">z</span> <span class="o">*</span> <span class="n">se_val</span><span class="p">)</span>
@@ -2520,7 +2520,7 @@ warn when the profile is not unimodal."</p>
     <span class="n">confidence</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.95</span><span class="p">,</span>
     <span class="n">n_steps</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">30</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ProfileCIResult</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Profile-likelihood confidence intervals.</span>
+<span class="w">    </span><span class="sd">"""Profile-likelihood confidence intervals.</span>
 
 <span class="sd">    For each parameter, fix it at a grid of values and reoptimize the</span>
 <span class="sd">    remaining parameters. The boundary is where the likelihood ratio</span>
@@ -2544,13 +2544,13 @@ warn when the profile is not unimodal."</p>
 <span class="sd">    Warns if: (1) boundary not found within 10x the asymptotic range,</span>
 <span class="sd">    (2) profile has multiple local minima (non-unimodal).</span>
 
-<span class="sd">    This implements rule 3 from CLAUDE.md: &quot;Profile-likelihood CI must</span>
-<span class="sd">    warn when the profile is not unimodal.&quot;</span>
+<span class="sd">    This implements rule 3 from CLAUDE.md: "Profile-likelihood CI must</span>
+<span class="sd">    warn when the profile is not unimodal."</span>
 
 <span class="sd">    The likelihood ratio statistic is:</span>
 <span class="sd">        LR = n * ln(RSS_profile / RSS_min)</span>
 <span class="sd">    Boundary is where LR &gt;= chi2_crit = chi2.ppf(confidence, df=1).</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
     <span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">result</span><span class="o">.</span><span class="n">x</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">)</span>
     <span class="n">y</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">result</span><span class="o">.</span><span class="n">y</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">)</span>
     <span class="n">weights</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="n">result</span><span class="o">.</span><span class="n">_weights</span>
@@ -2560,11 +2560,11 @@ warn when the profile is not unimodal."</p>
     <span class="n">n_obs</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">y</span><span class="p">)</span>
 
     <span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">param_names</span><span class="p">:</span>
-        <span class="n">se_val</span> <span class="o">=</span> <span class="n">se_fit</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="nb">float</span><span class="p">(</span><span class="s2">&quot;nan&quot;</span><span class="p">))</span>
+        <span class="n">se_val</span> <span class="o">=</span> <span class="n">se_fit</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="nb">float</span><span class="p">(</span><span class="s2">"nan"</span><span class="p">))</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="n">np</span><span class="o">.</span><span class="n">isfinite</span><span class="p">(</span><span class="n">se_val</span><span class="p">):</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
-                <span class="sa">f</span><span class="s2">&quot;Standard error for </span><span class="si">{</span><span class="n">name</span><span class="si">!r}</span><span class="s2"> is not finite; &quot;</span>
-                <span class="s2">&quot;profile-likelihood CI requires finite SE to define the search range.&quot;</span>
+                <span class="sa">f</span><span class="s2">"Standard error for </span><span class="si">{</span><span class="n">name</span><span class="si">!r}</span><span class="s2"> is not finite; "</span>
+                <span class="s2">"profile-likelihood CI requires finite SE to define the search range."</span>
             <span class="p">)</span>
 
     <span class="n">chi2_crit</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">stats</span><span class="o">.</span><span class="n">chi2</span><span class="o">.</span><span class="n">ppf</span><span class="p">(</span><span class="n">confidence</span><span class="p">,</span> <span class="n">df</span><span class="o">=</span><span class="mi">1</span><span class="p">))</span>
@@ -2576,7 +2576,7 @@ warn when the profile is not unimodal."</p>
     <span class="n">warn_msgs</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
 
     <span class="k">for</span> <span class="n">target_name</span> <span class="ow">in</span> <span class="n">param_names</span><span class="p">:</span>
-        <span class="n">se_val</span> <span class="o">=</span> <span class="n">se_fit</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">target_name</span><span class="p">,</span> <span class="nb">float</span><span class="p">(</span><span class="s2">&quot;nan&quot;</span><span class="p">))</span>
+        <span class="n">se_val</span> <span class="o">=</span> <span class="n">se_fit</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">target_name</span><span class="p">,</span> <span class="nb">float</span><span class="p">(</span><span class="s2">"nan"</span><span class="p">))</span>
         <span class="n">center</span> <span class="o">=</span> <span class="n">params_fit</span><span class="p">[</span><span class="n">target_name</span><span class="p">]</span>
 
         <span class="c1"># Search range: asymptotic 10x half-width on each side</span>
@@ -2613,18 +2613,18 @@ warn when the profile is not unimodal."</p>
 
         <span class="k">if</span> <span class="ow">not</span> <span class="n">converged</span><span class="p">[</span><span class="n">target_name</span><span class="p">]:</span>
             <span class="n">msg</span> <span class="o">=</span> <span class="p">(</span>
-                <span class="sa">f</span><span class="s2">&quot;Profile-likelihood boundary for &#39;</span><span class="si">{</span><span class="n">target_name</span><span class="si">}</span><span class="s2">&#39; not found within &quot;</span>
-                <span class="sa">f</span><span class="s2">&quot;10x asymptotic range. CI endpoint set to grid boundary. &quot;</span>
-                <span class="s2">&quot;Increase n_steps or check for parameter identifiability issues.&quot;</span>
+                <span class="sa">f</span><span class="s2">"Profile-likelihood boundary for '</span><span class="si">{</span><span class="n">target_name</span><span class="si">}</span><span class="s2">' not found within "</span>
+                <span class="sa">f</span><span class="s2">"10x asymptotic range. CI endpoint set to grid boundary. "</span>
+                <span class="s2">"Increase n_steps or check for parameter identifiability issues."</span>
             <span class="p">)</span>
             <span class="n">warn_msgs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
             <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="n">msg</span><span class="p">,</span> <span class="ne">UserWarning</span><span class="p">,</span> <span class="n">stacklevel</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
 
         <span class="k">if</span> <span class="ow">not</span> <span class="n">is_unimodal</span><span class="p">:</span>
             <span class="n">msg</span> <span class="o">=</span> <span class="p">(</span>
-                <span class="sa">f</span><span class="s2">&quot;Profile-likelihood for &#39;</span><span class="si">{</span><span class="n">target_name</span><span class="si">}</span><span class="s2">&#39; is non-unimodal. &quot;</span>
-                <span class="s2">&quot;The CI may be unreliable. Check for parameter redundancy or a &quot;</span>
-                <span class="s2">&quot;poorly conditioned fit.&quot;</span>
+                <span class="sa">f</span><span class="s2">"Profile-likelihood for '</span><span class="si">{</span><span class="n">target_name</span><span class="si">}</span><span class="s2">' is non-unimodal. "</span>
+                <span class="s2">"The CI may be unreliable. Check for parameter redundancy or a "</span>
+                <span class="s2">"poorly conditioned fit."</span>
             <span class="p">)</span>
             <span class="n">warn_msgs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
             <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="n">msg</span><span class="p">,</span> <span class="ne">UserWarning</span><span class="p">,</span> <span class="n">stacklevel</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
@@ -2702,11 +2702,118 @@ warn when the profile is not unimodal."</p>
     
       
       
-      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.tabs", "navigation.sections", "navigation.indexes", "navigation.top", "navigation.tracking", "search.suggest", "search.highlight", "content.code.copy", "content.action.edit"], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.tabs", "navigation.sections", "navigation.indexes", "navigation.top", "navigation.tracking", "search.suggest", "search.highlight", "content.code.copy", "content.action.edit"], "search": "../../assets/javascripts/workers/search.a7633da7.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
     
     
-      <script src="../../assets/javascripts/bundle.79ae519e.min.js"></script>
+      <script src="../../assets/javascripts/bundle.c21346df.min.js"></script>
       
     
-  </body>
+  <script data-mkdocs-jupyter-mathjax="{&quot;url&quot;: &quot;https://cdn.jsdelivr.net/npm/mathjax@4.1.3/tex-mml-chtml.js&quot;, &quot;version&quot;: 4}">
+/* Shared by full pages and Material's instant navigation. */
+(() => {
+  const config = JSON.parse(document.currentScript.dataset.mkdocsJupyterMathjax);
+  if (window.mkdocsJupyterMathJax) return;
+
+  let loading;
+  let queue = Promise.resolve();
+  let previous = [];
+
+  const ready = async () => {
+    if (!loading) {
+      loading = (async () => {
+        let math = window.MathJax;
+        if (!math?.typesetPromise) {
+          const url = new URL(config.url, document.baseURI).href;
+          const existing = Array.from(document.scripts).find(script =>
+            script.src && (script.src === url || script.id === 'MathJax-script' ||
+              (/mathjax/i.test(script.src) &&
+               /\/(?:MathJax|latest|(?:tex|mml)(?:-mml)?-(?:chtml|svg))\.js(?:[?#]|$)/i.test(script.src))));
+          if (existing) {
+            if (!math?.startup?.promise) {
+              await new Promise((resolve, reject) => {
+                existing.addEventListener('load', resolve, { once: true });
+                existing.addEventListener('error', reject, { once: true });
+              });
+            }
+          } else {
+            // Keep site macros, delimiters and startup hooks when supplied.
+            const options = math || {};
+            window.MathJax = {
+              ...options,
+              loader: {
+                ...options.loader,
+                load: Array.from(new Set(['ui/safe', ...(options.loader?.load || [])]))
+              },
+              startup: { typeset: false, ...options.startup },
+              tex: {
+                tags: 'ams',
+                useLabelIds: true,
+                inlineMath: [['$', '$'], ['\\(', '\\)']],
+                displayMath: [['$$', '$$'], ['\\[', '\\]']],
+                processEscapes: true,
+                processEnvironments: true,
+                ...options.tex
+              }
+            };
+            await new Promise((resolve, reject) => {
+              const script = document.createElement('script');
+              script.src = config.url;
+              script.id = 'MathJax-script';
+              script.async = true;
+              script.onload = resolve;
+              script.onerror = reject;
+              document.head.appendChild(script);
+            });
+          }
+        }
+        math = window.MathJax;
+        await math.startup.promise;
+        return math;
+      })();
+    }
+    const math = await loading;
+    // A site owner can extend the v3 queue again on each navigation.
+    await math.startup.promise;
+    return math;
+  };
+
+  const unrendered = node => {
+    if (node.matches('mjx-container')) return [];
+    if (!node.querySelector('mjx-container')) return [node];
+    // In v3, scanning generated assistive MathML again produces nested output.
+    return Array.from(node.children).flatMap(unrendered);
+  };
+
+  const refresh = () => {
+    // A separate chain also serializes v3, without changing v4's startup promise.
+    queue = queue.then(async () => {
+      const notebooks = Array.from(document.querySelectorAll('.jupyter-wrapper'));
+      if (!notebooks.length && !previous.length) return;
+      if (notebooks.length === previous.length &&
+          notebooks.every((node, index) => node === previous[index])) return;
+      const math = await ready();
+      if (previous.length) {
+        math.typesetClear(previous);
+        math.texReset();
+      }
+      previous = notebooks.filter(node => node.isConnected);
+      const pending = previous.flatMap(unrendered);
+      if (pending.length) await math.typesetPromise(pending);
+    }).catch(error => console.error('mkdocs-jupyter: MathJax rendering failed', error));
+    return queue;
+  };
+
+  window.mkdocsJupyterMathJax = { refresh };
+  const start = () => {
+    if (typeof document$ !== 'undefined') document$.subscribe(refresh);
+    else refresh();
+  };
+  // Theme bundles and user-provided MathJax scripts can follow notebook content.
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', start, { once: true });
+  } else start();
+})();
+
+</script>
+</body>
 </html>

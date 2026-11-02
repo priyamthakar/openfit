@@ -23,7 +23,7 @@
       
       
       <link rel="icon" href="../../assets/images/favicon.png">
-      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.6">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.8.0">
     
     
       
@@ -31,10 +31,10 @@
       
     
     
-      <link rel="stylesheet" href="../../assets/stylesheets/main.484c7ddc.min.css">
+      <link rel="stylesheet" href="../../assets/stylesheets/main.57a0d79d.min.css">
       
         
-        <link rel="stylesheet" href="../../assets/stylesheets/palette.ab4e12ef.min.css">
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.fb2fffe2.min.css">
       
       
 
@@ -2086,7 +2086,7 @@ r_squared : float
 aic : float
     Akaike Information Criterion: n<em>ln(RSS/n) + 2k  (unweighted RSS).
 bic : float
-    Bayesian Information Criterion: n</em>ln(RSS/n) + k<em>ln(n)  (unweighted RSS).
+    Bayesian Information Criterion: n</em>ln(RSS/n) + k*ln(n)  (unweighted RSS).
 aicc : float
     Bias-corrected AIC: AIC + 2k(k+1)/(n-k-1).
 rss : float
@@ -2096,7 +2096,7 @@ x : np.ndarray
 y : np.ndarray
     Observed response values.
 y_fitted : np.ndarray
-    Model-predicted values f(x, </em>*params).
+    Model-predicted values f(x, **params).
 residuals : np.ndarray
     Raw residuals y - y_fitted.
 weighted_residuals : np.ndarray
@@ -2426,7 +2426,7 @@ _weights : np.ndarray
 <span class="normal">317</span>
 <span class="normal">318</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@dataclass</span>
 <span class="k">class</span><span class="w"> </span><span class="nc">FitResult</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Container for a completed nonlinear least-squares fit.</span>
+<span class="w">    </span><span class="sd">"""Container for a completed nonlinear least-squares fit.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
@@ -2471,16 +2471,16 @@ _weights : np.ndarray
 <span class="sd">    n_params : int</span>
 <span class="sd">        Number of fitted parameters.</span>
 <span class="sd">    model_id : str</span>
-<span class="sd">        Model identifier string (e.g. &quot;hill4p&quot;).</span>
+<span class="sd">        Model identifier string (e.g. "hill4p").</span>
 <span class="sd">    weight_scheme : str</span>
-<span class="sd">        Weight scheme string (e.g. &quot;1/y2&quot;, &quot;uniform&quot;).</span>
+<span class="sd">        Weight scheme string (e.g. "1/y2", "uniform").</span>
 <span class="sd">    spec : FitSpec</span>
 <span class="sd">        Full reproducibility manifest.</span>
 <span class="sd">    _model : BaseModel</span>
 <span class="sd">        Model instance (private; used by plot helpers and uncertainty methods).</span>
 <span class="sd">    _weights : np.ndarray</span>
 <span class="sd">        Weight array w_i (private; used by uncertainty methods).</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
 
     <span class="c1"># Core fitted values</span>
     <span class="n">params</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">float</span><span class="p">]</span>
@@ -2522,45 +2522,45 @@ _weights : np.ndarray
     <span class="c1"># ------------------------------------------------------------------</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">summary</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Return an ASCII summary table of the fit result.</span>
+<span class="w">        </span><span class="sd">"""Return an ASCII summary table of the fit result.</span>
 
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
 <span class="sd">        str</span>
 <span class="sd">            Multi-line ASCII string with parameter table and GOF statistics.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">sep</span> <span class="o">=</span> <span class="s2">&quot;-&quot;</span> <span class="o">*</span> <span class="mi">64</span>
+<span class="sd">        """</span>
+        <span class="n">sep</span> <span class="o">=</span> <span class="s2">"-"</span> <span class="o">*</span> <span class="mi">64</span>
         <span class="n">lines</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
 
         <span class="n">header</span> <span class="o">=</span> <span class="p">(</span>
-            <span class="sa">f</span><span class="s2">&quot;Model: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">model_id</span><span class="si">:</span><span class="s2">&lt;12</span><span class="si">}</span><span class="s2">  &quot;</span>
-            <span class="sa">f</span><span class="s2">&quot;Weights: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">weight_scheme</span><span class="si">:</span><span class="s2">&lt;8</span><span class="si">}</span><span class="s2">  &quot;</span>
-            <span class="sa">f</span><span class="s2">&quot;n=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">n_obs</span><span class="si">}</span><span class="s2">  params=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">n_params</span><span class="si">}</span><span class="s2">&quot;</span>
+            <span class="sa">f</span><span class="s2">"Model: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">model_id</span><span class="si">:</span><span class="s2">&lt;12</span><span class="si">}</span><span class="s2">  "</span>
+            <span class="sa">f</span><span class="s2">"Weights: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">weight_scheme</span><span class="si">:</span><span class="s2">&lt;8</span><span class="si">}</span><span class="s2">  "</span>
+            <span class="sa">f</span><span class="s2">"n=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">n_obs</span><span class="si">}</span><span class="s2">  params=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">n_params</span><span class="si">}</span><span class="s2">"</span>
         <span class="p">)</span>
         <span class="n">lines</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">header</span><span class="p">)</span>
         <span class="n">lines</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">sep</span><span class="p">)</span>
 
-        <span class="n">col_fmt</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="si">{:&lt;16}</span><span class="s2">  </span><span class="si">{:&gt;12}</span><span class="s2">  </span><span class="si">{:&gt;10}</span><span class="s2">  </span><span class="si">{:&gt;20}</span><span class="s2">&quot;</span>
-        <span class="n">lines</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">col_fmt</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="s2">&quot;Parameter&quot;</span><span class="p">,</span> <span class="s2">&quot;Value&quot;</span><span class="p">,</span> <span class="s2">&quot;SE&quot;</span><span class="p">,</span> <span class="s2">&quot;95% CI&quot;</span><span class="p">))</span>
+        <span class="n">col_fmt</span> <span class="o">=</span> <span class="s2">"</span><span class="si">{:&lt;16}</span><span class="s2">  </span><span class="si">{:&gt;12}</span><span class="s2">  </span><span class="si">{:&gt;10}</span><span class="s2">  </span><span class="si">{:&gt;20}</span><span class="s2">"</span>
+        <span class="n">lines</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">col_fmt</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="s2">"Parameter"</span><span class="p">,</span> <span class="s2">"Value"</span><span class="p">,</span> <span class="s2">"SE"</span><span class="p">,</span> <span class="s2">"95% CI"</span><span class="p">))</span>
 
         <span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">params</span><span class="p">:</span>
             <span class="n">val</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">params</span><span class="p">[</span><span class="n">name</span><span class="p">]</span>
-            <span class="n">se_val</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">se</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="nb">float</span><span class="p">(</span><span class="s2">&quot;nan&quot;</span><span class="p">))</span>
-            <span class="n">lo</span><span class="p">,</span> <span class="n">hi</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">ci</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="s2">&quot;nan&quot;</span><span class="p">),</span> <span class="nb">float</span><span class="p">(</span><span class="s2">&quot;nan&quot;</span><span class="p">)))</span>
-            <span class="n">ci_str</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;[</span><span class="si">{</span><span class="n">lo</span><span class="si">:</span><span class="s2">&gt;9.3f</span><span class="si">}</span><span class="s2">, </span><span class="si">{</span><span class="n">hi</span><span class="si">:</span><span class="s2">&gt;9.3f</span><span class="si">}</span><span class="s2">]&quot;</span>
-            <span class="n">lines</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">col_fmt</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">val</span><span class="si">:</span><span class="s2">.6g</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">se_val</span><span class="si">:</span><span class="s2">.3g</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">ci_str</span><span class="p">))</span>
+            <span class="n">se_val</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">se</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="nb">float</span><span class="p">(</span><span class="s2">"nan"</span><span class="p">))</span>
+            <span class="n">lo</span><span class="p">,</span> <span class="n">hi</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">ci</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="s2">"nan"</span><span class="p">),</span> <span class="nb">float</span><span class="p">(</span><span class="s2">"nan"</span><span class="p">)))</span>
+            <span class="n">ci_str</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">"[</span><span class="si">{</span><span class="n">lo</span><span class="si">:</span><span class="s2">&gt;9.3f</span><span class="si">}</span><span class="s2">, </span><span class="si">{</span><span class="n">hi</span><span class="si">:</span><span class="s2">&gt;9.3f</span><span class="si">}</span><span class="s2">]"</span>
+            <span class="n">lines</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">col_fmt</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">val</span><span class="si">:</span><span class="s2">.6g</span><span class="si">}</span><span class="s2">"</span><span class="p">,</span> <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">se_val</span><span class="si">:</span><span class="s2">.3g</span><span class="si">}</span><span class="s2">"</span><span class="p">,</span> <span class="n">ci_str</span><span class="p">))</span>
 
         <span class="n">lines</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">sep</span><span class="p">)</span>
 
         <span class="n">gof</span> <span class="o">=</span> <span class="p">(</span>
-            <span class="sa">f</span><span class="s2">&quot;R^2=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">r_squared</span><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="s2">  &quot;</span>
-            <span class="sa">f</span><span class="s2">&quot;AICc=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">aicc</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2">  &quot;</span>
-            <span class="sa">f</span><span class="s2">&quot;BIC=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">bic</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2">  &quot;</span>
-            <span class="sa">f</span><span class="s2">&quot;RSS=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">rss</span><span class="si">:</span><span class="s2">.3e</span><span class="si">}</span><span class="s2">&quot;</span>
+            <span class="sa">f</span><span class="s2">"R^2=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">r_squared</span><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="s2">  "</span>
+            <span class="sa">f</span><span class="s2">"AICc=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">aicc</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2">  "</span>
+            <span class="sa">f</span><span class="s2">"BIC=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">bic</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2">  "</span>
+            <span class="sa">f</span><span class="s2">"RSS=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">rss</span><span class="si">:</span><span class="s2">.3e</span><span class="si">}</span><span class="s2">"</span>
         <span class="p">)</span>
         <span class="n">lines</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">gof</span><span class="p">)</span>
 
-        <span class="k">return</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">lines</span><span class="p">)</span>
+        <span class="k">return</span> <span class="s2">"</span><span class="se">\n</span><span class="s2">"</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">lines</span><span class="p">)</span>
 
     <span class="c1"># ------------------------------------------------------------------</span>
     <span class="c1"># plot()</span>
@@ -2569,23 +2569,23 @@ _weights : np.ndarray
     <span class="k">def</span><span class="w"> </span><span class="nf">plot</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">log_x</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
-        <span class="n">xlabel</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;x&quot;</span><span class="p">,</span>
-        <span class="n">ylabel</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;y&quot;</span><span class="p">,</span>
+        <span class="n">xlabel</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">"x"</span><span class="p">,</span>
+        <span class="n">ylabel</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">"y"</span><span class="p">,</span>
         <span class="n">show_ci</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
         <span class="n">show_confidence_band</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
         <span class="n">show_prediction_band</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
         <span class="n">confidence</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.95</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">matplotlib</span><span class="o">.</span><span class="n">figure</span><span class="o">.</span><span class="n">Figure</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Return a fit overlay figure (observed data + fitted curve).</span>
+<span class="w">        </span><span class="sd">"""Return a fit overlay figure (observed data + fitted curve).</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
 <span class="sd">        log_x : bool</span>
 <span class="sd">            Use log10 x-axis scale.  Default False.</span>
 <span class="sd">        xlabel : str</span>
-<span class="sd">            X-axis label.  Default &quot;x&quot;.</span>
+<span class="sd">            X-axis label.  Default "x".</span>
 <span class="sd">        ylabel : str</span>
-<span class="sd">            Y-axis label.  Default &quot;y&quot;.</span>
+<span class="sd">            Y-axis label.  Default "y".</span>
 <span class="sd">        show_ci : bool</span>
 <span class="sd">            Deprecated. Use show_confidence_band instead.</span>
 <span class="sd">        show_confidence_band : bool</span>
@@ -2599,7 +2599,7 @@ _weights : np.ndarray
 <span class="sd">        -------</span>
 <span class="sd">        matplotlib.figure.Figure</span>
 <span class="sd">            The overlay figure.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="kn">from</span><span class="w"> </span><span class="nn">openfit.plotting</span><span class="w"> </span><span class="kn">import</span> <span class="n">fit_overlay_plot</span>
 
         <span class="k">return</span> <span class="n">fit_overlay_plot</span><span class="p">(</span>
@@ -2623,7 +2623,7 @@ _weights : np.ndarray
         <span class="n">confidence</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.95</span><span class="p">,</span>
         <span class="n">n_points</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">200</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">BandResult</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Compute the confidence band for the fitted model.</span>
+<span class="w">        </span><span class="sd">"""Compute the confidence band for the fitted model.</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
@@ -2639,7 +2639,7 @@ _weights : np.ndarray
 <span class="sd">        -------</span>
 <span class="sd">        BandResult</span>
 <span class="sd">            Object containing x, lower, and upper bounds of the confidence band.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="kn">from</span><span class="w"> </span><span class="nn">openfit.bands</span><span class="w"> </span><span class="kn">import</span> <span class="n">confidence_band</span>
 
         <span class="k">return</span> <span class="n">confidence_band</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x_pred</span><span class="o">=</span><span class="n">x_pred</span><span class="p">,</span> <span class="n">confidence</span><span class="o">=</span><span class="n">confidence</span><span class="p">,</span> <span class="n">n_points</span><span class="o">=</span><span class="n">n_points</span><span class="p">)</span>
@@ -2650,7 +2650,7 @@ _weights : np.ndarray
         <span class="n">confidence</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.95</span><span class="p">,</span>
         <span class="n">n_points</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">200</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">BandResult</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Compute the prediction band for the fitted model.</span>
+<span class="w">        </span><span class="sd">"""Compute the prediction band for the fitted model.</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
@@ -2666,7 +2666,7 @@ _weights : np.ndarray
 <span class="sd">        -------</span>
 <span class="sd">        BandResult</span>
 <span class="sd">            Object containing x, lower, and upper bounds of the prediction band.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="kn">from</span><span class="w"> </span><span class="nn">openfit.bands</span><span class="w"> </span><span class="kn">import</span> <span class="n">prediction_band</span>
 
         <span class="k">return</span> <span class="n">prediction_band</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x_pred</span><span class="o">=</span><span class="n">x_pred</span><span class="p">,</span> <span class="n">confidence</span><span class="o">=</span><span class="n">confidence</span><span class="p">,</span> <span class="n">n_points</span><span class="o">=</span><span class="n">n_points</span><span class="p">)</span>
@@ -2676,13 +2676,13 @@ _weights : np.ndarray
     <span class="c1"># ------------------------------------------------------------------</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">leverage</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">LeverageResult</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Compute leverage diagnostics for the fit.</span>
+<span class="w">        </span><span class="sd">"""Compute leverage diagnostics for the fit.</span>
 
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
 <span class="sd">        LeverageResult</span>
-<span class="sd">            Object containing hat values, leverage points, Cook&#39;s distances, etc.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">            Object containing hat values, leverage points, Cook's distances, etc.</span>
+<span class="sd">        """</span>
         <span class="kn">from</span><span class="w"> </span><span class="nn">openfit.leverage</span><span class="w"> </span><span class="kn">import</span> <span class="n">leverage_diagnostics</span>
 
         <span class="k">return</span> <span class="n">leverage_diagnostics</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
@@ -2691,15 +2691,15 @@ _weights : np.ndarray
     <span class="c1"># report()</span>
     <span class="c1"># ------------------------------------------------------------------</span>
 
-    <span class="k">def</span><span class="w"> </span><span class="nf">report</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">path</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">fmt</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;html&quot;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Write a fit report to a file.</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">report</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">path</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">fmt</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">"html"</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">"""Write a fit report to a file.</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
 <span class="sd">        path : str</span>
-<span class="sd">            Output file path (e.g. &quot;fit_result.html&quot;).</span>
+<span class="sd">            Output file path (e.g. "fit_result.html").</span>
 <span class="sd">        fmt : str</span>
-<span class="sd">            Output format: &quot;html&quot;, &quot;markdown&quot;, &quot;pdf&quot;, or &quot;docx&quot;. Default &quot;html&quot;.</span>
+<span class="sd">            Output format: "html", "markdown", "pdf", or "docx". Default "html".</span>
 
 <span class="sd">        Raises</span>
 <span class="sd">        ------</span>
@@ -2707,18 +2707,18 @@ _weights : np.ndarray
 <span class="sd">            If the openfit.report module has not been installed (it requires the</span>
 <span class="sd">            [reports] optional-dependency group).</span>
 <span class="sd">        ValueError</span>
-<span class="sd">            If fmt is not &quot;html&quot;, &quot;markdown&quot;, &quot;pdf&quot;, or &quot;docx&quot;.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">_valid</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;html&quot;</span><span class="p">,</span> <span class="s2">&quot;markdown&quot;</span><span class="p">,</span> <span class="s2">&quot;pdf&quot;</span><span class="p">,</span> <span class="s2">&quot;docx&quot;</span><span class="p">}</span>
+<span class="sd">            If fmt is not "html", "markdown", "pdf", or "docx".</span>
+<span class="sd">        """</span>
+        <span class="n">_valid</span> <span class="o">=</span> <span class="p">{</span><span class="s2">"html"</span><span class="p">,</span> <span class="s2">"markdown"</span><span class="p">,</span> <span class="s2">"pdf"</span><span class="p">,</span> <span class="s2">"docx"</span><span class="p">}</span>
         <span class="k">if</span> <span class="n">fmt</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">_valid</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;fmt must be one of </span><span class="si">{</span><span class="nb">sorted</span><span class="p">(</span><span class="n">_valid</span><span class="p">)</span><span class="si">}</span><span class="s2">, got </span><span class="si">{</span><span class="n">fmt</span><span class="si">!r}</span><span class="s2">.&quot;</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"fmt must be one of </span><span class="si">{</span><span class="nb">sorted</span><span class="p">(</span><span class="n">_valid</span><span class="p">)</span><span class="si">}</span><span class="s2">, got </span><span class="si">{</span><span class="n">fmt</span><span class="si">!r}</span><span class="s2">."</span><span class="p">)</span>
 
         <span class="k">try</span><span class="p">:</span>
             <span class="kn">from</span><span class="w"> </span><span class="nn">openfit.report</span><span class="w"> </span><span class="kn">import</span> <span class="n">report_fit</span>  <span class="c1"># type: ignore[import]</span>
         <span class="k">except</span> <span class="ne">ImportError</span> <span class="k">as</span> <span class="n">exc</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">ImportError</span><span class="p">(</span>
-                <span class="s2">&quot;openfit.report is not available. &quot;</span>
-                <span class="s2">&quot;Install the reports extras with: pip install &#39;openfit[reports]&#39;&quot;</span>
+                <span class="s2">"openfit.report is not available. "</span>
+                <span class="s2">"Install the reports extras with: pip install 'openfit[reports]'"</span>
             <span class="p">)</span> <span class="kn">from</span><span class="w"> </span><span class="nn">exc</span>
 
         <span class="n">report_fit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">path</span><span class="o">=</span><span class="n">path</span><span class="p">,</span> <span class="n">fmt</span><span class="o">=</span><span class="n">fmt</span><span class="p">)</span>
@@ -2796,7 +2796,7 @@ n_points : int
     <span class="n">confidence</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.95</span><span class="p">,</span>
     <span class="n">n_points</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">200</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">BandResult</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Compute the confidence band for the fitted model.</span>
+<span class="w">    </span><span class="sd">"""Compute the confidence band for the fitted model.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
@@ -2812,7 +2812,7 @@ n_points : int
 <span class="sd">    -------</span>
 <span class="sd">    BandResult</span>
 <span class="sd">        Object containing x, lower, and upper bounds of the confidence band.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
     <span class="kn">from</span><span class="w"> </span><span class="nn">openfit.bands</span><span class="w"> </span><span class="kn">import</span> <span class="n">confidence_band</span>
 
     <span class="k">return</span> <span class="n">confidence_band</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x_pred</span><span class="o">=</span><span class="n">x_pred</span><span class="p">,</span> <span class="n">confidence</span><span class="o">=</span><span class="n">confidence</span><span class="p">,</span> <span class="n">n_points</span><span class="o">=</span><span class="n">n_points</span><span class="p">)</span>
@@ -2852,13 +2852,13 @@ n_points : int
 <span class="normal">280</span>
 <span class="normal">281</span>
 <span class="normal">282</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">leverage</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">LeverageResult</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Compute leverage diagnostics for the fit.</span>
+<span class="w">    </span><span class="sd">"""Compute leverage diagnostics for the fit.</span>
 
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
 <span class="sd">    LeverageResult</span>
-<span class="sd">        Object containing hat values, leverage points, Cook&#39;s distances, etc.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">        Object containing hat values, leverage points, Cook's distances, etc.</span>
+<span class="sd">    """</span>
     <span class="kn">from</span><span class="w"> </span><span class="nn">openfit.leverage</span><span class="w"> </span><span class="kn">import</span> <span class="n">leverage_diagnostics</span>
 
     <span class="k">return</span> <span class="n">leverage_diagnostics</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
@@ -2872,7 +2872,7 @@ n_points : int
 
 
 <h3 id="openfit.results.FitResult.plot" class="doc doc-heading">
-            <code class="highlight language-python"><span class="n">plot</span><span class="p">(</span><span class="n">log_x</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">xlabel</span><span class="o">=</span><span class="s1">&#39;x&#39;</span><span class="p">,</span> <span class="n">ylabel</span><span class="o">=</span><span class="s1">&#39;y&#39;</span><span class="p">,</span> <span class="n">show_ci</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">show_confidence_band</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">show_prediction_band</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">confidence</span><span class="o">=</span><span class="mf">0.95</span><span class="p">)</span></code>
+            <code class="highlight language-python"><span class="n">plot</span><span class="p">(</span><span class="n">log_x</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">xlabel</span><span class="o">=</span><span class="s1">'x'</span><span class="p">,</span> <span class="n">ylabel</span><span class="o">=</span><span class="s1">'y'</span><span class="p">,</span> <span class="n">show_ci</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">show_confidence_band</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">show_prediction_band</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">confidence</span><span class="o">=</span><span class="mf">0.95</span><span class="p">)</span></code>
 
 </h3>
 
@@ -2950,23 +2950,23 @@ confidence : float
 <span class="normal">208</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">plot</span><span class="p">(</span>
     <span class="bp">self</span><span class="p">,</span>
     <span class="n">log_x</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
-    <span class="n">xlabel</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;x&quot;</span><span class="p">,</span>
-    <span class="n">ylabel</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;y&quot;</span><span class="p">,</span>
+    <span class="n">xlabel</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">"x"</span><span class="p">,</span>
+    <span class="n">ylabel</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">"y"</span><span class="p">,</span>
     <span class="n">show_ci</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
     <span class="n">show_confidence_band</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
     <span class="n">show_prediction_band</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
     <span class="n">confidence</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.95</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">matplotlib</span><span class="o">.</span><span class="n">figure</span><span class="o">.</span><span class="n">Figure</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Return a fit overlay figure (observed data + fitted curve).</span>
+<span class="w">    </span><span class="sd">"""Return a fit overlay figure (observed data + fitted curve).</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
 <span class="sd">    log_x : bool</span>
 <span class="sd">        Use log10 x-axis scale.  Default False.</span>
 <span class="sd">    xlabel : str</span>
-<span class="sd">        X-axis label.  Default &quot;x&quot;.</span>
+<span class="sd">        X-axis label.  Default "x".</span>
 <span class="sd">    ylabel : str</span>
-<span class="sd">        Y-axis label.  Default &quot;y&quot;.</span>
+<span class="sd">        Y-axis label.  Default "y".</span>
 <span class="sd">    show_ci : bool</span>
 <span class="sd">        Deprecated. Use show_confidence_band instead.</span>
 <span class="sd">    show_confidence_band : bool</span>
@@ -2980,7 +2980,7 @@ confidence : float
 <span class="sd">    -------</span>
 <span class="sd">    matplotlib.figure.Figure</span>
 <span class="sd">        The overlay figure.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
     <span class="kn">from</span><span class="w"> </span><span class="nn">openfit.plotting</span><span class="w"> </span><span class="kn">import</span> <span class="n">fit_overlay_plot</span>
 
     <span class="k">return</span> <span class="n">fit_overlay_plot</span><span class="p">(</span>
@@ -3057,7 +3057,7 @@ n_points : int
     <span class="n">confidence</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.95</span><span class="p">,</span>
     <span class="n">n_points</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">200</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">BandResult</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Compute the prediction band for the fitted model.</span>
+<span class="w">    </span><span class="sd">"""Compute the prediction band for the fitted model.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
@@ -3073,7 +3073,7 @@ n_points : int
 <span class="sd">    -------</span>
 <span class="sd">    BandResult</span>
 <span class="sd">        Object containing x, lower, and upper bounds of the prediction band.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
     <span class="kn">from</span><span class="w"> </span><span class="nn">openfit.bands</span><span class="w"> </span><span class="kn">import</span> <span class="n">prediction_band</span>
 
     <span class="k">return</span> <span class="n">prediction_band</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x_pred</span><span class="o">=</span><span class="n">x_pred</span><span class="p">,</span> <span class="n">confidence</span><span class="o">=</span><span class="n">confidence</span><span class="p">,</span> <span class="n">n_points</span><span class="o">=</span><span class="n">n_points</span><span class="p">)</span>
@@ -3087,7 +3087,7 @@ n_points : int
 
 
 <h3 id="openfit.results.FitResult.report" class="doc doc-heading">
-            <code class="highlight language-python"><span class="n">report</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="n">fmt</span><span class="o">=</span><span class="s1">&#39;html&#39;</span><span class="p">)</span></code>
+            <code class="highlight language-python"><span class="n">report</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="n">fmt</span><span class="o">=</span><span class="s1">'html'</span><span class="p">)</span></code>
 
 </h3>
 
@@ -3140,15 +3140,15 @@ ValueError
 <span class="normal">315</span>
 <span class="normal">316</span>
 <span class="normal">317</span>
-<span class="normal">318</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">report</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">path</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">fmt</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;html&quot;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Write a fit report to a file.</span>
+<span class="normal">318</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">report</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">path</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">fmt</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">"html"</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""Write a fit report to a file.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
 <span class="sd">    path : str</span>
-<span class="sd">        Output file path (e.g. &quot;fit_result.html&quot;).</span>
+<span class="sd">        Output file path (e.g. "fit_result.html").</span>
 <span class="sd">    fmt : str</span>
-<span class="sd">        Output format: &quot;html&quot;, &quot;markdown&quot;, &quot;pdf&quot;, or &quot;docx&quot;. Default &quot;html&quot;.</span>
+<span class="sd">        Output format: "html", "markdown", "pdf", or "docx". Default "html".</span>
 
 <span class="sd">    Raises</span>
 <span class="sd">    ------</span>
@@ -3156,18 +3156,18 @@ ValueError
 <span class="sd">        If the openfit.report module has not been installed (it requires the</span>
 <span class="sd">        [reports] optional-dependency group).</span>
 <span class="sd">    ValueError</span>
-<span class="sd">        If fmt is not &quot;html&quot;, &quot;markdown&quot;, &quot;pdf&quot;, or &quot;docx&quot;.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">_valid</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;html&quot;</span><span class="p">,</span> <span class="s2">&quot;markdown&quot;</span><span class="p">,</span> <span class="s2">&quot;pdf&quot;</span><span class="p">,</span> <span class="s2">&quot;docx&quot;</span><span class="p">}</span>
+<span class="sd">        If fmt is not "html", "markdown", "pdf", or "docx".</span>
+<span class="sd">    """</span>
+    <span class="n">_valid</span> <span class="o">=</span> <span class="p">{</span><span class="s2">"html"</span><span class="p">,</span> <span class="s2">"markdown"</span><span class="p">,</span> <span class="s2">"pdf"</span><span class="p">,</span> <span class="s2">"docx"</span><span class="p">}</span>
     <span class="k">if</span> <span class="n">fmt</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">_valid</span><span class="p">:</span>
-        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;fmt must be one of </span><span class="si">{</span><span class="nb">sorted</span><span class="p">(</span><span class="n">_valid</span><span class="p">)</span><span class="si">}</span><span class="s2">, got </span><span class="si">{</span><span class="n">fmt</span><span class="si">!r}</span><span class="s2">.&quot;</span><span class="p">)</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"fmt must be one of </span><span class="si">{</span><span class="nb">sorted</span><span class="p">(</span><span class="n">_valid</span><span class="p">)</span><span class="si">}</span><span class="s2">, got </span><span class="si">{</span><span class="n">fmt</span><span class="si">!r}</span><span class="s2">."</span><span class="p">)</span>
 
     <span class="k">try</span><span class="p">:</span>
         <span class="kn">from</span><span class="w"> </span><span class="nn">openfit.report</span><span class="w"> </span><span class="kn">import</span> <span class="n">report_fit</span>  <span class="c1"># type: ignore[import]</span>
     <span class="k">except</span> <span class="ne">ImportError</span> <span class="k">as</span> <span class="n">exc</span><span class="p">:</span>
         <span class="k">raise</span> <span class="ne">ImportError</span><span class="p">(</span>
-            <span class="s2">&quot;openfit.report is not available. &quot;</span>
-            <span class="s2">&quot;Install the reports extras with: pip install &#39;openfit[reports]&#39;&quot;</span>
+            <span class="s2">"openfit.report is not available. "</span>
+            <span class="s2">"Install the reports extras with: pip install 'openfit[reports]'"</span>
         <span class="p">)</span> <span class="kn">from</span><span class="w"> </span><span class="nn">exc</span>
 
     <span class="n">report_fit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">path</span><span class="o">=</span><span class="n">path</span><span class="p">,</span> <span class="n">fmt</span><span class="o">=</span><span class="n">fmt</span><span class="p">)</span>
@@ -3236,45 +3236,45 @@ ValueError
 <span class="normal">155</span>
 <span class="normal">156</span>
 <span class="normal">157</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">summary</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Return an ASCII summary table of the fit result.</span>
+<span class="w">    </span><span class="sd">"""Return an ASCII summary table of the fit result.</span>
 
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
 <span class="sd">    str</span>
 <span class="sd">        Multi-line ASCII string with parameter table and GOF statistics.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">sep</span> <span class="o">=</span> <span class="s2">&quot;-&quot;</span> <span class="o">*</span> <span class="mi">64</span>
+<span class="sd">    """</span>
+    <span class="n">sep</span> <span class="o">=</span> <span class="s2">"-"</span> <span class="o">*</span> <span class="mi">64</span>
     <span class="n">lines</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
 
     <span class="n">header</span> <span class="o">=</span> <span class="p">(</span>
-        <span class="sa">f</span><span class="s2">&quot;Model: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">model_id</span><span class="si">:</span><span class="s2">&lt;12</span><span class="si">}</span><span class="s2">  &quot;</span>
-        <span class="sa">f</span><span class="s2">&quot;Weights: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">weight_scheme</span><span class="si">:</span><span class="s2">&lt;8</span><span class="si">}</span><span class="s2">  &quot;</span>
-        <span class="sa">f</span><span class="s2">&quot;n=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">n_obs</span><span class="si">}</span><span class="s2">  params=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">n_params</span><span class="si">}</span><span class="s2">&quot;</span>
+        <span class="sa">f</span><span class="s2">"Model: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">model_id</span><span class="si">:</span><span class="s2">&lt;12</span><span class="si">}</span><span class="s2">  "</span>
+        <span class="sa">f</span><span class="s2">"Weights: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">weight_scheme</span><span class="si">:</span><span class="s2">&lt;8</span><span class="si">}</span><span class="s2">  "</span>
+        <span class="sa">f</span><span class="s2">"n=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">n_obs</span><span class="si">}</span><span class="s2">  params=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">n_params</span><span class="si">}</span><span class="s2">"</span>
     <span class="p">)</span>
     <span class="n">lines</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">header</span><span class="p">)</span>
     <span class="n">lines</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">sep</span><span class="p">)</span>
 
-    <span class="n">col_fmt</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="si">{:&lt;16}</span><span class="s2">  </span><span class="si">{:&gt;12}</span><span class="s2">  </span><span class="si">{:&gt;10}</span><span class="s2">  </span><span class="si">{:&gt;20}</span><span class="s2">&quot;</span>
-    <span class="n">lines</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">col_fmt</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="s2">&quot;Parameter&quot;</span><span class="p">,</span> <span class="s2">&quot;Value&quot;</span><span class="p">,</span> <span class="s2">&quot;SE&quot;</span><span class="p">,</span> <span class="s2">&quot;95% CI&quot;</span><span class="p">))</span>
+    <span class="n">col_fmt</span> <span class="o">=</span> <span class="s2">"</span><span class="si">{:&lt;16}</span><span class="s2">  </span><span class="si">{:&gt;12}</span><span class="s2">  </span><span class="si">{:&gt;10}</span><span class="s2">  </span><span class="si">{:&gt;20}</span><span class="s2">"</span>
+    <span class="n">lines</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">col_fmt</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="s2">"Parameter"</span><span class="p">,</span> <span class="s2">"Value"</span><span class="p">,</span> <span class="s2">"SE"</span><span class="p">,</span> <span class="s2">"95% CI"</span><span class="p">))</span>
 
     <span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">params</span><span class="p">:</span>
         <span class="n">val</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">params</span><span class="p">[</span><span class="n">name</span><span class="p">]</span>
-        <span class="n">se_val</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">se</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="nb">float</span><span class="p">(</span><span class="s2">&quot;nan&quot;</span><span class="p">))</span>
-        <span class="n">lo</span><span class="p">,</span> <span class="n">hi</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">ci</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="s2">&quot;nan&quot;</span><span class="p">),</span> <span class="nb">float</span><span class="p">(</span><span class="s2">&quot;nan&quot;</span><span class="p">)))</span>
-        <span class="n">ci_str</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;[</span><span class="si">{</span><span class="n">lo</span><span class="si">:</span><span class="s2">&gt;9.3f</span><span class="si">}</span><span class="s2">, </span><span class="si">{</span><span class="n">hi</span><span class="si">:</span><span class="s2">&gt;9.3f</span><span class="si">}</span><span class="s2">]&quot;</span>
-        <span class="n">lines</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">col_fmt</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">val</span><span class="si">:</span><span class="s2">.6g</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">se_val</span><span class="si">:</span><span class="s2">.3g</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">ci_str</span><span class="p">))</span>
+        <span class="n">se_val</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">se</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="nb">float</span><span class="p">(</span><span class="s2">"nan"</span><span class="p">))</span>
+        <span class="n">lo</span><span class="p">,</span> <span class="n">hi</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">ci</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="s2">"nan"</span><span class="p">),</span> <span class="nb">float</span><span class="p">(</span><span class="s2">"nan"</span><span class="p">)))</span>
+        <span class="n">ci_str</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">"[</span><span class="si">{</span><span class="n">lo</span><span class="si">:</span><span class="s2">&gt;9.3f</span><span class="si">}</span><span class="s2">, </span><span class="si">{</span><span class="n">hi</span><span class="si">:</span><span class="s2">&gt;9.3f</span><span class="si">}</span><span class="s2">]"</span>
+        <span class="n">lines</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">col_fmt</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">val</span><span class="si">:</span><span class="s2">.6g</span><span class="si">}</span><span class="s2">"</span><span class="p">,</span> <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">se_val</span><span class="si">:</span><span class="s2">.3g</span><span class="si">}</span><span class="s2">"</span><span class="p">,</span> <span class="n">ci_str</span><span class="p">))</span>
 
     <span class="n">lines</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">sep</span><span class="p">)</span>
 
     <span class="n">gof</span> <span class="o">=</span> <span class="p">(</span>
-        <span class="sa">f</span><span class="s2">&quot;R^2=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">r_squared</span><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="s2">  &quot;</span>
-        <span class="sa">f</span><span class="s2">&quot;AICc=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">aicc</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2">  &quot;</span>
-        <span class="sa">f</span><span class="s2">&quot;BIC=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">bic</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2">  &quot;</span>
-        <span class="sa">f</span><span class="s2">&quot;RSS=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">rss</span><span class="si">:</span><span class="s2">.3e</span><span class="si">}</span><span class="s2">&quot;</span>
+        <span class="sa">f</span><span class="s2">"R^2=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">r_squared</span><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="s2">  "</span>
+        <span class="sa">f</span><span class="s2">"AICc=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">aicc</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2">  "</span>
+        <span class="sa">f</span><span class="s2">"BIC=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">bic</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2">  "</span>
+        <span class="sa">f</span><span class="s2">"RSS=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">rss</span><span class="si">:</span><span class="s2">.3e</span><span class="si">}</span><span class="s2">"</span>
     <span class="p">)</span>
     <span class="n">lines</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">gof</span><span class="p">)</span>
 
-    <span class="k">return</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">lines</span><span class="p">)</span>
+    <span class="k">return</span> <span class="s2">"</span><span class="se">\n</span><span class="s2">"</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">lines</span><span class="p">)</span>
 </code></pre></div></td></tr></table></div>
             </details>
     </div>
@@ -3356,11 +3356,118 @@ ValueError
     
       
       
-      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.tabs", "navigation.sections", "navigation.indexes", "navigation.top", "navigation.tracking", "search.suggest", "search.highlight", "content.code.copy", "content.action.edit"], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.tabs", "navigation.sections", "navigation.indexes", "navigation.top", "navigation.tracking", "search.suggest", "search.highlight", "content.code.copy", "content.action.edit"], "search": "../../assets/javascripts/workers/search.a7633da7.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
     
     
-      <script src="../../assets/javascripts/bundle.79ae519e.min.js"></script>
+      <script src="../../assets/javascripts/bundle.c21346df.min.js"></script>
       
     
-  </body>
+  <script data-mkdocs-jupyter-mathjax="{&quot;url&quot;: &quot;https://cdn.jsdelivr.net/npm/mathjax@4.1.3/tex-mml-chtml.js&quot;, &quot;version&quot;: 4}">
+/* Shared by full pages and Material's instant navigation. */
+(() => {
+  const config = JSON.parse(document.currentScript.dataset.mkdocsJupyterMathjax);
+  if (window.mkdocsJupyterMathJax) return;
+
+  let loading;
+  let queue = Promise.resolve();
+  let previous = [];
+
+  const ready = async () => {
+    if (!loading) {
+      loading = (async () => {
+        let math = window.MathJax;
+        if (!math?.typesetPromise) {
+          const url = new URL(config.url, document.baseURI).href;
+          const existing = Array.from(document.scripts).find(script =>
+            script.src && (script.src === url || script.id === 'MathJax-script' ||
+              (/mathjax/i.test(script.src) &&
+               /\/(?:MathJax|latest|(?:tex|mml)(?:-mml)?-(?:chtml|svg))\.js(?:[?#]|$)/i.test(script.src))));
+          if (existing) {
+            if (!math?.startup?.promise) {
+              await new Promise((resolve, reject) => {
+                existing.addEventListener('load', resolve, { once: true });
+                existing.addEventListener('error', reject, { once: true });
+              });
+            }
+          } else {
+            // Keep site macros, delimiters and startup hooks when supplied.
+            const options = math || {};
+            window.MathJax = {
+              ...options,
+              loader: {
+                ...options.loader,
+                load: Array.from(new Set(['ui/safe', ...(options.loader?.load || [])]))
+              },
+              startup: { typeset: false, ...options.startup },
+              tex: {
+                tags: 'ams',
+                useLabelIds: true,
+                inlineMath: [['$', '$'], ['\\(', '\\)']],
+                displayMath: [['$$', '$$'], ['\\[', '\\]']],
+                processEscapes: true,
+                processEnvironments: true,
+                ...options.tex
+              }
+            };
+            await new Promise((resolve, reject) => {
+              const script = document.createElement('script');
+              script.src = config.url;
+              script.id = 'MathJax-script';
+              script.async = true;
+              script.onload = resolve;
+              script.onerror = reject;
+              document.head.appendChild(script);
+            });
+          }
+        }
+        math = window.MathJax;
+        await math.startup.promise;
+        return math;
+      })();
+    }
+    const math = await loading;
+    // A site owner can extend the v3 queue again on each navigation.
+    await math.startup.promise;
+    return math;
+  };
+
+  const unrendered = node => {
+    if (node.matches('mjx-container')) return [];
+    if (!node.querySelector('mjx-container')) return [node];
+    // In v3, scanning generated assistive MathML again produces nested output.
+    return Array.from(node.children).flatMap(unrendered);
+  };
+
+  const refresh = () => {
+    // A separate chain also serializes v3, without changing v4's startup promise.
+    queue = queue.then(async () => {
+      const notebooks = Array.from(document.querySelectorAll('.jupyter-wrapper'));
+      if (!notebooks.length && !previous.length) return;
+      if (notebooks.length === previous.length &&
+          notebooks.every((node, index) => node === previous[index])) return;
+      const math = await ready();
+      if (previous.length) {
+        math.typesetClear(previous);
+        math.texReset();
+      }
+      previous = notebooks.filter(node => node.isConnected);
+      const pending = previous.flatMap(unrendered);
+      if (pending.length) await math.typesetPromise(pending);
+    }).catch(error => console.error('mkdocs-jupyter: MathJax rendering failed', error));
+    return queue;
+  };
+
+  window.mkdocsJupyterMathJax = { refresh };
+  const start = () => {
+    if (typeof document$ !== 'undefined') document$.subscribe(refresh);
+    else refresh();
+  };
+  // Theme bundles and user-provided MathJax scripts can follow notebook content.
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', start, { once: true });
+  } else start();
+})();
+
+</script>
+</body>
 </html>

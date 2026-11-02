@@ -23,7 +23,7 @@
       
       
       <link rel="icon" href="../assets/images/favicon.png">
-      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.6">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.8.0">
     
     
       
@@ -31,10 +31,10 @@
       
     
     
-      <link rel="stylesheet" href="../assets/stylesheets/main.484c7ddc.min.css">
+      <link rel="stylesheet" href="../assets/stylesheets/main.57a0d79d.min.css">
       
         
-        <link rel="stylesheet" href="../assets/stylesheets/palette.ab4e12ef.min.css">
+        <link rel="stylesheet" href="../assets/stylesheets/palette.fb2fffe2.min.css">
       
       
 
@@ -1695,7 +1695,7 @@
 </tr>
 <tr>
 <td><code>openfit_version</code></td>
-<td>The openfit version at the time the fit was run (e.g. <code>"1.0.0"</code>).</td>
+<td>The openfit version at the time the fit was run (e.g. <code>"1.0.1"</code>).</td>
 </tr>
 <tr>
 <td><code>scipy_version</code></td>
@@ -1715,16 +1715,16 @@
 <h2 id="saving-and-loading-a-fitspec">Saving and Loading a FitSpec</h2>
 <div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">openfit</span><span class="w"> </span><span class="kn">import</span> <span class="n">Fit</span><span class="p">,</span> <span class="n">FitSpec</span>
 
-<span class="n">result</span> <span class="o">=</span> <span class="n">Fit</span><span class="p">(</span><span class="s2">&quot;hill4p&quot;</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">weights</span><span class="o">=</span><span class="s2">&quot;1/y2&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">run</span><span class="p">()</span>
+<span class="n">result</span> <span class="o">=</span> <span class="n">Fit</span><span class="p">(</span><span class="s2">"hill4p"</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">weights</span><span class="o">=</span><span class="s2">"1/y2"</span><span class="p">)</span><span class="o">.</span><span class="n">run</span><span class="p">()</span>
 
 <span class="c1"># Save the FitSpec to disk</span>
-<span class="n">result</span><span class="o">.</span><span class="n">spec</span><span class="o">.</span><span class="n">to_json</span><span class="p">(</span><span class="s2">&quot;my_fit.spec.json&quot;</span><span class="p">)</span>
+<span class="n">result</span><span class="o">.</span><span class="n">spec</span><span class="o">.</span><span class="n">to_json</span><span class="p">(</span><span class="s2">"my_fit.spec.json"</span><span class="p">)</span>
 
 <span class="c1"># Load and inspect a saved FitSpec</span>
-<span class="n">spec</span> <span class="o">=</span> <span class="n">FitSpec</span><span class="o">.</span><span class="n">from_json</span><span class="p">(</span><span class="nb">open</span><span class="p">(</span><span class="s2">&quot;my_fit.spec.json&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">read</span><span class="p">())</span>
-<span class="nb">print</span><span class="p">(</span><span class="n">spec</span><span class="o">.</span><span class="n">model_id</span><span class="p">)</span>       <span class="c1"># &quot;hill4p&quot;</span>
-<span class="nb">print</span><span class="p">(</span><span class="n">spec</span><span class="o">.</span><span class="n">param_values</span><span class="p">)</span>   <span class="c1"># {&quot;Bottom&quot;: 0.47, &quot;Top&quot;: 99.8, &quot;EC50&quot;: 3.21, &quot;HillSlope&quot;: 1.14}</span>
-<span class="nb">print</span><span class="p">(</span><span class="n">spec</span><span class="o">.</span><span class="n">data_hash</span><span class="p">)</span>      <span class="c1"># &quot;a3f8c2...&quot; — compare against your data file&#39;s hash</span>
+<span class="n">spec</span> <span class="o">=</span> <span class="n">FitSpec</span><span class="o">.</span><span class="n">from_json</span><span class="p">(</span><span class="nb">open</span><span class="p">(</span><span class="s2">"my_fit.spec.json"</span><span class="p">)</span><span class="o">.</span><span class="n">read</span><span class="p">())</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">spec</span><span class="o">.</span><span class="n">model_id</span><span class="p">)</span>       <span class="c1"># "hill4p"</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">spec</span><span class="o">.</span><span class="n">param_values</span><span class="p">)</span>   <span class="c1"># {"Bottom": 0.47, "Top": 99.8, "EC50": 3.21, "HillSlope": 1.14}</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">spec</span><span class="o">.</span><span class="n">data_hash</span><span class="p">)</span>      <span class="c1"># "a3f8c2..." — compare against your data file's hash</span>
 </code></pre></div>
 <p><code>result.spec</code> is a <code>FitSpec</code> instance available on any <code>FitResult</code> returned by <code>Fit.run()</code>. If you run bootstrap CI, the random seed is recorded automatically.</p>
 <h3 id="verifying-a-data-hash">Verifying a Data Hash</h3>
@@ -1738,12 +1738,12 @@
 <span class="n">y</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="o">...</span><span class="p">],</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">)</span>
 
 <span class="c1"># Compute the hash the same way openfit does</span>
-<span class="n">raw</span> <span class="o">=</span> <span class="n">x</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="s2">&quot;&lt;f8&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">tobytes</span><span class="p">()</span> <span class="o">+</span> <span class="n">y</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="s2">&quot;&lt;f8&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">tobytes</span><span class="p">()</span>
+<span class="n">raw</span> <span class="o">=</span> <span class="n">x</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="s2">"&lt;f8"</span><span class="p">)</span><span class="o">.</span><span class="n">tobytes</span><span class="p">()</span> <span class="o">+</span> <span class="n">y</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="s2">"&lt;f8"</span><span class="p">)</span><span class="o">.</span><span class="n">tobytes</span><span class="p">()</span>
 <span class="n">computed_hash</span> <span class="o">=</span> <span class="n">hashlib</span><span class="o">.</span><span class="n">sha256</span><span class="p">(</span><span class="n">raw</span><span class="p">)</span><span class="o">.</span><span class="n">hexdigest</span><span class="p">()</span>
 
 <span class="c1"># Load and compare</span>
-<span class="n">spec</span> <span class="o">=</span> <span class="n">FitSpec</span><span class="o">.</span><span class="n">from_json</span><span class="p">(</span><span class="nb">open</span><span class="p">(</span><span class="s2">&quot;my_fit.spec.json&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">read</span><span class="p">())</span>
-<span class="k">assert</span> <span class="n">computed_hash</span> <span class="o">==</span> <span class="n">spec</span><span class="o">.</span><span class="n">data_hash</span><span class="p">,</span> <span class="s2">&quot;Data does not match FitSpec&quot;</span>
+<span class="n">spec</span> <span class="o">=</span> <span class="n">FitSpec</span><span class="o">.</span><span class="n">from_json</span><span class="p">(</span><span class="nb">open</span><span class="p">(</span><span class="s2">"my_fit.spec.json"</span><span class="p">)</span><span class="o">.</span><span class="n">read</span><span class="p">())</span>
+<span class="k">assert</span> <span class="n">computed_hash</span> <span class="o">==</span> <span class="n">spec</span><span class="o">.</span><span class="n">data_hash</span><span class="p">,</span> <span class="s2">"Data does not match FitSpec"</span>
 </code></pre></div>
 <p>If the hashes match, you have confirmed that this FitSpec was produced from exactly these data.</p>
 <hr />
@@ -1824,11 +1824,118 @@
     
       
       
-      <script id="__config" type="application/json">{"annotate": null, "base": "..", "features": ["navigation.tabs", "navigation.sections", "navigation.indexes", "navigation.top", "navigation.tracking", "search.suggest", "search.highlight", "content.code.copy", "content.action.edit"], "search": "../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+      <script id="__config" type="application/json">{"annotate": null, "base": "..", "features": ["navigation.tabs", "navigation.sections", "navigation.indexes", "navigation.top", "navigation.tracking", "search.suggest", "search.highlight", "content.code.copy", "content.action.edit"], "search": "../assets/javascripts/workers/search.a7633da7.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
     
     
-      <script src="../assets/javascripts/bundle.79ae519e.min.js"></script>
+      <script src="../assets/javascripts/bundle.c21346df.min.js"></script>
       
     
-  </body>
+  <script data-mkdocs-jupyter-mathjax="{&quot;url&quot;: &quot;https://cdn.jsdelivr.net/npm/mathjax@4.1.3/tex-mml-chtml.js&quot;, &quot;version&quot;: 4}">
+/* Shared by full pages and Material's instant navigation. */
+(() => {
+  const config = JSON.parse(document.currentScript.dataset.mkdocsJupyterMathjax);
+  if (window.mkdocsJupyterMathJax) return;
+
+  let loading;
+  let queue = Promise.resolve();
+  let previous = [];
+
+  const ready = async () => {
+    if (!loading) {
+      loading = (async () => {
+        let math = window.MathJax;
+        if (!math?.typesetPromise) {
+          const url = new URL(config.url, document.baseURI).href;
+          const existing = Array.from(document.scripts).find(script =>
+            script.src && (script.src === url || script.id === 'MathJax-script' ||
+              (/mathjax/i.test(script.src) &&
+               /\/(?:MathJax|latest|(?:tex|mml)(?:-mml)?-(?:chtml|svg))\.js(?:[?#]|$)/i.test(script.src))));
+          if (existing) {
+            if (!math?.startup?.promise) {
+              await new Promise((resolve, reject) => {
+                existing.addEventListener('load', resolve, { once: true });
+                existing.addEventListener('error', reject, { once: true });
+              });
+            }
+          } else {
+            // Keep site macros, delimiters and startup hooks when supplied.
+            const options = math || {};
+            window.MathJax = {
+              ...options,
+              loader: {
+                ...options.loader,
+                load: Array.from(new Set(['ui/safe', ...(options.loader?.load || [])]))
+              },
+              startup: { typeset: false, ...options.startup },
+              tex: {
+                tags: 'ams',
+                useLabelIds: true,
+                inlineMath: [['$', '$'], ['\\(', '\\)']],
+                displayMath: [['$$', '$$'], ['\\[', '\\]']],
+                processEscapes: true,
+                processEnvironments: true,
+                ...options.tex
+              }
+            };
+            await new Promise((resolve, reject) => {
+              const script = document.createElement('script');
+              script.src = config.url;
+              script.id = 'MathJax-script';
+              script.async = true;
+              script.onload = resolve;
+              script.onerror = reject;
+              document.head.appendChild(script);
+            });
+          }
+        }
+        math = window.MathJax;
+        await math.startup.promise;
+        return math;
+      })();
+    }
+    const math = await loading;
+    // A site owner can extend the v3 queue again on each navigation.
+    await math.startup.promise;
+    return math;
+  };
+
+  const unrendered = node => {
+    if (node.matches('mjx-container')) return [];
+    if (!node.querySelector('mjx-container')) return [node];
+    // In v3, scanning generated assistive MathML again produces nested output.
+    return Array.from(node.children).flatMap(unrendered);
+  };
+
+  const refresh = () => {
+    // A separate chain also serializes v3, without changing v4's startup promise.
+    queue = queue.then(async () => {
+      const notebooks = Array.from(document.querySelectorAll('.jupyter-wrapper'));
+      if (!notebooks.length && !previous.length) return;
+      if (notebooks.length === previous.length &&
+          notebooks.every((node, index) => node === previous[index])) return;
+      const math = await ready();
+      if (previous.length) {
+        math.typesetClear(previous);
+        math.texReset();
+      }
+      previous = notebooks.filter(node => node.isConnected);
+      const pending = previous.flatMap(unrendered);
+      if (pending.length) await math.typesetPromise(pending);
+    }).catch(error => console.error('mkdocs-jupyter: MathJax rendering failed', error));
+    return queue;
+  };
+
+  window.mkdocsJupyterMathJax = { refresh };
+  const start = () => {
+    if (typeof document$ !== 'undefined') document$.subscribe(refresh);
+    else refresh();
+  };
+  // Theme bundles and user-provided MathJax scripts can follow notebook content.
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', start, { once: true });
+  } else start();
+})();
+
+</script>
+</body>
 </html>

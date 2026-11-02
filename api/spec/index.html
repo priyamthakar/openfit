@@ -23,7 +23,7 @@
       
       
       <link rel="icon" href="../../assets/images/favicon.png">
-      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.6">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.8.0">
     
     
       
@@ -31,10 +31,10 @@
       
     
     
-      <link rel="stylesheet" href="../../assets/stylesheets/main.484c7ddc.min.css">
+      <link rel="stylesheet" href="../../assets/stylesheets/main.57a0d79d.min.css">
       
         
-        <link rel="stylesheet" href="../../assets/stylesheets/palette.ab4e12ef.min.css">
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.fb2fffe2.min.css">
       
       
 
@@ -2152,7 +2152,7 @@ timestamp : str
 <span class="normal">192</span>
 <span class="normal">193</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@dataclass</span>
 <span class="k">class</span><span class="w"> </span><span class="nc">FitSpec</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Reproducibility manifest for a nonlinear fit.</span>
+<span class="w">    </span><span class="sd">"""Reproducibility manifest for a nonlinear fit.</span>
 
 <span class="sd">    Every ``FitResult`` embeds a ``FitSpec`` so that a fit can be reproduced</span>
 <span class="sd">    exactly from the spec plus the original data.  ``param_values`` floats are</span>
@@ -2162,11 +2162,11 @@ timestamp : str
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
 <span class="sd">    model_id : str</span>
-<span class="sd">        Registered model identifier (e.g. ``&quot;hill4p&quot;``).</span>
+<span class="sd">        Registered model identifier (e.g. ``"hill4p"``).</span>
 <span class="sd">    param_values : dict[str, float]</span>
 <span class="sd">        Fitted parameter values keyed by parameter name.</span>
 <span class="sd">    weights : str</span>
-<span class="sd">        Weight scheme name (e.g. ``&quot;1/y2&quot;``, ``&quot;uniform&quot;``).</span>
+<span class="sd">        Weight scheme name (e.g. ``"1/y2"``, ``"uniform"``).</span>
 <span class="sd">    data_hash : str</span>
 <span class="sd">        SHA-256 hex digest of the concatenated x and y arrays</span>
 <span class="sd">        (see :func:`compute_data_hash`).</span>
@@ -2180,7 +2180,7 @@ timestamp : str
 <span class="sd">        Seed used for bootstrap CI (0 when bootstrap was not requested).</span>
 <span class="sd">    timestamp : str</span>
 <span class="sd">        ISO 8601 UTC timestamp of when the fit completed.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
 
     <span class="n">model_id</span><span class="p">:</span> <span class="nb">str</span>
     <span class="n">param_values</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">float</span><span class="p">]</span>
@@ -2197,11 +2197,11 @@ timestamp : str
     <span class="c1"># ------------------------------------------------------------------</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">to_json</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Serialise to a JSON string with lossless float precision.</span>
+<span class="w">        </span><span class="sd">"""Serialise to a JSON string with lossless float precision.</span>
 
 <span class="sd">        ``param_values`` floats are stored as their ``repr()`` strings</span>
-<span class="sd">        (e.g. ``&quot;0.1&quot;`` not ``0.1``) to avoid any precision loss through</span>
-<span class="sd">        JSON&#39;s native float formatting.  All other fields are already</span>
+<span class="sd">        (e.g. ``"0.1"`` not ``0.1``) to avoid any precision loss through</span>
+<span class="sd">        JSON's native float formatting.  All other fields are already</span>
 <span class="sd">        strings or integers and serialise without transformation.</span>
 
 <span class="sd">        Returns</span>
@@ -2209,14 +2209,14 @@ timestamp : str
 <span class="sd">        str</span>
 <span class="sd">            Indented JSON string that can be written to a file or</span>
 <span class="sd">            transmitted over a network.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="n">raw</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]</span> <span class="o">=</span> <span class="n">asdict</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
-        <span class="n">raw</span><span class="p">[</span><span class="s2">&quot;param_values&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span><span class="n">k</span><span class="p">:</span> <span class="nb">repr</span><span class="p">(</span><span class="n">v</span><span class="p">)</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">param_values</span><span class="o">.</span><span class="n">items</span><span class="p">()}</span>
+        <span class="n">raw</span><span class="p">[</span><span class="s2">"param_values"</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span><span class="n">k</span><span class="p">:</span> <span class="nb">repr</span><span class="p">(</span><span class="n">v</span><span class="p">)</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">param_values</span><span class="o">.</span><span class="n">items</span><span class="p">()}</span>
         <span class="k">return</span> <span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">raw</span><span class="p">,</span> <span class="n">indent</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
 
     <span class="nd">@classmethod</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">from_json</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">s</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">FitSpec</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Deserialise from a JSON string produced by :meth:`to_json`.</span>
+<span class="w">        </span><span class="sd">"""Deserialise from a JSON string produced by :meth:`to_json`.</span>
 
 <span class="sd">        ``param_values`` string representations are converted back to</span>
 <span class="sd">        ``float`` via ``float()``, which is the exact inverse of</span>
@@ -2231,9 +2231,9 @@ timestamp : str
 <span class="sd">        -------</span>
 <span class="sd">        FitSpec</span>
 <span class="sd">            Reconstructed manifest with identical field values.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="n">raw</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">s</span><span class="p">)</span>
-        <span class="n">raw</span><span class="p">[</span><span class="s2">&quot;param_values&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span><span class="n">k</span><span class="p">:</span> <span class="nb">float</span><span class="p">(</span><span class="n">v</span><span class="p">)</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">raw</span><span class="p">[</span><span class="s2">&quot;param_values&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">items</span><span class="p">()}</span>
+        <span class="n">raw</span><span class="p">[</span><span class="s2">"param_values"</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span><span class="n">k</span><span class="p">:</span> <span class="nb">float</span><span class="p">(</span><span class="n">v</span><span class="p">)</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">raw</span><span class="p">[</span><span class="s2">"param_values"</span><span class="p">]</span><span class="o">.</span><span class="n">items</span><span class="p">()}</span>
         <span class="k">return</span> <span class="bp">cls</span><span class="p">(</span><span class="o">**</span><span class="n">raw</span><span class="p">)</span>
 
     <span class="c1"># ------------------------------------------------------------------</span>
@@ -2241,7 +2241,7 @@ timestamp : str
     <span class="c1"># ------------------------------------------------------------------</span>
 
     <span class="k">def</span><span class="w"> </span><span class="fm">__eq__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">:</span> <span class="nb">object</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Return True if all fields of both specs match exactly.</span>
+<span class="w">        </span><span class="sd">"""Return True if all fields of both specs match exactly.</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
@@ -2253,7 +2253,7 @@ timestamp : str
 <span class="sd">        bool</span>
 <span class="sd">            ``True`` when *other* is a ``FitSpec`` and every field is</span>
 <span class="sd">            equal, ``False`` otherwise.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">other</span><span class="p">,</span> <span class="n">FitSpec</span><span class="p">):</span>
             <span class="k">return</span> <span class="bp">NotImplemented</span>  <span class="c1"># type: ignore[return-value]</span>
         <span class="k">return</span> <span class="n">asdict</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">==</span> <span class="n">asdict</span><span class="p">(</span><span class="n">other</span><span class="p">)</span>
@@ -2313,7 +2313,7 @@ timestamp : str
 <span class="normal">191</span>
 <span class="normal">192</span>
 <span class="normal">193</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="fm">__eq__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">:</span> <span class="nb">object</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Return True if all fields of both specs match exactly.</span>
+<span class="w">    </span><span class="sd">"""Return True if all fields of both specs match exactly.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
@@ -2325,7 +2325,7 @@ timestamp : str
 <span class="sd">    bool</span>
 <span class="sd">        ``True`` when *other* is a ``FitSpec`` and every field is</span>
 <span class="sd">        equal, ``False`` otherwise.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
     <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">other</span><span class="p">,</span> <span class="n">FitSpec</span><span class="p">):</span>
         <span class="k">return</span> <span class="bp">NotImplemented</span>  <span class="c1"># type: ignore[return-value]</span>
     <span class="k">return</span> <span class="n">asdict</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">==</span> <span class="n">asdict</span><span class="p">(</span><span class="n">other</span><span class="p">)</span>
@@ -2386,7 +2386,7 @@ timestamp : str
 <span class="normal">170</span>
 <span class="normal">171</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@classmethod</span>
 <span class="k">def</span><span class="w"> </span><span class="nf">from_json</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">s</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">FitSpec</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Deserialise from a JSON string produced by :meth:`to_json`.</span>
+<span class="w">    </span><span class="sd">"""Deserialise from a JSON string produced by :meth:`to_json`.</span>
 
 <span class="sd">    ``param_values`` string representations are converted back to</span>
 <span class="sd">    ``float`` via ``float()``, which is the exact inverse of</span>
@@ -2401,9 +2401,9 @@ timestamp : str
 <span class="sd">    -------</span>
 <span class="sd">    FitSpec</span>
 <span class="sd">        Reconstructed manifest with identical field values.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
     <span class="n">raw</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">s</span><span class="p">)</span>
-    <span class="n">raw</span><span class="p">[</span><span class="s2">&quot;param_values&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span><span class="n">k</span><span class="p">:</span> <span class="nb">float</span><span class="p">(</span><span class="n">v</span><span class="p">)</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">raw</span><span class="p">[</span><span class="s2">&quot;param_values&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">items</span><span class="p">()}</span>
+    <span class="n">raw</span><span class="p">[</span><span class="s2">"param_values"</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span><span class="n">k</span><span class="p">:</span> <span class="nb">float</span><span class="p">(</span><span class="n">v</span><span class="p">)</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">raw</span><span class="p">[</span><span class="s2">"param_values"</span><span class="p">]</span><span class="o">.</span><span class="n">items</span><span class="p">()}</span>
     <span class="k">return</span> <span class="bp">cls</span><span class="p">(</span><span class="o">**</span><span class="n">raw</span><span class="p">)</span>
 </code></pre></div></td></tr></table></div>
             </details>
@@ -2452,11 +2452,11 @@ strings or integers and serialise without transformation.</p>
 <span class="normal">147</span>
 <span class="normal">148</span>
 <span class="normal">149</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">to_json</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Serialise to a JSON string with lossless float precision.</span>
+<span class="w">    </span><span class="sd">"""Serialise to a JSON string with lossless float precision.</span>
 
 <span class="sd">    ``param_values`` floats are stored as their ``repr()`` strings</span>
-<span class="sd">    (e.g. ``&quot;0.1&quot;`` not ``0.1``) to avoid any precision loss through</span>
-<span class="sd">    JSON&#39;s native float formatting.  All other fields are already</span>
+<span class="sd">    (e.g. ``"0.1"`` not ``0.1``) to avoid any precision loss through</span>
+<span class="sd">    JSON's native float formatting.  All other fields are already</span>
 <span class="sd">    strings or integers and serialise without transformation.</span>
 
 <span class="sd">    Returns</span>
@@ -2464,9 +2464,9 @@ strings or integers and serialise without transformation.</p>
 <span class="sd">    str</span>
 <span class="sd">        Indented JSON string that can be written to a file or</span>
 <span class="sd">        transmitted over a network.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
     <span class="n">raw</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]</span> <span class="o">=</span> <span class="n">asdict</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
-    <span class="n">raw</span><span class="p">[</span><span class="s2">&quot;param_values&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span><span class="n">k</span><span class="p">:</span> <span class="nb">repr</span><span class="p">(</span><span class="n">v</span><span class="p">)</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">param_values</span><span class="o">.</span><span class="n">items</span><span class="p">()}</span>
+    <span class="n">raw</span><span class="p">[</span><span class="s2">"param_values"</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span><span class="n">k</span><span class="p">:</span> <span class="nb">repr</span><span class="p">(</span><span class="n">v</span><span class="p">)</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">param_values</span><span class="o">.</span><span class="n">items</span><span class="p">()}</span>
     <span class="k">return</span> <span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">raw</span><span class="p">,</span> <span class="n">indent</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
 </code></pre></div></td></tr></table></div>
             </details>
@@ -2567,16 +2567,16 @@ random_seed : int, optional
     <span class="n">y</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
     <span class="n">random_seed</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">FitSpec</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Convenience factory that auto-populates version strings and timestamp.</span>
+<span class="w">    </span><span class="sd">"""Convenience factory that auto-populates version strings and timestamp.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
 <span class="sd">    model_id : str</span>
-<span class="sd">        Registered model identifier (e.g. ``&quot;hill4p&quot;``).</span>
+<span class="sd">        Registered model identifier (e.g. ``"hill4p"``).</span>
 <span class="sd">    param_values : dict[str, float]</span>
 <span class="sd">        Fitted parameter values keyed by parameter name.</span>
 <span class="sd">    weights : str</span>
-<span class="sd">        Weight scheme name (e.g. ``&quot;1/y2&quot;``, ``&quot;uniform&quot;``).</span>
+<span class="sd">        Weight scheme name (e.g. ``"1/y2"``, ``"uniform"``).</span>
 <span class="sd">    x : np.ndarray</span>
 <span class="sd">        Independent-variable values used in the fit.</span>
 <span class="sd">    y : np.ndarray</span>
@@ -2588,11 +2588,11 @@ random_seed : int, optional
 <span class="sd">    -------</span>
 <span class="sd">    FitSpec</span>
 <span class="sd">        Fully populated reproducibility manifest.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
     <span class="k">try</span><span class="p">:</span>
-        <span class="n">openfit_ver</span> <span class="o">=</span> <span class="n">version</span><span class="p">(</span><span class="s2">&quot;openfit&quot;</span><span class="p">)</span>
+        <span class="n">openfit_ver</span> <span class="o">=</span> <span class="n">version</span><span class="p">(</span><span class="s2">"openfit"</span><span class="p">)</span>
     <span class="k">except</span> <span class="n">PackageNotFoundError</span><span class="p">:</span>
-        <span class="n">openfit_ver</span> <span class="o">=</span> <span class="s2">&quot;0.0.0&quot;</span>
+        <span class="n">openfit_ver</span> <span class="o">=</span> <span class="s2">"0.0.0"</span>
 
     <span class="k">return</span> <span class="n">FitSpec</span><span class="p">(</span>
         <span class="n">model_id</span><span class="o">=</span><span class="n">model_id</span><span class="p">,</span>
@@ -2659,10 +2659,10 @@ y : np.ndarray
 <span class="normal">35</span>
 <span class="normal">36</span>
 <span class="normal">37</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">compute_data_hash</span><span class="p">(</span><span class="n">x</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">y</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Compute a SHA-256 digest of the concatenated x and y arrays.</span>
+<span class="w">    </span><span class="sd">"""Compute a SHA-256 digest of the concatenated x and y arrays.</span>
 
 <span class="sd">    Both arrays are cast to float64 (little-endian) before hashing so</span>
-<span class="sd">    that the digest is independent of the caller&#39;s original dtype and</span>
+<span class="sd">    that the digest is independent of the caller's original dtype and</span>
 <span class="sd">    platform byte order.</span>
 
 <span class="sd">    Parameters</span>
@@ -2676,9 +2676,9 @@ y : np.ndarray
 <span class="sd">    -------</span>
 <span class="sd">    str</span>
 <span class="sd">        64-character lowercase hex digest.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">x_bytes</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="s2">&quot;&lt;f8&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">tobytes</span><span class="p">()</span>
-    <span class="n">y_bytes</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="s2">&quot;&lt;f8&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">tobytes</span><span class="p">()</span>
+<span class="sd">    """</span>
+    <span class="n">x_bytes</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="s2">"&lt;f8"</span><span class="p">)</span><span class="o">.</span><span class="n">tobytes</span><span class="p">()</span>
+    <span class="n">y_bytes</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="s2">"&lt;f8"</span><span class="p">)</span><span class="o">.</span><span class="n">tobytes</span><span class="p">()</span>
     <span class="k">return</span> <span class="n">hashlib</span><span class="o">.</span><span class="n">sha256</span><span class="p">(</span><span class="n">x_bytes</span> <span class="o">+</span> <span class="n">y_bytes</span><span class="p">)</span><span class="o">.</span><span class="n">hexdigest</span><span class="p">()</span>
 </code></pre></div></td></tr></table></div>
             </details>
@@ -2752,11 +2752,118 @@ y : np.ndarray
     
       
       
-      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.tabs", "navigation.sections", "navigation.indexes", "navigation.top", "navigation.tracking", "search.suggest", "search.highlight", "content.code.copy", "content.action.edit"], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.tabs", "navigation.sections", "navigation.indexes", "navigation.top", "navigation.tracking", "search.suggest", "search.highlight", "content.code.copy", "content.action.edit"], "search": "../../assets/javascripts/workers/search.a7633da7.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
     
     
-      <script src="../../assets/javascripts/bundle.79ae519e.min.js"></script>
+      <script src="../../assets/javascripts/bundle.c21346df.min.js"></script>
       
     
-  </body>
+  <script data-mkdocs-jupyter-mathjax="{&quot;url&quot;: &quot;https://cdn.jsdelivr.net/npm/mathjax@4.1.3/tex-mml-chtml.js&quot;, &quot;version&quot;: 4}">
+/* Shared by full pages and Material's instant navigation. */
+(() => {
+  const config = JSON.parse(document.currentScript.dataset.mkdocsJupyterMathjax);
+  if (window.mkdocsJupyterMathJax) return;
+
+  let loading;
+  let queue = Promise.resolve();
+  let previous = [];
+
+  const ready = async () => {
+    if (!loading) {
+      loading = (async () => {
+        let math = window.MathJax;
+        if (!math?.typesetPromise) {
+          const url = new URL(config.url, document.baseURI).href;
+          const existing = Array.from(document.scripts).find(script =>
+            script.src && (script.src === url || script.id === 'MathJax-script' ||
+              (/mathjax/i.test(script.src) &&
+               /\/(?:MathJax|latest|(?:tex|mml)(?:-mml)?-(?:chtml|svg))\.js(?:[?#]|$)/i.test(script.src))));
+          if (existing) {
+            if (!math?.startup?.promise) {
+              await new Promise((resolve, reject) => {
+                existing.addEventListener('load', resolve, { once: true });
+                existing.addEventListener('error', reject, { once: true });
+              });
+            }
+          } else {
+            // Keep site macros, delimiters and startup hooks when supplied.
+            const options = math || {};
+            window.MathJax = {
+              ...options,
+              loader: {
+                ...options.loader,
+                load: Array.from(new Set(['ui/safe', ...(options.loader?.load || [])]))
+              },
+              startup: { typeset: false, ...options.startup },
+              tex: {
+                tags: 'ams',
+                useLabelIds: true,
+                inlineMath: [['$', '$'], ['\\(', '\\)']],
+                displayMath: [['$$', '$$'], ['\\[', '\\]']],
+                processEscapes: true,
+                processEnvironments: true,
+                ...options.tex
+              }
+            };
+            await new Promise((resolve, reject) => {
+              const script = document.createElement('script');
+              script.src = config.url;
+              script.id = 'MathJax-script';
+              script.async = true;
+              script.onload = resolve;
+              script.onerror = reject;
+              document.head.appendChild(script);
+            });
+          }
+        }
+        math = window.MathJax;
+        await math.startup.promise;
+        return math;
+      })();
+    }
+    const math = await loading;
+    // A site owner can extend the v3 queue again on each navigation.
+    await math.startup.promise;
+    return math;
+  };
+
+  const unrendered = node => {
+    if (node.matches('mjx-container')) return [];
+    if (!node.querySelector('mjx-container')) return [node];
+    // In v3, scanning generated assistive MathML again produces nested output.
+    return Array.from(node.children).flatMap(unrendered);
+  };
+
+  const refresh = () => {
+    // A separate chain also serializes v3, without changing v4's startup promise.
+    queue = queue.then(async () => {
+      const notebooks = Array.from(document.querySelectorAll('.jupyter-wrapper'));
+      if (!notebooks.length && !previous.length) return;
+      if (notebooks.length === previous.length &&
+          notebooks.every((node, index) => node === previous[index])) return;
+      const math = await ready();
+      if (previous.length) {
+        math.typesetClear(previous);
+        math.texReset();
+      }
+      previous = notebooks.filter(node => node.isConnected);
+      const pending = previous.flatMap(unrendered);
+      if (pending.length) await math.typesetPromise(pending);
+    }).catch(error => console.error('mkdocs-jupyter: MathJax rendering failed', error));
+    return queue;
+  };
+
+  window.mkdocsJupyterMathJax = { refresh };
+  const start = () => {
+    if (typeof document$ !== 'undefined') document$.subscribe(refresh);
+    else refresh();
+  };
+  // Theme bundles and user-provided MathJax scripts can follow notebook content.
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', start, { once: true });
+  } else start();
+})();
+
+</script>
+</body>
 </html>

@@ -21,7 +21,7 @@
       
       
       <link rel="icon" href="../../assets/images/favicon.png">
-      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.6">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.8.0">
     
     
       
@@ -29,10 +29,10 @@
       
     
     
-      <link rel="stylesheet" href="../../assets/stylesheets/main.484c7ddc.min.css">
+      <link rel="stylesheet" href="../../assets/stylesheets/main.57a0d79d.min.css">
       
         
-        <link rel="stylesheet" href="../../assets/stylesheets/palette.ab4e12ef.min.css">
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.fb2fffe2.min.css">
       
       
 
@@ -1679,7 +1679,7 @@
 
 
 <h2 id="openfit.cli.compare" class="doc doc-heading">
-            <code class="highlight language-python"><span class="n">compare</span><span class="p">(</span><span class="n">data_file</span><span class="o">=</span><span class="n">typer</span><span class="o">.</span><span class="n">Argument</span><span class="p">(</span><span class="o">...</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Path to CSV or Excel data file.&#39;</span><span class="p">),</span> <span class="n">models_arg</span><span class="o">=</span><span class="n">typer</span><span class="o">.</span><span class="n">Option</span><span class="p">(</span><span class="o">...</span><span class="p">,</span> <span class="s1">&#39;--models&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Comma-separated model IDs.&#39;</span><span class="p">),</span> <span class="n">weights</span><span class="o">=</span><span class="n">typer</span><span class="o">.</span><span class="n">Option</span><span class="p">(</span><span class="s1">&#39;uniform&#39;</span><span class="p">,</span> <span class="s1">&#39;--weights&#39;</span><span class="p">,</span> <span class="s1">&#39;-w&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Weight scheme: uniform, 1/y, 1/y2, 1/sd2, poisson.&#39;</span><span class="p">),</span> <span class="n">x_col</span><span class="o">=</span><span class="n">typer</span><span class="o">.</span><span class="n">Option</span><span class="p">(</span><span class="s1">&#39;0&#39;</span><span class="p">,</span> <span class="s1">&#39;--x-col&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;X column name or 0-based index.&#39;</span><span class="p">),</span> <span class="n">y_col</span><span class="o">=</span><span class="n">typer</span><span class="o">.</span><span class="n">Option</span><span class="p">(</span><span class="s1">&#39;1&#39;</span><span class="p">,</span> <span class="s1">&#39;--y-col&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Y column name or 0-based index.&#39;</span><span class="p">),</span> <span class="n">sd_col</span><span class="o">=</span><span class="n">typer</span><span class="o">.</span><span class="n">Option</span><span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="s1">&#39;--sd-col&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;SD column for 1/sd2 weighting.&#39;</span><span class="p">),</span> <span class="n">report</span><span class="o">=</span><span class="n">typer</span><span class="o">.</span><span class="n">Option</span><span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="s1">&#39;--report&#39;</span><span class="p">,</span> <span class="s1">&#39;-r&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Output report file (.html or .md).&#39;</span><span class="p">),</span> <span class="n">fmt</span><span class="o">=</span><span class="n">typer</span><span class="o">.</span><span class="n">Option</span><span class="p">(</span><span class="s1">&#39;html&#39;</span><span class="p">,</span> <span class="s1">&#39;--format&#39;</span><span class="p">,</span> <span class="s1">&#39;-f&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Report format: html or markdown.&#39;</span><span class="p">))</span></code>
+            <code class="highlight language-python"><span class="n">compare</span><span class="p">(</span><span class="n">data_file</span><span class="o">=</span><span class="n">typer</span><span class="o">.</span><span class="n">Argument</span><span class="p">(</span><span class="o">...</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">'Path to CSV or Excel data file.'</span><span class="p">),</span> <span class="n">models_arg</span><span class="o">=</span><span class="n">typer</span><span class="o">.</span><span class="n">Option</span><span class="p">(</span><span class="o">...</span><span class="p">,</span> <span class="s1">'--models'</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">'Comma-separated model IDs.'</span><span class="p">),</span> <span class="n">weights</span><span class="o">=</span><span class="n">typer</span><span class="o">.</span><span class="n">Option</span><span class="p">(</span><span class="s1">'uniform'</span><span class="p">,</span> <span class="s1">'--weights'</span><span class="p">,</span> <span class="s1">'-w'</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">'Weight scheme: uniform, 1/y, 1/y2, 1/sd2, poisson.'</span><span class="p">),</span> <span class="n">x_col</span><span class="o">=</span><span class="n">typer</span><span class="o">.</span><span class="n">Option</span><span class="p">(</span><span class="s1">'0'</span><span class="p">,</span> <span class="s1">'--x-col'</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">'X column name or 0-based index.'</span><span class="p">),</span> <span class="n">y_col</span><span class="o">=</span><span class="n">typer</span><span class="o">.</span><span class="n">Option</span><span class="p">(</span><span class="s1">'1'</span><span class="p">,</span> <span class="s1">'--y-col'</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">'Y column name or 0-based index.'</span><span class="p">),</span> <span class="n">sd_col</span><span class="o">=</span><span class="n">typer</span><span class="o">.</span><span class="n">Option</span><span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="s1">'--sd-col'</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">'SD column for 1/sd2 weighting.'</span><span class="p">),</span> <span class="n">report</span><span class="o">=</span><span class="n">typer</span><span class="o">.</span><span class="n">Option</span><span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="s1">'--report'</span><span class="p">,</span> <span class="s1">'-r'</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">'Output report file (.html or .md).'</span><span class="p">),</span> <span class="n">fmt</span><span class="o">=</span><span class="n">typer</span><span class="o">.</span><span class="n">Option</span><span class="p">(</span><span class="s1">'html'</span><span class="p">,</span> <span class="s1">'--format'</span><span class="p">,</span> <span class="s1">'-f'</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">'Report format: html or markdown.'</span><span class="p">))</span></code>
 
 </h2>
 
@@ -1782,30 +1782,30 @@
 <span class="normal">393</span>
 <span class="normal">394</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@app</span><span class="o">.</span><span class="n">command</span><span class="p">()</span>
 <span class="k">def</span><span class="w"> </span><span class="nf">compare</span><span class="p">(</span>
-    <span class="n">data_file</span><span class="p">:</span> <span class="n">Path</span> <span class="o">=</span> <span class="n">typer</span><span class="o">.</span><span class="n">Argument</span><span class="p">(</span><span class="o">...</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Path to CSV or Excel data file.&quot;</span><span class="p">),</span>  <span class="c1"># noqa: B008</span>
-    <span class="n">models_arg</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">typer</span><span class="o">.</span><span class="n">Option</span><span class="p">(</span><span class="o">...</span><span class="p">,</span> <span class="s2">&quot;--models&quot;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Comma-separated model IDs.&quot;</span><span class="p">),</span>
+    <span class="n">data_file</span><span class="p">:</span> <span class="n">Path</span> <span class="o">=</span> <span class="n">typer</span><span class="o">.</span><span class="n">Argument</span><span class="p">(</span><span class="o">...</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">"Path to CSV or Excel data file."</span><span class="p">),</span>  <span class="c1"># noqa: B008</span>
+    <span class="n">models_arg</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">typer</span><span class="o">.</span><span class="n">Option</span><span class="p">(</span><span class="o">...</span><span class="p">,</span> <span class="s2">"--models"</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">"Comma-separated model IDs."</span><span class="p">),</span>
     <span class="n">weights</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">typer</span><span class="o">.</span><span class="n">Option</span><span class="p">(</span>
-        <span class="s2">&quot;uniform&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;--weights&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;-w&quot;</span><span class="p">,</span>
-        <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Weight scheme: uniform, 1/y, 1/y2, 1/sd2, poisson.&quot;</span><span class="p">,</span>
+        <span class="s2">"uniform"</span><span class="p">,</span>
+        <span class="s2">"--weights"</span><span class="p">,</span>
+        <span class="s2">"-w"</span><span class="p">,</span>
+        <span class="n">help</span><span class="o">=</span><span class="s2">"Weight scheme: uniform, 1/y, 1/y2, 1/sd2, poisson."</span><span class="p">,</span>
     <span class="p">),</span>
-    <span class="n">x_col</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">typer</span><span class="o">.</span><span class="n">Option</span><span class="p">(</span><span class="s2">&quot;0&quot;</span><span class="p">,</span> <span class="s2">&quot;--x-col&quot;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">&quot;X column name or 0-based index.&quot;</span><span class="p">),</span>
-    <span class="n">y_col</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">typer</span><span class="o">.</span><span class="n">Option</span><span class="p">(</span><span class="s2">&quot;1&quot;</span><span class="p">,</span> <span class="s2">&quot;--y-col&quot;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Y column name or 0-based index.&quot;</span><span class="p">),</span>
+    <span class="n">x_col</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">typer</span><span class="o">.</span><span class="n">Option</span><span class="p">(</span><span class="s2">"0"</span><span class="p">,</span> <span class="s2">"--x-col"</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">"X column name or 0-based index."</span><span class="p">),</span>
+    <span class="n">y_col</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">typer</span><span class="o">.</span><span class="n">Option</span><span class="p">(</span><span class="s2">"1"</span><span class="p">,</span> <span class="s2">"--y-col"</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">"Y column name or 0-based index."</span><span class="p">),</span>
     <span class="n">sd_col</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="n">typer</span><span class="o">.</span><span class="n">Option</span><span class="p">(</span>  <span class="c1"># noqa: B008</span>
-        <span class="kc">None</span><span class="p">,</span> <span class="s2">&quot;--sd-col&quot;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">&quot;SD column for 1/sd2 weighting.&quot;</span>
+        <span class="kc">None</span><span class="p">,</span> <span class="s2">"--sd-col"</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">"SD column for 1/sd2 weighting."</span>
     <span class="p">),</span>
     <span class="n">report</span><span class="p">:</span> <span class="n">Path</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="n">typer</span><span class="o">.</span><span class="n">Option</span><span class="p">(</span>  <span class="c1"># noqa: B008</span>
-        <span class="kc">None</span><span class="p">,</span> <span class="s2">&quot;--report&quot;</span><span class="p">,</span> <span class="s2">&quot;-r&quot;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Output report file (.html or .md).&quot;</span>
+        <span class="kc">None</span><span class="p">,</span> <span class="s2">"--report"</span><span class="p">,</span> <span class="s2">"-r"</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">"Output report file (.html or .md)."</span>
     <span class="p">),</span>
-    <span class="n">fmt</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">typer</span><span class="o">.</span><span class="n">Option</span><span class="p">(</span><span class="s2">&quot;html&quot;</span><span class="p">,</span> <span class="s2">&quot;--format&quot;</span><span class="p">,</span> <span class="s2">&quot;-f&quot;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Report format: html or markdown.&quot;</span><span class="p">),</span>
+    <span class="n">fmt</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">typer</span><span class="o">.</span><span class="n">Option</span><span class="p">(</span><span class="s2">"html"</span><span class="p">,</span> <span class="s2">"--format"</span><span class="p">,</span> <span class="s2">"-f"</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">"Report format: html or markdown."</span><span class="p">),</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Fit and compare multiple models on the same dataset.&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""Fit and compare multiple models on the same dataset."""</span>
     <span class="c1"># -- Parse and validate model IDs -----------------------------------------</span>
-    <span class="n">model_ids</span> <span class="o">=</span> <span class="p">[</span><span class="n">m</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span> <span class="k">for</span> <span class="n">m</span> <span class="ow">in</span> <span class="n">models_arg</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;,&quot;</span><span class="p">)</span> <span class="k">if</span> <span class="n">m</span><span class="o">.</span><span class="n">strip</span><span class="p">()]</span>
+    <span class="n">model_ids</span> <span class="o">=</span> <span class="p">[</span><span class="n">m</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span> <span class="k">for</span> <span class="n">m</span> <span class="ow">in</span> <span class="n">models_arg</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">","</span><span class="p">)</span> <span class="k">if</span> <span class="n">m</span><span class="o">.</span><span class="n">strip</span><span class="p">()]</span>
     <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">model_ids</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mi">2</span><span class="p">:</span>
         <span class="n">err_console</span><span class="o">.</span><span class="n">print</span><span class="p">(</span>
-            <span class="s2">&quot;[red]Error:[/red] --models requires at least two comma-separated model IDs.&quot;</span>
+            <span class="s2">"[red]Error:[/red] --models requires at least two comma-separated model IDs."</span>
         <span class="p">)</span>
         <span class="k">raise</span> <span class="n">typer</span><span class="o">.</span><span class="n">Exit</span><span class="p">(</span><span class="n">code</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
 
@@ -1813,8 +1813,8 @@
     <span class="k">for</span> <span class="n">mid</span> <span class="ow">in</span> <span class="n">model_ids</span><span class="p">:</span>
         <span class="k">if</span> <span class="n">mid</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">list_models</span><span class="p">():</span>
             <span class="n">err_console</span><span class="o">.</span><span class="n">print</span><span class="p">(</span>
-                <span class="sa">f</span><span class="s2">&quot;[red]Error:[/red] Unknown model ID: </span><span class="si">{</span><span class="n">mid</span><span class="si">!r}</span><span class="s2">. &quot;</span>
-                <span class="s2">&quot;Run &#39;openfit models&#39; to see available models.&quot;</span>
+                <span class="sa">f</span><span class="s2">"[red]Error:[/red] Unknown model ID: </span><span class="si">{</span><span class="n">mid</span><span class="si">!r}</span><span class="s2">. "</span>
+                <span class="s2">"Run 'openfit models' to see available models."</span>
             <span class="p">)</span>
             <span class="n">failed</span> <span class="o">=</span> <span class="kc">True</span>
     <span class="k">if</span> <span class="n">failed</span><span class="p">:</span>
@@ -1831,16 +1831,16 @@
     <span class="k">try</span><span class="p">:</span>
         <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">sd</span> <span class="o">=</span> <span class="n">_load_data</span><span class="p">(</span><span class="n">data_file</span><span class="p">,</span> <span class="n">x_col_resolved</span><span class="p">,</span> <span class="n">y_col_resolved</span><span class="p">,</span> <span class="n">sd_col_resolved</span><span class="p">)</span>
     <span class="k">except</span> <span class="ne">FileNotFoundError</span> <span class="k">as</span> <span class="n">exc</span><span class="p">:</span>
-        <span class="n">err_console</span><span class="o">.</span><span class="n">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;[red]Error:[/red] </span><span class="si">{</span><span class="n">exc</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="n">err_console</span><span class="o">.</span><span class="n">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"[red]Error:[/red] </span><span class="si">{</span><span class="n">exc</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
         <span class="k">raise</span> <span class="n">typer</span><span class="o">.</span><span class="n">Exit</span><span class="p">(</span><span class="n">code</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span> <span class="kn">from</span><span class="w"> </span><span class="nn">exc</span>
     <span class="k">except</span> <span class="ne">ValueError</span> <span class="k">as</span> <span class="n">exc</span><span class="p">:</span>
-        <span class="n">err_console</span><span class="o">.</span><span class="n">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;[red]Error:[/red] </span><span class="si">{</span><span class="n">exc</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="n">err_console</span><span class="o">.</span><span class="n">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"[red]Error:[/red] </span><span class="si">{</span><span class="n">exc</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
         <span class="k">raise</span> <span class="n">typer</span><span class="o">.</span><span class="n">Exit</span><span class="p">(</span><span class="n">code</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span> <span class="kn">from</span><span class="w"> </span><span class="nn">exc</span>
 
     <span class="c1"># -- Fit each model -------------------------------------------------------</span>
-    <span class="n">fit_kwargs</span><span class="p">:</span> <span class="nb">dict</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;weights&quot;</span><span class="p">:</span> <span class="n">weights</span><span class="p">}</span>
+    <span class="n">fit_kwargs</span><span class="p">:</span> <span class="nb">dict</span> <span class="o">=</span> <span class="p">{</span><span class="s2">"weights"</span><span class="p">:</span> <span class="n">weights</span><span class="p">}</span>
     <span class="k">if</span> <span class="n">sd</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="n">fit_kwargs</span><span class="p">[</span><span class="s2">&quot;sd&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">sd</span>
+        <span class="n">fit_kwargs</span><span class="p">[</span><span class="s2">"sd"</span><span class="p">]</span> <span class="o">=</span> <span class="n">sd</span>
 
     <span class="n">results</span> <span class="o">=</span> <span class="p">[]</span>
     <span class="k">for</span> <span class="n">mid</span> <span class="ow">in</span> <span class="n">model_ids</span><span class="p">:</span>
@@ -1848,14 +1848,14 @@
             <span class="n">result</span> <span class="o">=</span> <span class="n">Fit</span><span class="p">(</span><span class="n">mid</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="o">**</span><span class="n">fit_kwargs</span><span class="p">)</span><span class="o">.</span><span class="n">run</span><span class="p">()</span>
             <span class="n">results</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">result</span><span class="p">)</span>
         <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">exc</span><span class="p">:</span>  <span class="c1"># noqa: BLE001</span>
-            <span class="n">err_console</span><span class="o">.</span><span class="n">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;[red]Fit failed for </span><span class="si">{</span><span class="n">mid</span><span class="si">!r}</span><span class="s2">:[/red] </span><span class="si">{</span><span class="n">exc</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="n">err_console</span><span class="o">.</span><span class="n">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"[red]Fit failed for </span><span class="si">{</span><span class="n">mid</span><span class="si">!r}</span><span class="s2">:[/red] </span><span class="si">{</span><span class="n">exc</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
             <span class="k">raise</span> <span class="n">typer</span><span class="o">.</span><span class="n">Exit</span><span class="p">(</span><span class="n">code</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span> <span class="kn">from</span><span class="w"> </span><span class="nn">exc</span>
 
     <span class="c1"># -- Compare models -------------------------------------------------------</span>
     <span class="k">try</span><span class="p">:</span>
         <span class="n">comparison</span> <span class="o">=</span> <span class="n">compare_models</span><span class="p">(</span><span class="n">results</span><span class="p">)</span>
     <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">exc</span><span class="p">:</span>  <span class="c1"># noqa: BLE001</span>
-        <span class="n">err_console</span><span class="o">.</span><span class="n">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;[red]Comparison failed:[/red] </span><span class="si">{</span><span class="n">exc</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="n">err_console</span><span class="o">.</span><span class="n">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"[red]Comparison failed:[/red] </span><span class="si">{</span><span class="n">exc</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
         <span class="k">raise</span> <span class="n">typer</span><span class="o">.</span><span class="n">Exit</span><span class="p">(</span><span class="n">code</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span> <span class="kn">from</span><span class="w"> </span><span class="nn">exc</span>
 
     <span class="c1"># -- Print comparison table to console ------------------------------------</span>
@@ -1866,10 +1866,10 @@
         <span class="k">try</span><span class="p">:</span>
             <span class="n">_write_comparison_report</span><span class="p">(</span><span class="n">comparison</span><span class="p">,</span> <span class="n">report</span><span class="p">,</span> <span class="n">fmt</span><span class="p">)</span>
         <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">exc</span><span class="p">:</span>  <span class="c1"># noqa: BLE001</span>
-            <span class="n">err_console</span><span class="o">.</span><span class="n">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;[red]Error writing report:[/red] </span><span class="si">{</span><span class="n">exc</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="n">err_console</span><span class="o">.</span><span class="n">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"[red]Error writing report:[/red] </span><span class="si">{</span><span class="n">exc</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
             <span class="k">raise</span> <span class="n">typer</span><span class="o">.</span><span class="n">Exit</span><span class="p">(</span><span class="n">code</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span> <span class="kn">from</span><span class="w"> </span><span class="nn">exc</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="n">console</span><span class="o">.</span><span class="n">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;  Report written to: </span><span class="si">{</span><span class="n">report</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="n">console</span><span class="o">.</span><span class="n">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"  Report written to: </span><span class="si">{</span><span class="n">report</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
 </code></pre></div></td></tr></table></div>
             </details>
     </div>
@@ -1880,7 +1880,7 @@
 
 
 <h2 id="openfit.cli.fit" class="doc doc-heading">
-            <code class="highlight language-python"><span class="n">fit</span><span class="p">(</span><span class="n">data_file</span><span class="o">=</span><span class="n">typer</span><span class="o">.</span><span class="n">Argument</span><span class="p">(</span><span class="o">...</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Path to CSV or Excel data file.&#39;</span><span class="p">),</span> <span class="n">model</span><span class="o">=</span><span class="n">typer</span><span class="o">.</span><span class="n">Option</span><span class="p">(</span><span class="o">...</span><span class="p">,</span> <span class="s1">&#39;--model&#39;</span><span class="p">,</span> <span class="s1">&#39;-m&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Model ID (e.g. &#39;hill4p&#39;).&quot;</span><span class="p">),</span> <span class="n">weights</span><span class="o">=</span><span class="n">typer</span><span class="o">.</span><span class="n">Option</span><span class="p">(</span><span class="s1">&#39;uniform&#39;</span><span class="p">,</span> <span class="s1">&#39;--weights&#39;</span><span class="p">,</span> <span class="s1">&#39;-w&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Weight scheme: uniform, 1/y, 1/y2, 1/sd2, poisson.&#39;</span><span class="p">),</span> <span class="n">x_col</span><span class="o">=</span><span class="n">typer</span><span class="o">.</span><span class="n">Option</span><span class="p">(</span><span class="s1">&#39;0&#39;</span><span class="p">,</span> <span class="s1">&#39;--x-col&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;X column name or 0-based index.&#39;</span><span class="p">),</span> <span class="n">y_col</span><span class="o">=</span><span class="n">typer</span><span class="o">.</span><span class="n">Option</span><span class="p">(</span><span class="s1">&#39;1&#39;</span><span class="p">,</span> <span class="s1">&#39;--y-col&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Y column name or 0-based index.&#39;</span><span class="p">),</span> <span class="n">sd_col</span><span class="o">=</span><span class="n">typer</span><span class="o">.</span><span class="n">Option</span><span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="s1">&#39;--sd-col&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;SD column for 1/sd2 weighting.&#39;</span><span class="p">),</span> <span class="n">report</span><span class="o">=</span><span class="n">typer</span><span class="o">.</span><span class="n">Option</span><span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="s1">&#39;--report&#39;</span><span class="p">,</span> <span class="s1">&#39;-r&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Output report file (.html or .md).&#39;</span><span class="p">),</span> <span class="n">fmt</span><span class="o">=</span><span class="n">typer</span><span class="o">.</span><span class="n">Option</span><span class="p">(</span><span class="s1">&#39;html&#39;</span><span class="p">,</span> <span class="s1">&#39;--format&#39;</span><span class="p">,</span> <span class="s1">&#39;-f&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Report format: html or markdown.&#39;</span><span class="p">),</span> <span class="n">log_x</span><span class="o">=</span><span class="n">typer</span><span class="o">.</span><span class="n">Option</span><span class="p">(</span><span class="kc">False</span><span class="p">,</span> <span class="s1">&#39;--log-x&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Use log scale for x axis in plot.&#39;</span><span class="p">))</span></code>
+            <code class="highlight language-python"><span class="n">fit</span><span class="p">(</span><span class="n">data_file</span><span class="o">=</span><span class="n">typer</span><span class="o">.</span><span class="n">Argument</span><span class="p">(</span><span class="o">...</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">'Path to CSV or Excel data file.'</span><span class="p">),</span> <span class="n">model</span><span class="o">=</span><span class="n">typer</span><span class="o">.</span><span class="n">Option</span><span class="p">(</span><span class="o">...</span><span class="p">,</span> <span class="s1">'--model'</span><span class="p">,</span> <span class="s1">'-m'</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">"Model ID (e.g. 'hill4p')."</span><span class="p">),</span> <span class="n">weights</span><span class="o">=</span><span class="n">typer</span><span class="o">.</span><span class="n">Option</span><span class="p">(</span><span class="s1">'uniform'</span><span class="p">,</span> <span class="s1">'--weights'</span><span class="p">,</span> <span class="s1">'-w'</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">'Weight scheme: uniform, 1/y, 1/y2, 1/sd2, poisson.'</span><span class="p">),</span> <span class="n">x_col</span><span class="o">=</span><span class="n">typer</span><span class="o">.</span><span class="n">Option</span><span class="p">(</span><span class="s1">'0'</span><span class="p">,</span> <span class="s1">'--x-col'</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">'X column name or 0-based index.'</span><span class="p">),</span> <span class="n">y_col</span><span class="o">=</span><span class="n">typer</span><span class="o">.</span><span class="n">Option</span><span class="p">(</span><span class="s1">'1'</span><span class="p">,</span> <span class="s1">'--y-col'</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">'Y column name or 0-based index.'</span><span class="p">),</span> <span class="n">sd_col</span><span class="o">=</span><span class="n">typer</span><span class="o">.</span><span class="n">Option</span><span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="s1">'--sd-col'</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">'SD column for 1/sd2 weighting.'</span><span class="p">),</span> <span class="n">report</span><span class="o">=</span><span class="n">typer</span><span class="o">.</span><span class="n">Option</span><span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="s1">'--report'</span><span class="p">,</span> <span class="s1">'-r'</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">'Output report file (.html or .md).'</span><span class="p">),</span> <span class="n">fmt</span><span class="o">=</span><span class="n">typer</span><span class="o">.</span><span class="n">Option</span><span class="p">(</span><span class="s1">'html'</span><span class="p">,</span> <span class="s1">'--format'</span><span class="p">,</span> <span class="s1">'-f'</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">'Report format: html or markdown.'</span><span class="p">),</span> <span class="n">log_x</span><span class="o">=</span><span class="n">typer</span><span class="o">.</span><span class="n">Option</span><span class="p">(</span><span class="kc">False</span><span class="p">,</span> <span class="s1">'--log-x'</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">'Use log scale for x axis in plot.'</span><span class="p">))</span></code>
 
 </h2>
 
@@ -1975,26 +1975,26 @@
 <span class="normal">301</span>
 <span class="normal">302</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@app</span><span class="o">.</span><span class="n">command</span><span class="p">()</span>
 <span class="k">def</span><span class="w"> </span><span class="nf">fit</span><span class="p">(</span>
-    <span class="n">data_file</span><span class="p">:</span> <span class="n">Path</span> <span class="o">=</span> <span class="n">typer</span><span class="o">.</span><span class="n">Argument</span><span class="p">(</span><span class="o">...</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Path to CSV or Excel data file.&quot;</span><span class="p">),</span>  <span class="c1"># noqa: B008</span>
-    <span class="n">model</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">typer</span><span class="o">.</span><span class="n">Option</span><span class="p">(</span><span class="o">...</span><span class="p">,</span> <span class="s2">&quot;--model&quot;</span><span class="p">,</span> <span class="s2">&quot;-m&quot;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Model ID (e.g. &#39;hill4p&#39;).&quot;</span><span class="p">),</span>
+    <span class="n">data_file</span><span class="p">:</span> <span class="n">Path</span> <span class="o">=</span> <span class="n">typer</span><span class="o">.</span><span class="n">Argument</span><span class="p">(</span><span class="o">...</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">"Path to CSV or Excel data file."</span><span class="p">),</span>  <span class="c1"># noqa: B008</span>
+    <span class="n">model</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">typer</span><span class="o">.</span><span class="n">Option</span><span class="p">(</span><span class="o">...</span><span class="p">,</span> <span class="s2">"--model"</span><span class="p">,</span> <span class="s2">"-m"</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">"Model ID (e.g. 'hill4p')."</span><span class="p">),</span>
     <span class="n">weights</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">typer</span><span class="o">.</span><span class="n">Option</span><span class="p">(</span>
-        <span class="s2">&quot;uniform&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;--weights&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;-w&quot;</span><span class="p">,</span>
-        <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Weight scheme: uniform, 1/y, 1/y2, 1/sd2, poisson.&quot;</span><span class="p">,</span>
+        <span class="s2">"uniform"</span><span class="p">,</span>
+        <span class="s2">"--weights"</span><span class="p">,</span>
+        <span class="s2">"-w"</span><span class="p">,</span>
+        <span class="n">help</span><span class="o">=</span><span class="s2">"Weight scheme: uniform, 1/y, 1/y2, 1/sd2, poisson."</span><span class="p">,</span>
     <span class="p">),</span>
-    <span class="n">x_col</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">typer</span><span class="o">.</span><span class="n">Option</span><span class="p">(</span><span class="s2">&quot;0&quot;</span><span class="p">,</span> <span class="s2">&quot;--x-col&quot;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">&quot;X column name or 0-based index.&quot;</span><span class="p">),</span>
-    <span class="n">y_col</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">typer</span><span class="o">.</span><span class="n">Option</span><span class="p">(</span><span class="s2">&quot;1&quot;</span><span class="p">,</span> <span class="s2">&quot;--y-col&quot;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Y column name or 0-based index.&quot;</span><span class="p">),</span>
+    <span class="n">x_col</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">typer</span><span class="o">.</span><span class="n">Option</span><span class="p">(</span><span class="s2">"0"</span><span class="p">,</span> <span class="s2">"--x-col"</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">"X column name or 0-based index."</span><span class="p">),</span>
+    <span class="n">y_col</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">typer</span><span class="o">.</span><span class="n">Option</span><span class="p">(</span><span class="s2">"1"</span><span class="p">,</span> <span class="s2">"--y-col"</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">"Y column name or 0-based index."</span><span class="p">),</span>
     <span class="n">sd_col</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="n">typer</span><span class="o">.</span><span class="n">Option</span><span class="p">(</span>  <span class="c1"># noqa: B008</span>
-        <span class="kc">None</span><span class="p">,</span> <span class="s2">&quot;--sd-col&quot;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">&quot;SD column for 1/sd2 weighting.&quot;</span>
+        <span class="kc">None</span><span class="p">,</span> <span class="s2">"--sd-col"</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">"SD column for 1/sd2 weighting."</span>
     <span class="p">),</span>
     <span class="n">report</span><span class="p">:</span> <span class="n">Path</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="n">typer</span><span class="o">.</span><span class="n">Option</span><span class="p">(</span>  <span class="c1"># noqa: B008</span>
-        <span class="kc">None</span><span class="p">,</span> <span class="s2">&quot;--report&quot;</span><span class="p">,</span> <span class="s2">&quot;-r&quot;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Output report file (.html or .md).&quot;</span>
+        <span class="kc">None</span><span class="p">,</span> <span class="s2">"--report"</span><span class="p">,</span> <span class="s2">"-r"</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">"Output report file (.html or .md)."</span>
     <span class="p">),</span>
-    <span class="n">fmt</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">typer</span><span class="o">.</span><span class="n">Option</span><span class="p">(</span><span class="s2">&quot;html&quot;</span><span class="p">,</span> <span class="s2">&quot;--format&quot;</span><span class="p">,</span> <span class="s2">&quot;-f&quot;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Report format: html or markdown.&quot;</span><span class="p">),</span>
-    <span class="n">log_x</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="n">typer</span><span class="o">.</span><span class="n">Option</span><span class="p">(</span><span class="kc">False</span><span class="p">,</span> <span class="s2">&quot;--log-x&quot;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Use log scale for x axis in plot.&quot;</span><span class="p">),</span>
+    <span class="n">fmt</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">typer</span><span class="o">.</span><span class="n">Option</span><span class="p">(</span><span class="s2">"html"</span><span class="p">,</span> <span class="s2">"--format"</span><span class="p">,</span> <span class="s2">"-f"</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">"Report format: html or markdown."</span><span class="p">),</span>
+    <span class="n">log_x</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="n">typer</span><span class="o">.</span><span class="n">Option</span><span class="p">(</span><span class="kc">False</span><span class="p">,</span> <span class="s2">"--log-x"</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">"Use log scale for x axis in plot."</span><span class="p">),</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Fit a model to data from a CSV or Excel file.&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""Fit a model to data from a CSV or Excel file."""</span>
     <span class="c1"># -- Validate model and weights before touching disk ----------------------</span>
     <span class="n">_validate_model_id</span><span class="p">(</span><span class="n">model</span><span class="p">)</span>
     <span class="n">_validate_weights</span><span class="p">(</span><span class="n">weights</span><span class="p">)</span>
@@ -2008,31 +2008,31 @@
     <span class="k">try</span><span class="p">:</span>
         <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">sd</span> <span class="o">=</span> <span class="n">_load_data</span><span class="p">(</span><span class="n">data_file</span><span class="p">,</span> <span class="n">x_col_resolved</span><span class="p">,</span> <span class="n">y_col_resolved</span><span class="p">,</span> <span class="n">sd_col_resolved</span><span class="p">)</span>
     <span class="k">except</span> <span class="ne">FileNotFoundError</span> <span class="k">as</span> <span class="n">exc</span><span class="p">:</span>
-        <span class="n">err_console</span><span class="o">.</span><span class="n">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;[red]Error:[/red] </span><span class="si">{</span><span class="n">exc</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="n">err_console</span><span class="o">.</span><span class="n">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"[red]Error:[/red] </span><span class="si">{</span><span class="n">exc</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
         <span class="k">raise</span> <span class="n">typer</span><span class="o">.</span><span class="n">Exit</span><span class="p">(</span><span class="n">code</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span> <span class="kn">from</span><span class="w"> </span><span class="nn">exc</span>
     <span class="k">except</span> <span class="ne">ValueError</span> <span class="k">as</span> <span class="n">exc</span><span class="p">:</span>
-        <span class="n">err_console</span><span class="o">.</span><span class="n">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;[red]Error:[/red] </span><span class="si">{</span><span class="n">exc</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="n">err_console</span><span class="o">.</span><span class="n">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"[red]Error:[/red] </span><span class="si">{</span><span class="n">exc</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
         <span class="k">raise</span> <span class="n">typer</span><span class="o">.</span><span class="n">Exit</span><span class="p">(</span><span class="n">code</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span> <span class="kn">from</span><span class="w"> </span><span class="nn">exc</span>
 
     <span class="c1"># -- Run fit --------------------------------------------------------------</span>
     <span class="k">try</span><span class="p">:</span>
-        <span class="n">fit_kwargs</span><span class="p">:</span> <span class="nb">dict</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;weights&quot;</span><span class="p">:</span> <span class="n">weights</span><span class="p">}</span>
+        <span class="n">fit_kwargs</span><span class="p">:</span> <span class="nb">dict</span> <span class="o">=</span> <span class="p">{</span><span class="s2">"weights"</span><span class="p">:</span> <span class="n">weights</span><span class="p">}</span>
         <span class="k">if</span> <span class="n">sd</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="n">fit_kwargs</span><span class="p">[</span><span class="s2">&quot;sd&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">sd</span>
+            <span class="n">fit_kwargs</span><span class="p">[</span><span class="s2">"sd"</span><span class="p">]</span> <span class="o">=</span> <span class="n">sd</span>
         <span class="k">if</span> <span class="n">log_x</span><span class="p">:</span>
-            <span class="n">fit_kwargs</span><span class="p">[</span><span class="s2">&quot;log_x&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">log_x</span>
+            <span class="n">fit_kwargs</span><span class="p">[</span><span class="s2">"log_x"</span><span class="p">]</span> <span class="o">=</span> <span class="n">log_x</span>
         <span class="n">result</span> <span class="o">=</span> <span class="n">Fit</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="o">**</span><span class="n">fit_kwargs</span><span class="p">)</span><span class="o">.</span><span class="n">run</span><span class="p">()</span>
     <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">exc</span><span class="p">:</span>  <span class="c1"># noqa: BLE001</span>
-        <span class="n">err_console</span><span class="o">.</span><span class="n">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;[red]Fit failed:[/red] </span><span class="si">{</span><span class="n">exc</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="n">err_console</span><span class="o">.</span><span class="n">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"[red]Fit failed:[/red] </span><span class="si">{</span><span class="n">exc</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
         <span class="k">raise</span> <span class="n">typer</span><span class="o">.</span><span class="n">Exit</span><span class="p">(</span><span class="n">code</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span> <span class="kn">from</span><span class="w"> </span><span class="nn">exc</span>
 
     <span class="c1"># -- Print summary --------------------------------------------------------</span>
-    <span class="n">console</span><span class="o">.</span><span class="n">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">openfit -- </span><span class="si">{</span><span class="n">model</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-    <span class="n">console</span><span class="o">.</span><span class="n">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;  Data file : </span><span class="si">{</span><span class="n">data_file</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-    <span class="n">console</span><span class="o">.</span><span class="n">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;  n obs     : </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">x</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-    <span class="n">console</span><span class="o">.</span><span class="n">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;  Weights   : </span><span class="si">{</span><span class="n">weights</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="n">console</span><span class="o">.</span><span class="n">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"</span><span class="se">\n</span><span class="s2">openfit -- </span><span class="si">{</span><span class="n">model</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+    <span class="n">console</span><span class="o">.</span><span class="n">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"  Data file : </span><span class="si">{</span><span class="n">data_file</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+    <span class="n">console</span><span class="o">.</span><span class="n">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"  n obs     : </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">x</span><span class="p">)</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+    <span class="n">console</span><span class="o">.</span><span class="n">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"  Weights   : </span><span class="si">{</span><span class="n">weights</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
 
-    <span class="n">summary_method</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">result</span><span class="p">,</span> <span class="s2">&quot;summary&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+    <span class="n">summary_method</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">result</span><span class="p">,</span> <span class="s2">"summary"</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
     <span class="k">if</span> <span class="nb">callable</span><span class="p">(</span><span class="n">summary_method</span><span class="p">):</span>
         <span class="n">console</span><span class="o">.</span><span class="n">print</span><span class="p">(</span><span class="n">summary_method</span><span class="p">())</span>
     <span class="k">else</span><span class="p">:</span>
@@ -2042,19 +2042,19 @@
     <span class="c1"># -- Write report ---------------------------------------------------------</span>
     <span class="k">if</span> <span class="n">report</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
         <span class="k">try</span><span class="p">:</span>
-            <span class="n">report_method</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">result</span><span class="p">,</span> <span class="s2">&quot;report&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+            <span class="n">report_method</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">result</span><span class="p">,</span> <span class="s2">"report"</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
             <span class="k">if</span> <span class="nb">callable</span><span class="p">(</span><span class="n">report_method</span><span class="p">):</span>
                 <span class="n">report_method</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">report</span><span class="p">),</span> <span class="n">fmt</span><span class="o">=</span><span class="n">fmt</span><span class="p">)</span>
             <span class="k">else</span><span class="p">:</span>
                 <span class="n">err_console</span><span class="o">.</span><span class="n">print</span><span class="p">(</span>
-                    <span class="s2">&quot;[yellow]Warning:[/yellow] FitResult has no report() method; &quot;</span>
-                    <span class="s2">&quot;report not written.&quot;</span>
+                    <span class="s2">"[yellow]Warning:[/yellow] FitResult has no report() method; "</span>
+                    <span class="s2">"report not written."</span>
                 <span class="p">)</span>
         <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">exc</span><span class="p">:</span>  <span class="c1"># noqa: BLE001</span>
-            <span class="n">err_console</span><span class="o">.</span><span class="n">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;[red]Error writing report:[/red] </span><span class="si">{</span><span class="n">exc</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="n">err_console</span><span class="o">.</span><span class="n">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"[red]Error writing report:[/red] </span><span class="si">{</span><span class="n">exc</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
             <span class="k">raise</span> <span class="n">typer</span><span class="o">.</span><span class="n">Exit</span><span class="p">(</span><span class="n">code</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span> <span class="kn">from</span><span class="w"> </span><span class="nn">exc</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="n">console</span><span class="o">.</span><span class="n">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;  Report    : </span><span class="si">{</span><span class="n">report</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="n">console</span><span class="o">.</span><span class="n">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"  Report    : </span><span class="si">{</span><span class="n">report</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
 </code></pre></div></td></tr></table></div>
             </details>
     </div>
@@ -2080,7 +2080,7 @@
               <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">453</span>
 <span class="normal">454</span>
 <span class="normal">455</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">main</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Entry point registered in pyproject.toml as openfit = openfit.cli:main.&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""Entry point registered in pyproject.toml as openfit = openfit.cli:main."""</span>
     <span class="n">app</span><span class="p">()</span>
 </code></pre></div></td></tr></table></div>
             </details>
@@ -2123,19 +2123,19 @@
 <span class="normal">217</span>
 <span class="normal">218</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@app</span><span class="o">.</span><span class="n">command</span><span class="p">()</span>
 <span class="k">def</span><span class="w"> </span><span class="nf">models</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;List all available built-in models.&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""List all available built-in models."""</span>
     <span class="n">tbl</span> <span class="o">=</span> <span class="n">Table</span><span class="p">(</span>
-        <span class="n">title</span><span class="o">=</span><span class="s2">&quot;openfit built-in models&quot;</span><span class="p">,</span>
+        <span class="n">title</span><span class="o">=</span><span class="s2">"openfit built-in models"</span><span class="p">,</span>
         <span class="n">box</span><span class="o">=</span><span class="n">rich</span><span class="o">.</span><span class="n">box</span><span class="o">.</span><span class="n">ASCII</span><span class="p">,</span>
         <span class="n">show_header</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
-        <span class="n">header_style</span><span class="o">=</span><span class="s2">&quot;bold&quot;</span><span class="p">,</span>
+        <span class="n">header_style</span><span class="o">=</span><span class="s2">"bold"</span><span class="p">,</span>
     <span class="p">)</span>
-    <span class="n">tbl</span><span class="o">.</span><span class="n">add_column</span><span class="p">(</span><span class="s2">&quot;Model ID&quot;</span><span class="p">,</span> <span class="n">style</span><span class="o">=</span><span class="s2">&quot;cyan&quot;</span><span class="p">,</span> <span class="n">no_wrap</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-    <span class="n">tbl</span><span class="o">.</span><span class="n">add_column</span><span class="p">(</span><span class="s2">&quot;Parameters&quot;</span><span class="p">)</span>
+    <span class="n">tbl</span><span class="o">.</span><span class="n">add_column</span><span class="p">(</span><span class="s2">"Model ID"</span><span class="p">,</span> <span class="n">style</span><span class="o">=</span><span class="s2">"cyan"</span><span class="p">,</span> <span class="n">no_wrap</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">tbl</span><span class="o">.</span><span class="n">add_column</span><span class="p">(</span><span class="s2">"Parameters"</span><span class="p">)</span>
 
     <span class="k">for</span> <span class="n">model_id</span> <span class="ow">in</span> <span class="n">list_models</span><span class="p">():</span>
         <span class="n">mdl</span> <span class="o">=</span> <span class="n">get_model</span><span class="p">(</span><span class="n">model_id</span><span class="p">)</span>
-        <span class="n">param_str</span> <span class="o">=</span> <span class="s2">&quot;, &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">mdl</span><span class="o">.</span><span class="n">param_names</span><span class="p">)</span>
+        <span class="n">param_str</span> <span class="o">=</span> <span class="s2">", "</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">mdl</span><span class="o">.</span><span class="n">param_names</span><span class="p">)</span>
         <span class="n">tbl</span><span class="o">.</span><span class="n">add_row</span><span class="p">(</span><span class="n">model_id</span><span class="p">,</span> <span class="n">param_str</span><span class="p">)</span>
 
     <span class="n">console</span><span class="o">.</span><span class="n">print</span><span class="p">(</span><span class="n">tbl</span><span class="p">)</span>
@@ -2166,8 +2166,8 @@
 <span class="normal">197</span>
 <span class="normal">198</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@app</span><span class="o">.</span><span class="n">command</span><span class="p">()</span>
 <span class="k">def</span><span class="w"> </span><span class="nf">version</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Print the openfit version.&quot;&quot;&quot;</span>
-    <span class="n">console</span><span class="o">.</span><span class="n">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;openfit </span><span class="si">{</span><span class="n">__version__</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="w">    </span><span class="sd">"""Print the openfit version."""</span>
+    <span class="n">console</span><span class="o">.</span><span class="n">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"openfit </span><span class="si">{</span><span class="n">__version__</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
 </code></pre></div></td></tr></table></div>
             </details>
     </div>
@@ -2240,11 +2240,118 @@
     
       
       
-      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.tabs", "navigation.sections", "navigation.indexes", "navigation.top", "navigation.tracking", "search.suggest", "search.highlight", "content.code.copy", "content.action.edit"], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.tabs", "navigation.sections", "navigation.indexes", "navigation.top", "navigation.tracking", "search.suggest", "search.highlight", "content.code.copy", "content.action.edit"], "search": "../../assets/javascripts/workers/search.a7633da7.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
     
     
-      <script src="../../assets/javascripts/bundle.79ae519e.min.js"></script>
+      <script src="../../assets/javascripts/bundle.c21346df.min.js"></script>
       
     
-  </body>
+  <script data-mkdocs-jupyter-mathjax="{&quot;url&quot;: &quot;https://cdn.jsdelivr.net/npm/mathjax@4.1.3/tex-mml-chtml.js&quot;, &quot;version&quot;: 4}">
+/* Shared by full pages and Material's instant navigation. */
+(() => {
+  const config = JSON.parse(document.currentScript.dataset.mkdocsJupyterMathjax);
+  if (window.mkdocsJupyterMathJax) return;
+
+  let loading;
+  let queue = Promise.resolve();
+  let previous = [];
+
+  const ready = async () => {
+    if (!loading) {
+      loading = (async () => {
+        let math = window.MathJax;
+        if (!math?.typesetPromise) {
+          const url = new URL(config.url, document.baseURI).href;
+          const existing = Array.from(document.scripts).find(script =>
+            script.src && (script.src === url || script.id === 'MathJax-script' ||
+              (/mathjax/i.test(script.src) &&
+               /\/(?:MathJax|latest|(?:tex|mml)(?:-mml)?-(?:chtml|svg))\.js(?:[?#]|$)/i.test(script.src))));
+          if (existing) {
+            if (!math?.startup?.promise) {
+              await new Promise((resolve, reject) => {
+                existing.addEventListener('load', resolve, { once: true });
+                existing.addEventListener('error', reject, { once: true });
+              });
+            }
+          } else {
+            // Keep site macros, delimiters and startup hooks when supplied.
+            const options = math || {};
+            window.MathJax = {
+              ...options,
+              loader: {
+                ...options.loader,
+                load: Array.from(new Set(['ui/safe', ...(options.loader?.load || [])]))
+              },
+              startup: { typeset: false, ...options.startup },
+              tex: {
+                tags: 'ams',
+                useLabelIds: true,
+                inlineMath: [['$', '$'], ['\\(', '\\)']],
+                displayMath: [['$$', '$$'], ['\\[', '\\]']],
+                processEscapes: true,
+                processEnvironments: true,
+                ...options.tex
+              }
+            };
+            await new Promise((resolve, reject) => {
+              const script = document.createElement('script');
+              script.src = config.url;
+              script.id = 'MathJax-script';
+              script.async = true;
+              script.onload = resolve;
+              script.onerror = reject;
+              document.head.appendChild(script);
+            });
+          }
+        }
+        math = window.MathJax;
+        await math.startup.promise;
+        return math;
+      })();
+    }
+    const math = await loading;
+    // A site owner can extend the v3 queue again on each navigation.
+    await math.startup.promise;
+    return math;
+  };
+
+  const unrendered = node => {
+    if (node.matches('mjx-container')) return [];
+    if (!node.querySelector('mjx-container')) return [node];
+    // In v3, scanning generated assistive MathML again produces nested output.
+    return Array.from(node.children).flatMap(unrendered);
+  };
+
+  const refresh = () => {
+    // A separate chain also serializes v3, without changing v4's startup promise.
+    queue = queue.then(async () => {
+      const notebooks = Array.from(document.querySelectorAll('.jupyter-wrapper'));
+      if (!notebooks.length && !previous.length) return;
+      if (notebooks.length === previous.length &&
+          notebooks.every((node, index) => node === previous[index])) return;
+      const math = await ready();
+      if (previous.length) {
+        math.typesetClear(previous);
+        math.texReset();
+      }
+      previous = notebooks.filter(node => node.isConnected);
+      const pending = previous.flatMap(unrendered);
+      if (pending.length) await math.typesetPromise(pending);
+    }).catch(error => console.error('mkdocs-jupyter: MathJax rendering failed', error));
+    return queue;
+  };
+
+  window.mkdocsJupyterMathJax = { refresh };
+  const start = () => {
+    if (typeof document$ !== 'undefined') document$.subscribe(refresh);
+    else refresh();
+  };
+  // Theme bundles and user-provided MathJax scripts can follow notebook content.
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', start, { once: true });
+  } else start();
+})();
+
+</script>
+</body>
 </html>
