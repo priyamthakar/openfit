@@ -10,6 +10,19 @@ Versioning follows [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ---
 
+## [1.0.1] - 2026-11-02
+
+First release published to PyPI (v1.0.0 was released on GitHub only; its
+PyPI upload failed).
+
+### Changed
+- Publish workflow now runs the test suite and checks that the tag matches the
+  `pyproject.toml` version before uploading, publishes from a `pypi` environment
+  via Trusted Publishing, and can be re-run manually for an existing tag.
+- Bumped package, citation, and conda recipe metadata to 1.0.1.
+
+---
+
 ## [1.0.0] - 2026-06-21
 
 ### Added

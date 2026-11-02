@@ -8,7 +8,7 @@
 Reproducible, open-source nonlinear curve fitting with publication-quality reports.
 Every fit you can rerun, every result you can cite.
 
-> **Status:** v1.0.0 stable. 419 tests collected (412 passed, 7 skipped;
+> **Status:** v1.0.1 stable. 419 tests collected (412 passed, 7 skipped;
 > NIST StRD all 27 datasets, synthetic 4PL/5PL and binding-model certified,
 > published-reference validation). Release workflow is tag-driven through GitHub Actions.
 
