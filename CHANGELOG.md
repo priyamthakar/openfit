@@ -9,6 +9,9 @@ Versioning follows [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 ## [Unreleased]
 
 ### Changed
+- Docs are now published with GitHub Pages' Actions deployment
+  (`actions/deploy-pages`) instead of `mkdocs gh-deploy`, so the `gh-pages`
+  branch is no longer used. The workflow can also be run manually.
 - `mypy src/openfit` (strict) now passes and runs in CI (Ubuntu, Python 3.12).
   Fixed the existing type errors: typed the model registry, plotting style
   context and ROUT plot arguments, CLI helpers, report/leverage helper

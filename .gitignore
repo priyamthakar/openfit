@@ -22,3 +22,7 @@ test_*.html
 .DS_Store
 .antigravitycli/
 site/
+
+# MkDocs build output (docs workflow)
+_site/
+.cache/
