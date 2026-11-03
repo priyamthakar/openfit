@@ -3,7 +3,7 @@
 from __future__ import annotations
 
 from io import BytesIO
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, Any
 
 from docx import Document
 from docx.enum.text import WD_ALIGN_PARAGRAPH
@@ -12,6 +12,7 @@ from docx.shared import Inches, Pt, RGBColor
 
 if TYPE_CHECKING:
     import matplotlib.figure
+    from docx.document import Document as DocxDocument
 
     from openfit.results import FitResult
 
@@ -59,7 +60,7 @@ def _fig_to_png_bytes(fig: matplotlib.figure.Figure) -> BytesIO:
     return buf
 
 
-def _set_cell_shading(cell, color_hex: str) -> None:
+def _set_cell_shading(cell: Any, color_hex: str) -> None:
     """Set solid background shading on a cell."""
     shading = cell._element.get_or_add_tcPr()
     shading_elem = shading.makeelement(
@@ -72,7 +73,7 @@ def _set_cell_shading(cell, color_hex: str) -> None:
     shading.append(shading_elem)
 
 
-def _make_table(doc: Document, headers: list[str], rows: list[list[str]]) -> None:
+def _make_table(doc: DocxDocument, headers: list[str], rows: list[list[str]]) -> None:
     """Add a professionally styled table to the document.
 
     Parameters

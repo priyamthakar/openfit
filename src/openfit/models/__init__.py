@@ -78,7 +78,7 @@ _REGISTRY: dict[str, BaseModel] = {}
 
 def _register_defaults() -> None:
     """Register all built-in model instances into the global registry."""
-    built_ins: list[type[object]] = [
+    built_ins: list[type[BaseModel]] = [
         Hill3P,
         Hill4P,
         Hill5P,
@@ -110,8 +110,8 @@ def _register_defaults() -> None:
         CompetitiveBinding,
     ]
     for cls in built_ins:
-        instance = cls()  # type: ignore[call-arg]
-        _REGISTRY[instance.model_id] = instance  # type: ignore[union-attr]
+        instance = cls()
+        _REGISTRY[instance.model_id] = instance
 
 
 _register_defaults()

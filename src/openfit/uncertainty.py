@@ -344,7 +344,7 @@ def _predict(model: object, x: np.ndarray, params: dict[str, float]) -> np.ndarr
 
     Central prediction helper.  Reconcile with models/base.py when written.
     """
-    return np.asarray(model.equation(x, **params), dtype=float)  # type: ignore[union-attr]
+    return np.asarray(model.equation(x, **params), dtype=float)  # type: ignore[attr-defined]
 
 
 def _profile_rss_grid(
@@ -387,8 +387,8 @@ def _profile_rss_grid(
             y_hat = _predict(model, x, full)
             res = y - y_hat
             if weights is not None:
-                return np.sqrt(weights) * res
-            return res
+                return np.asarray(np.sqrt(weights) * res)
+            return np.asarray(res)
 
         try:
             opt = optimize.least_squares(objective, best_free, method="lm")
@@ -434,13 +434,13 @@ def _refit(
         y_hat = _predict(model, x, params)
         res = y - y_hat
         if weights is not None:
-            return np.sqrt(weights) * res
-        return res
+            return np.asarray(np.sqrt(weights) * res)
+        return np.asarray(res)
 
     try:
         opt = optimize.least_squares(objective, p0, method="lm")
         if opt.success or opt.cost < 1e10:
-            return opt.x
+            return np.asarray(opt.x, dtype=float)
         return None
     except Exception:
         return None

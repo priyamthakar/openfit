@@ -174,7 +174,7 @@ def _lorentzian_objective(
     raw_res = y - y_hat
     # Avoid overflow: clip the argument of ln
     arg = 1.0 + (raw_res / rsdr) ** 2
-    return np.sqrt(2.0 * np.log(np.maximum(arg, 1e-300)))
+    return np.asarray(np.sqrt(2.0 * np.log(np.maximum(arg, 1e-300))))
 
 
 def _ordinary_residuals(
@@ -203,7 +203,7 @@ def _ordinary_residuals(
     """
     param_dict = dict(zip(model.param_names, params_vec, strict=False))
     y_hat = model.equation(x, **param_dict)
-    return y - y_hat
+    return np.asarray(y - y_hat)
 
 
 def _fit_ols(

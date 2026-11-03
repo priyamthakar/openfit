@@ -14,6 +14,8 @@ import numpy as np
 matplotlib.use("Agg")
 
 if TYPE_CHECKING:
+    from matplotlib.figure import Figure
+
     from openfit.global_fit import GlobalFitResult
 
 from openfit.report.html import DISCLAIMER
@@ -36,7 +38,13 @@ def _fmt(value: float | None) -> str:
     return f"{f:.5g}"
 
 
-def _figure_to_base64(fig, dpi: int = 150) -> str:
+def _set1_colors() -> list[tuple[float, float, float, float]]:
+    """Return the colours of matplotlib's qualitative ``Set1`` colormap as RGBA."""
+    cmap = plt.get_cmap("Set1")
+    return [cmap(i) for i in range(cmap.N)]
+
+
+def _figure_to_base64(fig: Figure, dpi: int = 150) -> str:
     """Convert matplotlib figure to base64 PNG data URI."""
     buf = io.BytesIO()
     fig.savefig(buf, format="png", dpi=dpi, bbox_inches="tight")
@@ -56,7 +64,7 @@ def _global_overlay_plot(
     x_smooth_points: int = 200,
 ) -> str:
     """Generate overlay plot with all datasets, shared curve, and local curves."""
-    colors = plt.cm.Set1.colors[: len(result._datasets)]
+    colors = _set1_colors()[: len(result._datasets)]
     markers = ["o", "s", "^", "D", "v", "p", "h", "*", "X", "P"]
 
     fig, ax = plt.subplots(figsize=(10, 6))
@@ -130,7 +138,7 @@ def _residual_plots(result: GlobalFitResult) -> list[str]:
         y_pred = result._model.equation(x, **params)
         residuals = y - y_pred
 
-        colors = plt.cm.Set1.colors
+        colors = _set1_colors()
         color = colors[i % len(colors)]
 
         ax.scatter(x, residuals, color=color, alpha=0.7, s=40, zorder=3)

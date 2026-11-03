@@ -34,6 +34,10 @@ jobs:
           ruff check src/ tests/
           ruff format --check src/ tests/
 
+      - name: Type-check with mypy
+        if: matrix.os == 'ubuntu-latest' && matrix.python-version == '3.12'
+        run: mypy src/openfit
+
       - name: Test with pytest
         run: |
           pytest --cov=src/openfit --cov-report=term-missing --cov-report=xml

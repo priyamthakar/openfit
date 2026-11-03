@@ -510,7 +510,7 @@ def render_html_report(result: FitResult) -> str:
             autoescape=jinja2.select_autoescape(["html", "j2"]),
         )
         template = env.get_template(_FIT_TEMPLATE_NAME)
-        return template.render(**ctx)
+        return str(template.render(**ctx))
     except jinja2.TemplateNotFound:
         # Template file is absent (e.g. package installed without data files).
         return _render_html_fallback(ctx)
