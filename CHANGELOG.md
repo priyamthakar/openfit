@@ -9,6 +9,10 @@ Versioning follows [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 ## [Unreleased]
 
 ### Changed
+- GitHub Actions moved to their Node 24 releases (Node 20 is deprecated on
+  runners): `checkout@v7`, `setup-python@v7`, `upload-artifact@v7`,
+  `download-artifact@v8`, `configure-pages@v6`, `upload-pages-artifact@v5`,
+  `deploy-pages@v5`, `codecov-action@v7` (its `file` input is now `files`).
 - Docs are now published with GitHub Pages' Actions deployment
   (`actions/deploy-pages`) instead of `mkdocs gh-deploy`, so the `gh-pages`
   branch is no longer used. The workflow can also be run manually.
